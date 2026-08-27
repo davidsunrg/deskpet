@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
 export type ThemeMode = 'dark' | 'light';
-export type LocaleMode = 'en' | 'zh';
+export type LocaleMode = 'en';
 
 export interface PageHealthMonitor {
   reset: () => void;
@@ -31,9 +31,8 @@ export function installPageHealthMonitor(page: Page): PageHealthMonitor {
   };
 }
 
-export function localizedPath(path: string, locale: LocaleMode) {
-  if (locale === 'en') return path;
-  return path === '/' ? '/zh' : `/zh${path}`;
+export function localizedPath(path: string, _locale: LocaleMode = 'en') {
+  return path;
 }
 
 export async function setTheme(page: Page, theme: ThemeMode) {

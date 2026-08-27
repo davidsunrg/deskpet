@@ -32,7 +32,6 @@ const publicPages = [
 
 const smokeMatrix: Array<{ locale: LocaleMode; theme: ThemeMode }> = [
   { locale: 'en', theme: 'light' },
-  { locale: 'zh', theme: 'light' },
 ];
 
 test.describe('public page smoke coverage', () => {

@@ -1,10 +1,9 @@
 import { getLocale, type Locale } from '@/lib/locale';
 import en from '@/i18n/deskpet/en.json';
-import zh from '@/i18n/deskpet/zh.json';
 
 type MessageTree = Record<string, unknown>;
 
-const messagesByLocale: Record<Locale, MessageTree> = { en, zh };
+const messagesByLocale: Record<Locale, MessageTree> = { en };
 
 function resolvePath(tree: MessageTree, path: string): unknown {
   return path.split('.').reduce<unknown>((node, segment) => {

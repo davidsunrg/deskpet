@@ -1,45 +1,35 @@
 # Locale
 
-This project uses Paraglide JS for runtime locale support.
+This project uses Paraglide JS for English-only runtime locale support.
 
 ## Locales
 
 - Base locale: `en`
-- Additional locale: `zh`
-- Default English URLs are unprefixed: `/about`
-- Chinese URLs use a prefix: `/zh/about`
+- English URLs are unprefixed: `/about`
 
 ## Files
 
-- Source messages: `project.inlang/messages/en.json` and `zh.json`
+- Source messages: `project.inlang/messages/en.json`
 - Paraglide settings: `project.inlang/settings.json`
 - Generated runtime: `src/locale/paraglide/`
 - Project locale helpers: `src/lib/locale.ts`
 - Server middleware wrapper: `src/locale/middleware.ts`
 
-Markdown content stays in the same collection directory. English content uses
-the base filename, while localized variants add the locale before `.md`:
+Markdown content uses the base filename in each collection directory:
 
 ```txt
 content/blog/getting-started.md
-content/blog/getting-started.zh.md
 content/changelog/v1.0.0.md
-content/changelog/v1.0.0.zh.md
 content/pages/privacy.md
-content/pages/privacy.zh.md
 ```
-
-`content-collections.ts` strips the `.zh` suffix from the route slug, so
-`getting-started.md` and `getting-started.zh.md` both map to `/blog/getting-started`
-under their respective URL locale.
 
 `src/locale/paraglide/` is generated code and is ignored by git.
 
 ## Commands
 
 ```bash
-pnpm locale:sort      # sort message keys by prefix/name in all locale JSON files
-pnpm locale:check     # verify en/zh key parity and JSON leaf values
+pnpm locale:sort      # sort message keys in en.json
+pnpm locale:check     # verify en.json leaf values and JSON message fields
 pnpm locale:compile   # compile Paraglide runtime manually
 ```
 
@@ -52,57 +42,23 @@ Application code reads messages directly from the generated Paraglide module:
 ```ts
 import { m } from '@/locale/paraglide/messages';
 
-m.auth_login_email();
+m.auth_login_title();
 ```
 
-`project.inlang/messages/*.json` is the single source of UI and email message
-truth. Do not add parallel TS message source files or nested compatibility
-layers.
+DeskPet marketing copy uses `src/i18n/deskpet/en.json` via `src/lib/deskpet-i18n.ts`.
 
-When a server-side workflow must always render in English, pass an explicit
-locale option:
+## URL Strategy
 
-```ts
-m.mail_verify_email_subject(undefined, { locale: 'en' });
-```
-
-Small arrays and record-like values, such as pricing feature lists, are stored
-as JSON strings in Paraglide messages and parsed through `parseMessageJson()`
-in `src/lib/locale.ts`.
-
-Structured UI content, such as Homepage, AI Playground, and Roadmap copy, still
-uses individual message keys in `project.inlang/messages/*.json`. Do not store a
-whole page or block tree as one JSON-string message. Components should call the
-generated flat `m.key()` functions directly. If a component needs a list, define
-that list in the component and use `m.key()` for the translatable fields.
+Paraglide is configured with the `url` strategy, but with only `en` enabled there is no
+locale prefix in routes. `localizeHref()` and `deLocalizeHref()` remain available for
+helpers that need canonical path normalization.
 
 ## Adding Copy
 
-- Short UI copy: add the same key to `project.inlang/messages/en.json` and
-  `project.inlang/messages/zh.json`, run `pnpm locale:sort`, then call the
-  generated `m.key()`.
-- Email copy: add the key to the JSON files and read it through
-  `m.key(undefined, { locale: 'en' })`.
-- Homepage, AI, or Roadmap structured copy: add or update individual message
-  keys in the JSON files, then call the generated `m.key()` functions directly
-  from the component.
-- Long-form content: add Markdown files, for example `post.md` and
-  `post.zh.md`.
+1. Add keys to `project.inlang/messages/en.json`
+2. Run `pnpm locale:sort` if needed
+3. Run `pnpm locale:check`
+4. Use `m.your_key()` from Paraglide in components
 
-## Current Scope
-
-The current implementation supports:
-
-- Runtime UI messages through `@/locale/paraglide/messages`
-- Homepage blocks through direct `m.key()` calls
-- AI Playground UI through direct `m.key()` calls
-- Roadmap board content through direct `m.key()` calls
-- Blog Markdown content with locale-aware content collections
-- Changelog Markdown content with locale-aware content collections
-- Legal Markdown pages with locale-aware content collections
-- Locale-aware canonical, hreflang, and sitemap output
-
-The current implementation intentionally does not handle:
-
-- User profile locale storage
-- Email locale
+For DeskPet-specific marketing strings, edit `src/i18n/deskpet/en.json` and use
+`useTranslations('Namespace')` from `@/lib/deskpet-i18n`.

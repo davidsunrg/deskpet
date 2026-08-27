@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 import {
   expectHealthyPage,
   installPageHealthMonitor,
-  localizedPath,
   setTheme,
 } from '../fixtures/page-health';
 
@@ -63,20 +62,5 @@ test.describe('DeskPet public shell', () => {
     await expect(selectedPet).toBeVisible({ timeout: 30_000 });
 
     monitor.expectNoErrors('playground deep link');
-  });
-
-  test('localized playground route renders in zh', async ({ page }) => {
-    await setTheme(page, 'light');
-    const monitor = installPageHealthMonitor(page);
-
-    await expectHealthyPage(page, monitor, localizedPath('/playground', 'zh'), {
-      theme: 'light',
-    });
-
-    await expect(page.getByTestId('playground-pet-picker')).toBeVisible({
-      timeout: 30_000,
-    });
-
-    monitor.expectNoErrors('localized playground');
   });
 });

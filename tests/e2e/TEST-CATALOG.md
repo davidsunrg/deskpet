@@ -46,12 +46,12 @@ configured `x-e2e-secret` header. Test accounts must use the
 
 **File:** `specs/public-pages.spec.ts` | **Priority:** P0
 
-Verifies that public pages render in English/Chinese in light mode without
+Verifies that public pages render in light mode without
 browser console errors or page errors.
 
 | # | Test name | Flow |
 |---|---|---|
-| 1 | Public pages render successfully | Open `/`, `/playground`, `/pricing`, `/blog`, `/blog/getting-started`, `/ai`, `/about`, `/contact`, `/changelog`, `/roadmap`, `/waitlist`, `/cookie`, `/privacy`, `/terms`, `/auth/login`, `/auth/signup`, `/auth/register` (redirects to signup), `/auth/forgot-password`, `/auth/reset-password` for `en` and `zh` in `light` mode. Verify each returns 2xx, renders a visible body, applies the light theme, and emits no browser errors. |
+| 1 | Public pages render successfully | Open `/`, `/playground`, `/pricing`, `/blog`, `/blog/getting-started`, `/ai`, `/about`, `/contact`, `/changelog`, `/roadmap`, `/waitlist`, `/cookie`, `/privacy`, `/terms`, `/auth/login`, `/auth/signup`, `/auth/register` (redirects to signup), `/auth/forgot-password`, `/auth/reset-password` in `light` mode. Verify each returns 2xx, renders a visible body, applies the light theme, and emits no browser errors. |
 | 2 | Home login modal opens | Open `/`, click the navbar login button, verify the login dialog and email OTP input flow are visible (no password field), and assert no browser errors. |
 | 3 | Marketing auth controls render immediately | Open `/` and verify login/signup controls are visible without auth loading placeholders. |
 | 4 | Open mobile navigation hides at desktop breakpoint | Open the mobile navigation at a narrow viewport, resize to desktop width, and verify the mobile dialog no longer covers the desktop navigation. |
@@ -69,7 +69,6 @@ Covers the migrated DeskPet marketing homepage and public playground slice.
 | 1 | Homepage hero and CTAs | Open `/`, verify DeskPet hero heading, playground/make-pet CTAs, and pet grid render without browser errors. |
 | 2 | Playground loads pets | Open `/playground`, verify the pet picker and at least one visible pet video render. |
 | 3 | Playground deep link | Open `/playground?pet=orange-cat`, verify the orange cat option stays selected after reload. |
-| 4 | Localized playground | Open `/zh/playground` and verify the pet picker renders in light mode without browser errors. |
 
 ## 2. Authentication And Protected Routes
 
@@ -91,12 +90,12 @@ verified users.
 
 **File:** `specs/protected-pages.spec.ts` | **Priority:** P0
 
-Verifies authenticated app pages render in English/Chinese in light mode
+Verifies authenticated app pages render in light mode
 without browser console errors or page errors.
 
 | # | Test name | Flow |
 |---|---|---|
-| 1 | Protected pages render successfully | Sign in as an admin E2E user, then open `/dashboard`, `/admin/users`, `/settings/profile`, `/settings/security`, `/settings/apikeys`, `/settings/files`, `/settings/billing`, `/settings/payment`, `/settings/notifications` for `en` and `zh` in `light` mode. Verify each returns 2xx, renders a visible body, applies the light theme, and emits no browser errors. |
+| 1 | Protected pages render successfully | Sign in as an admin E2E user, then open `/dashboard`, `/admin/users`, `/settings/profile`, `/settings/security`, `/settings/apikeys`, `/settings/files`, `/settings/billing`, `/settings/payment`, `/settings/notifications` in `light` mode. Verify each returns 2xx, renders a visible body, applies the light theme, and emits no browser errors. |
 | 2 | Collapsed sidebar persists across protected route groups | Collapse the desktop sidebar, navigate from Dashboard to Profile and Security, then return to Dashboard. Verify the sidebar remains collapsed after every route transition. |
 
 ## 4. Profile Settings

@@ -1,9 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-const MESSAGE_FILES = [
-  'project.inlang/messages/en.json',
-  'project.inlang/messages/zh.json',
-] as const;
+const MESSAGE_FILE = 'project.inlang/messages/en.json';
 
 async function sortMessages(file: string) {
   const raw = await readFile(file, 'utf8');
@@ -15,6 +12,6 @@ async function sortMessages(file: string) {
   await writeFile(file, `${JSON.stringify(sortedMessages, null, 2)}\n`);
 }
 
-await Promise.all(MESSAGE_FILES.map(sortMessages));
+await sortMessages(MESSAGE_FILE);
 
-console.log(`Locale keys sorted (${MESSAGE_FILES.length} files)`);
+console.log('Locale keys sorted (en.json)');

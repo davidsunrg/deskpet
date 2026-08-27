@@ -10,40 +10,25 @@ const JSON_MESSAGE_KEYS = [
   'pricing_plans_pro_limits',
 ] as const;
 
-async function readMessages(locale: 'en' | 'zh') {
-  const raw = await readFile(`project.inlang/messages/${locale}.json`, 'utf8');
+async function readMessages() {
+  const raw = await readFile('project.inlang/messages/en.json', 'utf8');
   return JSON.parse(raw) as Record<string, string>;
 }
 
-const en = await readMessages('en');
-const zh = await readMessages('zh');
+const en = await readMessages();
 const enKeys = Object.keys(en).sort();
-const zhKeys = Object.keys(zh).sort();
-
-const missingInZh = enKeys.filter((key) => !zhKeys.includes(key));
-const missingInEn = zhKeys.filter((key) => !enKeys.includes(key));
-const emptyValues = [...enKeys, ...zhKeys].filter((key, index, keys) => {
-  if (keys.indexOf(key) !== index) return false;
-  return en[key] === '' || zh[key] === '';
-});
+const emptyValues = enKeys.filter((key) => en[key] === '');
 
 for (const key of JSON_MESSAGE_KEYS) {
-  for (const [locale, messages] of [
-    ['en', en],
-    ['zh', zh],
-  ] as const) {
-    try {
-      JSON.parse(messages[key] ?? '');
-    } catch {
-      throw new Error(`${locale}.${key} is not valid JSON`);
-    }
+  try {
+    JSON.parse(en[key] ?? '');
+  } catch {
+    throw new Error(`en.${key} is not valid JSON`);
   }
 }
 
-if (missingInZh.length || missingInEn.length || emptyValues.length) {
-  console.error(
-    JSON.stringify({ missingInZh, missingInEn, emptyValues }, null, 2)
-  );
+if (emptyValues.length) {
+  console.error(JSON.stringify({ emptyValues }, null, 2));
   process.exit(1);
 }
 

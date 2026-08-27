@@ -27,7 +27,6 @@ const protectedPages = [
 
 const smokeMatrix: Array<{ locale: LocaleMode; theme: ThemeMode }> = [
   { locale: 'en', theme: 'light' },
-  { locale: 'zh', theme: 'light' },
 ];
 
 test.describe('protected page smoke coverage', () => {

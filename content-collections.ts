@@ -2,14 +2,14 @@ import { defineCollection, defineConfig } from '@content-collections/core';
 import { z } from 'zod';
 
 function getLocaleSlug(path: string) {
-  const localeMatch = path.match(/^(?<slug>.+)\.(?<locale>en|zh)$/);
+  const localeMatch = path.match(/^(?<slug>.+)\.en$/);
   if (localeMatch?.groups) {
     return {
-      locale: localeMatch.groups.locale,
+      locale: 'en' as const,
       slug: localeMatch.groups.slug,
     };
   }
-  return { locale: 'en', slug: path };
+  return { locale: 'en' as const, slug: path };
 }
 
 const blog = defineCollection({
