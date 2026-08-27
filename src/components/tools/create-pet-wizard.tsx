@@ -716,10 +716,11 @@ export function CreatePetWizard() {
       })
     );
     assertActionSuccess(result, t('profile.createError'));
+    const petId = result.data.data.petId;
     clearDraft();
     await navigate({
       to: '/dashboard/pets/$petId',
-      params: { petId: result.petId },
+      params: { petId },
       search: { step: 'final' },
     });
   }, [breed, draftId, navigate, petName, readyPhotos, sex, species, t]);

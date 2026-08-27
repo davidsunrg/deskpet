@@ -2,6 +2,9 @@ export const WIZARD_STEPS = ['photos', 'basics', 'details', 'final'] as const;
 
 export type WizardStep = (typeof WIZARD_STEPS)[number];
 
+/** Default step when opening a saved pet detail page. */
+export const DEFAULT_PET_DETAIL_STEP: WizardStep = 'final';
+
 export type WizardStepUnlockState = {
   hasReferenceSources: boolean;
   isBasicsComplete: boolean;

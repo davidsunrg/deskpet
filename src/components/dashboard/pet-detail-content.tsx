@@ -23,11 +23,12 @@ import {
 } from '@/utils/pet-catalog';
 import { PetCreationStatus } from '@/utils/pets/pet-creation-status';
 import {
+  DEFAULT_PET_DETAIL_STEP,
   WIZARD_STEPS,
   type WizardStep,
 } from '@/utils/pets/pet-maker-wizard-steps';
 import { CheckCircle2Icon, ImageIcon, PawPrintIcon } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export type UserPetDetail = {
@@ -56,11 +57,15 @@ function getSexLabel(sex: string | null): string | null {
 
 export function PetDetailContent({
   pet,
-  initialStep = 'photos',
+  initialStep = DEFAULT_PET_DETAIL_STEP,
 }: PetDetailContentProps) {
   const t = useTranslations('CreatePetWizard');
   const [step, setStep] = useState<WizardStep>(initialStep);
   const [checkoutBusy, setCheckoutBusy] = useState(false);
+
+  useEffect(() => {
+    setStep(initialStep);
+  }, [initialStep, pet.id]);
 
   const avatarUrl = pet.avatar ? getFileAccessUrl(pet.avatar) : null;
   const sexLabel = getSexLabel(pet.sex);
