@@ -121,9 +121,7 @@ export function EmailOtpForm({
             name="otp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm font-bold text-deskpet-ink">
-                  {m.auth_otp_code()}
-                </FormLabel>
+                <FormLabel className="sr-only">{m.auth_otp_code()}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -150,10 +148,10 @@ export function EmailOtpForm({
           </Button>
         </form>
       </Form>
-      <div className="flex flex-col gap-2 text-center text-sm font-bold">
+      <div className="flex flex-col gap-2 text-center text-sm">
         <button
           type="button"
-          className="text-deskpet-muted hover:text-deskpet-ink hover:underline"
+          className="text-muted-foreground underline-offset-4 hover:underline"
           onClick={() => void sendOtp()}
           disabled={isPending}
         >
@@ -162,7 +160,7 @@ export function EmailOtpForm({
         {onBack ? (
           <button
             type="button"
-            className="text-deskpet-muted hover:text-deskpet-ink hover:underline"
+            className="text-muted-foreground underline-offset-4 hover:underline"
             onClick={onBack}
             disabled={isPending}
           >

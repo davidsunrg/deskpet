@@ -90,9 +90,14 @@
 }
 
 @theme inline {
-  --font-brand: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-brand);
-  --font-custom: var(--font-brand);
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-noto-sans-mono: "Noto Sans Mono", ui-monospace, monospace;
+  --font-bricolage-grotesque:
+    "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-noto-sans-mono);
+  --font-brand: var(--font-inter);
+  --font-custom: var(--font-inter);
   --border-width: 1px;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -147,20 +152,59 @@
 
 @layer base {
   /*
-   * Bricolage Grotesque is loaded with `font-display: optional`:
-   *   - Browser uses the fallback system font immediately (no blocking).
-   *   - Webfont is downloaded in the background with LOW priority.
-   *   - If it arrives within the extremely short block period (~100 ms)
-   *     it is used; otherwise the browser NEVER swaps, eliminating CLS
-   *     from font changes on the initial page load.
-   *   - Subsequent visits read the font from cache, so users do see the
-   *     brand font almost every time after the first load.
-   *
-   * WOFF2 files are self-hosted from /public/fonts/ (copied from
-   * node_modules/@fontsource/bricolage-grotesque/files). Only weights
-   * actually used on-site are shipped. Weight 500 is intentionally omitted
-   * — browsers synthesize it from 400 via `font-synthesis`.
+   * Inter + Noto Sans Mono match deskpet-next marketing chrome.
+   * Bricolage remains available via --font-bricolage-grotesque if needed later.
+   * `font-display: optional` avoids CLS on first paint.
    */
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-display: optional;
+    src: url("/fonts/inter-400.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-display: optional;
+    src: url("/fonts/inter-500.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-display: optional;
+    src: url("/fonts/inter-600.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-display: optional;
+    src: url("/fonts/inter-700.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 800;
+    font-display: optional;
+    src: url("/fonts/inter-800.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 900;
+    font-display: optional;
+    src: url("/fonts/inter-900.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Noto Sans Mono";
+    font-style: normal;
+    font-weight: 400;
+    font-display: optional;
+    src: url("/fonts/noto-mono-400.woff2") format("woff2");
+  }
   @font-face {
     font-family: "Bricolage Grotesque";
     font-style: normal;
@@ -182,18 +226,23 @@
     font-display: optional;
     src: url("/fonts/bricolage-700.woff2") format("woff2");
   }
+  @font-face {
+    font-family: "Bricolage Grotesque";
+    font-style: normal;
+    font-weight: 800;
+    font-display: optional;
+    src: url("/fonts/bricolage-800.woff2") format("woff2");
+  }
 
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply antialiased bg-background text-foreground;
-    font-family: var(--font-brand);
+    @apply font-sans antialiased bg-background text-foreground;
     font-weight: 400;
   }
   html {
-    @apply scroll-smooth;
-    font-family: var(--font-brand);
+    @apply scroll-smooth font-sans;
     color-scheme: light;
   }
 }

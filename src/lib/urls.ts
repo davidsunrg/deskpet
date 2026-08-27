@@ -136,3 +136,15 @@ export function isLinkActive(
     pathname === '/' ? '/' : pathname.replace(/\/$/, '') || '/';
   return normalizedPath === normalizedHref;
 }
+
+/**
+ * Locale-aware active check used by marketing chrome (matches deskpet-next).
+ */
+export function isLocalePathActive(
+  href: string | undefined,
+  pathname: string
+): boolean {
+  if (!href || href.includes('#')) return false;
+  if (href === '/') return pathname === '/';
+  return pathname.startsWith(href);
+}

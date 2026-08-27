@@ -2,7 +2,7 @@ import { m } from '@/locale/paraglide/messages';
 import { useNavbarLinks } from '@/config/navbar-config';
 import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
 import { getCanonicalPathname } from '@/lib/locale';
-import { isLinkActive } from '@/lib/urls';
+import { isLocalePathActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,7 +20,12 @@ import {
 import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
 import { MarketingUserButton } from '@/components/auth/marketing-user-button';
 import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
-import { IconChevronRight, IconMenu2, IconX } from '@tabler/icons-react';
+import {
+  IconArrowUpRight,
+  IconChevronRight,
+  IconMenu2,
+  IconX,
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { websiteConfig } from '@/config/website';
 
@@ -33,29 +38,38 @@ export function NavbarMobile({
   identity,
   ...props
 }: NavbarMobileProps) {
-  const pathname = getCanonicalPathname(useLocalePathname());
+  const localePathname = getCanonicalPathname(useLocalePathname());
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const menuLinks = useNavbarLinks();
   const showAuth =
     websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
   const signedIn = !!identity.user;
 
   useEffect(() => {
+    setMounted(true);
     setOpen(false);
-  }, [pathname]);
+  }, [localePathname]);
 
   return (
     <>
       <div
-        className={cn('flex h-14 items-center justify-between', className)}
+        className={cn(
+          'flex h-14 items-center justify-between gap-3',
+          className
+        )}
         {...props}
       >
-        <LocaleLink href="/" className="flex min-w-0 items-center gap-2.5">
+        <LocaleLink
+          href="/"
+          aria-label={m.common_home()}
+          className="flex min-w-0 items-center gap-2"
+        >
           <Logo className="size-8 rounded-lg" />
-          <BrandName className="text-lg" />
+          <BrandName className="whitespace-nowrap text-xl" />
         </LocaleLink>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {showAuth ? (
             signedIn ? (
               <MarketingUserButton identity={identity} />
@@ -70,7 +84,7 @@ export function NavbarMobile({
             aria-expanded={open}
             aria-label={m.common_toggle_menu()}
             onClick={() => setOpen((value) => !value)}
-            className="size-9 rounded-lg border border-deskpet-ink/15 text-deskpet-ink"
+            className="size-8 rounded-md border"
           >
             {open ? (
               <IconX className="size-4" />
@@ -81,35 +95,45 @@ export function NavbarMobile({
         </div>
       </div>
 
-      {open ? (
+      {mounted && open ? (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={m.common_mobile_navigation()}
-          className="fixed inset-0 top-14.25 z-50 flex flex-col overflow-y-auto bg-deskpet-paper animate-in fade-in-0 duration-200 lg:hidden"
+          className="fixed inset-0 top-14.25 z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200 lg:hidden"
         >
-          <div className="flex flex-1 flex-col gap-2 p-4">
+          <div className="flex flex-1 flex-col items-start gap-4 p-4">
             <ul className="w-full space-y-1">
               {menuLinks?.map((item) => {
                 const active = item.href
-                  ? isLinkActive(item.href, pathname)
-                  : item.items?.some((sub) => isLinkActive(sub.href, pathname));
+                  ? isLocalePathActive(item.href, localePathname)
+                  : item.items?.some((sub) =>
+                      isLocalePathActive(sub.href, localePathname)
+                    );
+
                 return (
-                  <li key={item.title}>
+                  <li key={item.title} className="py-1">
                     {item.items ? (
                       <Collapsible>
                         <CollapsibleTrigger
-                          className={cn(
-                            mobileNavLinkClass,
-                            'w-full justify-between',
-                            active && mobileNavLinkActiveClass
-                          )}
+                          render={
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              className={cn(
+                                'w-full justify-between bg-transparent text-left text-[15px] font-bold',
+                                'text-deskpet-muted hover:bg-deskpet-mint-soft hover:text-deskpet-ink',
+                                active && mobileNavLinkActiveClass
+                              )}
+                            />
+                          }
+                          nativeButton={false}
                         >
                           {item.title}
                           <IconChevronRight className="size-4" />
                         </CollapsibleTrigger>
                         <CollapsibleContent className="pl-2">
-                          <ul className="mt-1 space-y-1">
+                          <ul className="mt-2 space-y-2">
                             {item.items.map((sub) => (
                               <li key={sub.title}>
                                 <LocaleLink
@@ -123,14 +147,19 @@ export function NavbarMobile({
                                   onClick={() => setOpen(false)}
                                   className={cn(
                                     mobileNavSubLinkClass,
-                                    isLinkActive(sub.href, pathname) &&
-                                      mobileNavLinkActiveClass
+                                    isLocalePathActive(
+                                      sub.href,
+                                      localePathname
+                                    ) && mobileNavLinkActiveClass
                                   )}
                                 >
                                   {sub.icon ? (
                                     <sub.icon className="size-4 shrink-0" />
                                   ) : null}
                                   {sub.title}
+                                  {sub.external ? (
+                                    <IconArrowUpRight className="size-4 shrink-0" />
+                                  ) : null}
                                 </LocaleLink>
                               </li>
                             ))}

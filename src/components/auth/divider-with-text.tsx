@@ -8,11 +8,9 @@ interface DividerWithTextProps {
 export function DividerWithText({ text, className }: DividerWithTextProps) {
   return (
     <div className={cn('relative flex items-center', className)}>
-      <div className="grow border-t border-deskpet-ink/15" />
-      <span className="mx-4 shrink text-sm font-bold text-deskpet-muted">
-        {text}
-      </span>
-      <div className="grow border-t border-deskpet-ink/15" />
+      <div className="grow border-t border-border" />
+      <span className="mx-4 shrink text-sm text-muted-foreground">{text}</span>
+      <div className="grow border-t border-border" />
     </div>
   );
 }

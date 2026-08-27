@@ -19,6 +19,8 @@
   ],
   "ignoreDependencies": [
     "@fontsource/bricolage-grotesque",
+    "@fontsource/inter",
+    "@fontsource/noto-sans-mono",
     "@radix-ui/react-slot",
     "@tanstack/ai-react",
     "@react-email/preview-server",

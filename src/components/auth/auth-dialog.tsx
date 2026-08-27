@@ -40,8 +40,8 @@ export function AuthDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="gap-0 overflow-hidden border-0 bg-deskpet-paper p-6 pt-8 shadow-none ring-0 sm:max-w-[400px]">
-        <DialogHeader className="sr-only">
+      <DialogContent className="gap-0 p-6 pt-8 sm:max-w-[400px]">
+        <DialogHeader className="hidden">
           <DialogTitle>
             {view === 'login'
               ? m.auth_login_welcome_back()

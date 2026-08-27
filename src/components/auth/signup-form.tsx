@@ -102,8 +102,9 @@ export function SignupForm({
       <AuthCard
         headerLabel={m.auth_signup_create_account()}
         bottomButtonLabel={m.auth_signup_sign_in_hint()}
-        bottomButtonHref={bottomButtonHref}
+        bottomButtonHref={onSwitchToLogin ? undefined : bottomButtonHref}
         onBottomButtonClick={onSwitchToLogin}
+        showBrand={false}
         className={className}
       >
         <EmailOtpForm
@@ -120,76 +121,79 @@ export function SignupForm({
     <AuthCard
       headerLabel={m.auth_signup_create_account()}
       bottomButtonLabel={m.auth_signup_sign_in_hint()}
-      bottomButtonHref={bottomButtonHref}
+      bottomButtonHref={onSwitchToLogin ? undefined : bottomButtonHref}
       onBottomButtonClick={onSwitchToLogin}
+      showBrand={false}
       className={className}
     >
-      {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={authLabelClass(true)}>
-                      {m.auth_register_name()}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder={m.auth_register_placeholder_name()}
-                        name="name"
-                        className={authFieldClass}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+      <div className="space-y-4">
+        {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className={authLabelClass(true)}>
+                        {m.auth_register_name()}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          placeholder={m.auth_register_placeholder_name()}
+                          name="name"
+                          className={authFieldClass}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className={authLabelClass()}>
+                        {m.auth_register_email()}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          placeholder={m.auth_register_placeholder_email()}
+                          type="email"
+                          name="email"
+                          className={authFieldClass}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormError message={error} />
+              <Button
+                disabled={isPending}
+                type="submit"
+                className={authSubmitClass}
+              >
+                {isPending && (
+                  <IconLoader2 className="mr-2 size-4 animate-spin" />
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={authLabelClass()}>
-                      {m.auth_register_email()}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder={m.auth_register_placeholder_email()}
-                        type="email"
-                        name="email"
-                        className={authFieldClass}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormError message={error} />
-            <Button
-              disabled={isPending}
-              type="submit"
-              className={authSubmitClass}
-            >
-              {isPending && (
-                <IconLoader2 className="mr-2 size-4 animate-spin" />
-              )}
-              {m.auth_otp_continue()}
-            </Button>
-          </form>
-        </Form>
-      )}
-      <SocialLoginButton
-        callbackUrl={callbackUrl}
-        showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
-      />
+                {m.auth_otp_continue()}
+              </Button>
+            </form>
+          </Form>
+        )}
+        <SocialLoginButton
+          callbackUrl={callbackUrl}
+          showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
+        />
+      </div>
     </AuthCard>
   );
 }

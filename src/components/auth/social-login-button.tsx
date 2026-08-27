@@ -1,18 +1,17 @@
 import { m } from '@/locale/paraglide/messages';
 import { useState } from 'react';
-import { authOutlineButtonClass } from '@/components/auth/auth-form-styles';
-import { DividerWithText } from '@/components/auth/divider-with-text';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { websiteConfig } from '@/config/website';
 import { authClient } from '@/auth/client';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 import { getPathWithLocale } from '@/lib/urls';
 import { IconBrandGoogleFilled, IconLoader2 } from '@tabler/icons-react';
+
 interface SocialLoginButtonProps {
   callbackUrl?: string;
   showDivider?: boolean;
 }
+
 export function SocialLoginButton({
   callbackUrl: propCallbackUrl,
   showDivider = true,
@@ -45,19 +44,22 @@ export function SocialLoginButton({
     );
   };
   return (
-    <div className="w-full flex flex-col gap-4">
-      {showDivider && <DividerWithText text={m.auth_social_or()} />}
+    <div className="flex w-full flex-col gap-4">
+      {showDivider ? (
+        <div className="w-full border-t border-border" aria-hidden />
+      ) : null}
       <Button
         type="button"
+        size="lg"
+        className="w-full"
         variant="outline"
-        className={cn(authOutlineButtonClass)}
         onClick={() => onClick('google')}
         disabled={isLoading === 'google'}
       >
         {isLoading === 'google' ? (
           <IconLoader2 className="mr-2 size-4 animate-spin" />
         ) : (
-          <IconBrandGoogleFilled className="size-4 mr-2" />
+          <IconBrandGoogleFilled className="mr-2 size-4" />
         )}
         <span>{m.auth_social_sign_in_with_google()}</span>
       </Button>

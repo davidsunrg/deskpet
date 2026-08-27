@@ -20,7 +20,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { websiteConfig } from '@/config/website';
 import { authClient } from '@/auth/client';
-import { cn } from '@/lib/utils';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 import { getPathWithLocale } from '@/lib/urls';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -98,9 +97,10 @@ export function LoginForm({
       <AuthCard
         headerLabel={m.auth_login_welcome_back()}
         bottomButtonLabel={m.auth_login_sign_up_hint()}
-        bottomButtonHref={bottomButtonHref}
+        bottomButtonHref={onSwitchToSignup ? undefined : bottomButtonHref}
         onBottomButtonClick={onSwitchToSignup}
-        className={cn('', className)}
+        showBrand={false}
+        className={className}
       >
         <EmailOtpForm
           email={email}
@@ -116,53 +116,56 @@ export function LoginForm({
     <AuthCard
       headerLabel={m.auth_login_welcome_back()}
       bottomButtonLabel={m.auth_login_sign_up_hint()}
-      bottomButtonHref={bottomButtonHref}
+      bottomButtonHref={onSwitchToSignup ? undefined : bottomButtonHref}
       onBottomButtonClick={onSwitchToSignup}
-      className={cn('', className)}
+      showBrand={false}
+      className={className}
     >
-      {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={authLabelClass()}>
-                    {m.auth_login_email()}
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={isPending}
-                      placeholder={m.auth_login_placeholder_email()}
-                      type="email"
-                      name="email"
-                      className={authFieldClass}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormError message={error} />
-            <Button
-              disabled={isPending}
-              type="submit"
-              className={authSubmitClass}
-            >
-              {isPending && (
-                <IconLoader2 className="mr-2 size-4 animate-spin" />
-              )}
-              {m.auth_otp_continue()}
-            </Button>
-          </form>
-        </Form>
-      )}
-      <SocialLoginButton
-        callbackUrl={callbackUrl}
-        showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
-      />
+      <div className="space-y-4">
+        {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={authLabelClass()}>
+                      {m.auth_login_email()}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder={m.auth_login_placeholder_email()}
+                        type="email"
+                        name="email"
+                        className={authFieldClass}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormError message={error} />
+              <Button
+                disabled={isPending}
+                type="submit"
+                className={authSubmitClass}
+              >
+                {isPending && (
+                  <IconLoader2 className="mr-2 size-4 animate-spin" />
+                )}
+                {m.auth_otp_continue()}
+              </Button>
+            </form>
+          </Form>
+        )}
+        <SocialLoginButton
+          callbackUrl={callbackUrl}
+          showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
+        />
+      </div>
     </AuthCard>
   );
 }
