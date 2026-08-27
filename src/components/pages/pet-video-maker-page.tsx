@@ -1,5 +1,4 @@
-'use client';
-
+import { PetVideoMaker } from '@/components/tools/pet-video-maker';
 import { MarketingToolsShell } from '@/components/tools/marketing-tools-shell';
 import { useTranslations } from '@/lib/deskpet-i18n';
 
@@ -20,11 +19,7 @@ export function PetVideoMakerPage() {
         </p>
       </header>
 
-      <div className="mx-auto max-w-3xl rounded-[28px] border-[3px] border-deskpet-ink bg-[#fbf7ef] p-10 text-center shadow-[8px_8px_0_0_rgba(55,39,51,0.1)]">
-        <p className="m-0 text-base font-medium leading-relaxed text-deskpet-muted">
-          {t('comingSoon.description')}
-        </p>
-      </div>
+      <PetVideoMaker />
     </MarketingToolsShell>
   );
 }
