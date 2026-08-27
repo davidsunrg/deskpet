@@ -345,7 +345,6 @@ export function PetVideoDoubleBuffer({
           <video
             key={`slot-${index}`}
             ref={ref}
-            crossOrigin="anonymous"
             poster={showPoster && index === 0 ? poster : undefined}
             className={cn(
               className,
