@@ -26,9 +26,15 @@ const mobileLinkActiveClass = 'font-bold text-deskpet-ink bg-deskpet-mint-soft';
 const mobileSubLinkClass =
   'flex w-full items-center gap-4 rounded-md p-2 text-[15px] font-bold text-deskpet-muted transition-colors duration-150 hover:bg-deskpet-mint-soft hover:text-deskpet-ink';
 
-interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {
+  initialNavSignedIn?: boolean;
+}
 
-export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
+export function NavbarMobile({
+  className,
+  initialNavSignedIn = false,
+  ...props
+}: NavbarMobileProps) {
   const localePathname = useLocalePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -59,7 +65,7 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
         </LocaleLink>
 
         <div className="flex shrink-0 items-center gap-2">
-          <MarketingLoginButton />
+          <MarketingLoginButton initialIsSignedIn={initialNavSignedIn} />
           <Button
             type="button"
             variant="ghost"

@@ -19,6 +19,8 @@ import { ArrowUpRightIcon, ChevronDownIcon } from 'lucide-react';
 interface NavBarProps {
   /** Kept for call-site compatibility; header always uses the HTML sticky style. */
   scroll?: boolean;
+  /** SSR session hint so nav auth CTA matches before client hydration. */
+  initialNavSignedIn?: boolean;
 }
 
 /** Matches references/html/pet-detail.html .nav-links a hover/active underline. */
@@ -34,7 +36,7 @@ const navLinkClass = cn(
 
 const navLinkActiveClass = 'after:scale-x-100';
 
-export function Navbar(_props: NavBarProps = {}) {
+export function Navbar({ initialNavSignedIn = false }: NavBarProps = {}) {
   const menuLinks = useNavbarLinks();
   const localePathname = useLocalePathname();
   return (
@@ -163,12 +165,15 @@ export function Navbar(_props: NavBarProps = {}) {
             </ul>
 
             <div className="flex items-center gap-4 shrink-0">
-              <MarketingLoginButton />
+              <MarketingLoginButton initialIsSignedIn={initialNavSignedIn} />
             </div>
           </nav>
 
           {/* mobile navbar */}
-          <NavbarMobile className="lg:hidden" />
+          <NavbarMobile
+            className="lg:hidden"
+            initialNavSignedIn={initialNavSignedIn}
+          />
         </Container>
       </div>
     </header>

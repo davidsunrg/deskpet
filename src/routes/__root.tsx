@@ -1,3 +1,4 @@
+import { getMarketingNavbarIdentityFn } from '@/api/marketing-identity';
 import type { QueryClient } from '@tanstack/react-query';
 import {
   createRootRouteWithContext,
@@ -33,6 +34,12 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
+  loader: async () => {
+    const identity = await getMarketingNavbarIdentityFn();
+    return {
+      marketingNavSignedIn: identity.user !== null,
+    };
+  },
   head: () => {
     const ogImage = getOgImage();
     const twitterSite = getBaseUrl();
@@ -125,6 +132,7 @@ export const Route = createRootRouteWithContext<{
  * Only marketing pages get Navbar + Footer; auth/dashboard/404 pages don't.
  */
 function RootComponent() {
+  const { marketingNavSignedIn } = Route.useLoaderData();
   const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
   const canonicalPathname = getCanonicalPathname(pathname);
   const matches = useRouterState({ select: (s) => s.matches }) ?? [];
@@ -151,7 +159,7 @@ function RootComponent() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      <Navbar initialNavSignedIn={marketingNavSignedIn} />
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>

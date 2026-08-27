@@ -12,16 +12,21 @@ import { useRouter } from '@tanstack/react-router';
 interface MarketingLoginButtonProps {
   className?: string;
   callbackUrl?: string;
+  /** SSR hint from root loader; used until client session resolves. */
+  initialIsSignedIn?: boolean;
 }
 
 export function MarketingLoginButton({
   className,
   callbackUrl,
+  initialIsSignedIn = false,
 }: MarketingLoginButtonProps) {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const isSignedIn = isRealSignedInUser(session?.user);
+  const showDashboard = isPending ? initialIsSignedIn : isSignedIn;
   const loginLabel = m.auth_common_login();
+  const dashboardLabel = m.dashboard_title();
 
   const loginButtonClass = cn(
     buttonVariants({
@@ -33,14 +38,14 @@ export function MarketingLoginButton({
     className
   );
 
-  if (isSignedIn) {
+  if (showDashboard) {
     return (
       <button
         type="button"
         className={loginButtonClass}
         onClick={() => router.navigate({ to: Routes.Dashboard })}
       >
-        {loginLabel}
+        {dashboardLabel}
       </button>
     );
   }
