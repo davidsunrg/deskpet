@@ -1,10 +1,11 @@
-export const WIZARD_STEPS = ['photos', 'basics', 'details'] as const;
+export const WIZARD_STEPS = ['photos', 'basics', 'details', 'final'] as const;
 
 export type WizardStep = (typeof WIZARD_STEPS)[number];
 
 export type WizardStepUnlockState = {
   hasReferenceSources: boolean;
   isBasicsComplete: boolean;
+  isDetailsComplete?: boolean;
 };
 
 export function isWizardStep(value: unknown): value is WizardStep {
@@ -29,6 +30,12 @@ export function isWizardStepUnlocked(
       return unlock.hasReferenceSources;
     case 'details':
       return unlock.hasReferenceSources && unlock.isBasicsComplete;
+    case 'final':
+      return (
+        unlock.hasReferenceSources &&
+        unlock.isBasicsComplete &&
+        unlock.isDetailsComplete === true
+      );
     default:
       return false;
   }
@@ -38,6 +45,13 @@ export function isWizardStepUnlocked(
 export function resolveHighestUnlockedStep(
   unlock: WizardStepUnlockState
 ): WizardStep {
+  if (
+    unlock.hasReferenceSources &&
+    unlock.isBasicsComplete &&
+    unlock.isDetailsComplete
+  ) {
+    return 'final';
+  }
   if (unlock.hasReferenceSources && unlock.isBasicsComplete) {
     return 'details';
   }
@@ -54,6 +68,9 @@ export function clampStepToUnlocked(
   const candidate = step && isWizardStep(step) ? step : undefined;
   if (candidate && isWizardStepUnlocked(candidate, unlock)) {
     return candidate;
+  }
+  if (candidate === 'final' && isWizardStepUnlocked('details', unlock)) {
+    return 'details';
   }
   if (candidate === 'details' && isWizardStepUnlocked('basics', unlock)) {
     return 'basics';

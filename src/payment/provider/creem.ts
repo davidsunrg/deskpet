@@ -2,6 +2,7 @@ import { getDb } from '@/db';
 import { payment } from '@/db/app.schema';
 import { user } from '@/db/auth.schema';
 import { sendPaymentNotification } from '@/notification';
+import { markPetPaidFromCheckoutMetadata } from '@/server/pets/update-pet-status';
 import { Creem } from 'creem';
 import type {
   CheckoutEntity,
@@ -812,6 +813,10 @@ export class CreemProvider implements PaymentProvider {
           'Customer',
         amount,
       });
+
+      await markPetPaidFromCheckoutMetadata(
+        object.metadata as Record<string, string | undefined>
+      );
 
       console.log('<< Created Creem one-time payment record success');
     } catch (error) {

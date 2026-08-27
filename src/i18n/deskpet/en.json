@@ -990,7 +990,8 @@
     "steps": {
       "photos": "Photos",
       "basics": "Basics",
-      "details": "Details"
+      "details": "Details",
+      "final": "Final"
     },
     "seoSteps": {
       "eyebrow": "How it works",
@@ -1120,7 +1121,13 @@
     },
     "details": {
       "title": "Pet Details",
-      "description": "Review your pet and confirm species and breed. Create Pet saves this companion."
+      "description": "Review your pet and confirm species and breed before the final step."
+    },
+    "final": {
+      "title": "Unlock your pet",
+      "description": "Choose the custom plan to finish your desktop companion and unlock full creation.",
+      "paidTitle": "Payment complete",
+      "paidDescription": "Your custom pet plan is active. We will continue building your companion from here."
     },
     "profile": {
       "updateAvatar": "Update Avatar",

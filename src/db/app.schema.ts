@@ -12,6 +12,10 @@ import type {
   PaymentType,
   PlanInterval,
 } from '@/payment/types';
+import {
+  DEFAULT_PET_CREATION_STATUS,
+  type PetCreationStatus,
+} from '@/utils/pets/pet-creation-status';
 
 /**
  * Payment: subscription and one-time
@@ -72,10 +76,17 @@ export const pet = sqliteTable(
     photoKeys: text('photo_keys', { mode: 'json' })
       .$type<string[]>()
       .notNull(),
+    status: text('status')
+      .notNull()
+      .default(DEFAULT_PET_CREATION_STATUS)
+      .$type<PetCreationStatus>(),
     createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
     updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
   },
-  (table) => [index('pet_user_id_idx').on(table.userId)]
+  (table) => [
+    index('pet_user_id_idx').on(table.userId),
+    index('pet_user_status_idx').on(table.userId, table.status),
+  ]
 );
 
 export const petRelations = relations(pet, ({ one }) => ({

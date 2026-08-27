@@ -5,21 +5,30 @@ import {
   DashboardCardHeader,
 } from '@/components/dashboard/dashboard-card';
 import { PetAvatar } from '@/components/pets/pet-avatar';
+import {
+  PricingTable,
+  type PaidActionPlanSelection,
+} from '@/components/pricing/pricing-table';
+import { markPetCheckoutStartedFn } from '@/api/pet-maker-wizard';
+import { createCheckoutSession } from '@/api/payment';
 import { formatDate, formatDateTime } from '@/lib/formatter';
 import { useTranslations } from '@/lib/deskpet-i18n';
-import { getFileAccessUrl } from '@/lib/urls';
+import { dashboardPetDetailRoute, Routes } from '@/lib/routes';
+import { getCanonicalUrl, getFileAccessUrl } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import {
   getPetBreedLabel,
   getPetSpeciesLabel,
   PetSex,
 } from '@/utils/pet-catalog';
+import { PetCreationStatus } from '@/utils/pets/pet-creation-status';
 import {
   WIZARD_STEPS,
   type WizardStep,
 } from '@/utils/pets/pet-maker-wizard-steps';
-import { ImageIcon, PawPrintIcon } from 'lucide-react';
-import { useState } from 'react';
+import { CheckCircle2Icon, ImageIcon, PawPrintIcon } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 
 export type UserPetDetail = {
   id: string;
@@ -29,12 +38,14 @@ export type UserPetDetail = {
   sex: string | null;
   avatar: string | null;
   photoKeys: string[];
+  status: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
 type PetDetailContentProps = {
   pet: UserPetDetail;
+  initialStep?: WizardStep;
 };
 
 function getSexLabel(sex: string | null): string | null {
@@ -43,13 +54,59 @@ function getSexLabel(sex: string | null): string | null {
   return null;
 }
 
-export function PetDetailContent({ pet }: PetDetailContentProps) {
+export function PetDetailContent({
+  pet,
+  initialStep = 'photos',
+}: PetDetailContentProps) {
   const t = useTranslations('CreatePetWizard');
-  const [step, setStep] = useState<WizardStep>('photos');
+  const [step, setStep] = useState<WizardStep>(initialStep);
+  const [checkoutBusy, setCheckoutBusy] = useState(false);
 
   const avatarUrl = pet.avatar ? getFileAccessUrl(pet.avatar) : null;
   const sexLabel = getSexLabel(pet.sex);
   const photoUrls = pet.photoKeys.map((key) => getFileAccessUrl(key));
+  const isPaid = pet.status === PetCreationStatus.Paid;
+
+  const handlePaidPlanAction = useCallback(
+    async (selection: PaidActionPlanSelection) => {
+      try {
+        setCheckoutBusy(true);
+        await markPetCheckoutStartedFn({ data: { petId: pet.id } });
+
+        const finalReturnPath = `${dashboardPetDetailRoute(pet.id)}?step=final`;
+        const successUrl = getCanonicalUrl(
+          `${Routes.Payment}?session_id={CHECKOUT_SESSION_ID}&callback=${encodeURIComponent(finalReturnPath)}`
+        );
+        const cancelUrl = getCanonicalUrl(finalReturnPath);
+
+        const result = await createCheckoutSession({
+          data: {
+            planId: selection.checkoutPlanId,
+            priceId: selection.priceId,
+            successUrl,
+            cancelUrl,
+            metadata: {
+              petId: pet.id,
+              source: 'pet_final_step',
+            },
+          },
+        });
+
+        if (result?.url) {
+          window.location.href = result.url;
+          return;
+        }
+
+        toast.error('Checkout failed. Please try again.');
+      } catch (error) {
+        console.error('Pet checkout error:', error);
+        toast.error('Checkout failed. Please try again.');
+      } finally {
+        setCheckoutBusy(false);
+      }
+    },
+    [pet.id]
+  );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
@@ -208,6 +265,36 @@ export function PetDetailContent({ pet }: PetDetailContentProps) {
                 </div>
               </dl>
             </div>
+          </section>
+        ) : null}
+
+        {step === 'final' ? (
+          <section className={cn(dashboardCardClass, 'p-5 sm:p-6')}>
+            <DashboardCardHeader
+              icon={<CheckCircle2Icon className="size-[18px]" />}
+              accent="bg-deskpet-mint-soft"
+              title={t('final.title')}
+              description={t('final.description')}
+            />
+            {isPaid ? (
+              <div className="mt-2 rounded-2xl border-2 border-deskpet-mint bg-deskpet-mint-soft/40 p-5">
+                <p className="m-0 text-lg font-black text-deskpet-ink">
+                  {t('final.paidTitle')}
+                </p>
+                <p className="mt-2 m-0 text-sm leading-6 text-deskpet-muted">
+                  {t('final.paidDescription')}
+                </p>
+              </div>
+            ) : (
+              <PricingTable
+                pageChrome={false}
+                planIds={['customizeMyOwn']}
+                metadata={{ petId: pet.id, source: 'pet_final_step' }}
+                onPaidPlanAction={handlePaidPlanAction}
+                paidActionBusy={checkoutBusy}
+                className="mt-2"
+              />
+            )}
           </section>
         ) : null}
       </div>

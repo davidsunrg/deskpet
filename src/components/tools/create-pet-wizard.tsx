@@ -95,6 +95,7 @@ import {
   PencilIcon,
   PlusIcon,
   Trash2Icon,
+  CheckCircle2Icon,
 } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -174,10 +175,17 @@ function isBasicsCompleteFromDraft(draft: {
   );
 }
 
+function isDetailsCompleteFromDraft(draft: PetMakerLocalDraft): boolean {
+  return (
+    !!draft.species && (!speciesUsesBreeds(draft.species) || !!draft.breed)
+  );
+}
+
 function stepUnlockFromDraft(draft: PetMakerLocalDraft) {
   return {
     hasReferenceSources: draft.photos.length > 0,
     isBasicsComplete: isBasicsCompleteFromDraft(draft),
+    isDetailsComplete: isDetailsCompleteFromDraft(draft),
   };
 }
 
@@ -288,6 +296,7 @@ export function CreatePetWizard() {
     isWizardStepUnlocked(target, {
       hasReferenceSources,
       isBasicsComplete,
+      isDetailsComplete,
     });
 
   const goToStep = useCallback(
@@ -296,6 +305,7 @@ export function CreatePetWizard() {
         !isWizardStepUnlocked(target, {
           hasReferenceSources,
           isBasicsComplete,
+          isDetailsComplete,
         })
       ) {
         return;
@@ -303,18 +313,19 @@ export function CreatePetWizard() {
       if (target === step) return;
       setStep(target);
     },
-    [hasReferenceSources, isBasicsComplete, step]
+    [hasReferenceSources, isBasicsComplete, isDetailsComplete, step]
   );
 
   useEffect(() => {
     const clamped = clampStepToUnlocked(step, {
       hasReferenceSources,
       isBasicsComplete,
+      isDetailsComplete,
     });
     if (clamped !== step) {
       setStep(clamped);
     }
-  }, [hasReferenceSources, isBasicsComplete, step]);
+  }, [hasReferenceSources, isBasicsComplete, isDetailsComplete, step]);
 
   const applyRecognitionPrefill = useCallback(
     (data: CreatorPetRecognitionData | null) => {
@@ -706,7 +717,11 @@ export function CreatePetWizard() {
     );
     assertActionSuccess(result, t('profile.createError'));
     clearDraft();
-    await navigate({ to: Routes.DashboardPets });
+    await navigate({
+      to: '/dashboard/pets/$petId',
+      params: { petId: result.petId },
+      search: { step: 'final' },
+    });
   }, [breed, draftId, navigate, petName, readyPhotos, sex, species, t]);
 
   /** Verified users create the pet; guests open auth and resume from saved draft. */
@@ -813,7 +828,9 @@ export function CreatePetWizard() {
       ? hasReferenceSources && !uploadingPhotos
       : step === 'basics'
         ? isBasicsComplete
-        : isDetailsComplete;
+        : step === 'details' || step === 'final'
+          ? isDetailsComplete
+          : false;
 
   const startBackgroundRecognition = (_photoList: WizardPhoto[]) => {
     setRecognitionStatus('skipped');
@@ -857,7 +874,6 @@ export function CreatePetWizard() {
     }
 
     if (step === 'details') {
-      if (creatingPet) return;
       if (!species) {
         toast.error(t('profile.speciesRequired'));
         return;
@@ -867,6 +883,12 @@ export function CreatePetWizard() {
         return;
       }
 
+      goToStep('final');
+      return;
+    }
+
+    if (step === 'final') {
+      if (creatingPet) return;
       void executeCreatePetAndContinue();
     }
   };
@@ -906,7 +928,7 @@ export function CreatePetWizard() {
         </p>
       </header>
 
-      <ol className="grid select-none gap-2 rounded-[22px] border-2 border-deskpet-ink/12 bg-white p-2 sm:grid-cols-3">
+      <ol className="grid select-none gap-2 rounded-[22px] border-2 border-deskpet-ink/12 bg-white p-2 sm:grid-cols-2 lg:grid-cols-4">
         {WIZARD_STEPS.map((item, index) => {
           const active = item === step;
           const unlocked = isStepUnlocked(item);
@@ -1090,6 +1112,30 @@ export function CreatePetWizard() {
         </section>
       ) : null}
 
+      {step === 'final' ? (
+        <section className={cn(dashboardCardClass, 'p-5 sm:p-6')}>
+          <DashboardCardHeader
+            icon={<CheckCircle2Icon className="size-[18px]" />}
+            accent="bg-deskpet-mint-soft"
+            title={t('final.title')}
+            description={t('final.description')}
+          />
+          <div className="grid gap-6">
+            <DetailsBasicsSummary
+              displayAvatarUrl={displayAvatarUrl}
+              petName={petName.trim() || t('profile.unnamedPet')}
+              sex={sex}
+            />
+            <PetInfoFields
+              species={species}
+              breed={breed}
+              onSpeciesChange={handleSpeciesChange}
+              onBreedChange={(value) => setBreed(value as PetBreedId)}
+            />
+          </div>
+        </section>
+      ) : null}
+
       <footer className="flex flex-wrap justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           <Button
@@ -1119,9 +1165,11 @@ export function CreatePetWizard() {
             ? t('profile.creating')
             : waitingForRecognition
               ? t('basics.waitingForRecognition')
-              : step === 'details'
+              : step === 'final'
                 ? t('nav.createPet')
-                : t('nav.continue')}
+                : step === 'details'
+                  ? t('nav.continue')
+                  : t('nav.continue')}
           {creatingPet || waitingForRecognition ? null : (
             <ArrowRightIcon className="size-4" />
           )}

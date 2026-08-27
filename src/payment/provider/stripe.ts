@@ -8,6 +8,7 @@ import {
 } from '@/payment/constants';
 import { findPlanByPlanId, findPriceInPlan } from '@/lib/price-plan';
 import { sendPaymentNotification } from '@/notification';
+import { markPetPaidFromCheckoutMetadata } from '@/server/pets/update-pet-status';
 import { and, desc, eq } from 'drizzle-orm';
 import { Stripe } from 'stripe';
 import type {
@@ -755,6 +756,10 @@ export class StripeProvider implements PaymentProvider {
       userName: (session.metadata?.userName as string) ?? 'Customer',
       amount,
     });
+
+    await markPetPaidFromCheckoutMetadata(
+      session.metadata as Record<string, string | undefined>
+    );
 
     console.log('<< Process lifetime plan purchase success');
   }

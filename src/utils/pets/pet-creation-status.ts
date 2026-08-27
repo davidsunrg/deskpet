@@ -2,6 +2,8 @@
 export const PET_CREATION_STATUS_VALUES = [
   'photos_uploaded',
   'profile_created',
+  'checkout_started',
+  'paid',
 ] as const;
 
 export type PetCreationStatus = (typeof PET_CREATION_STATUS_VALUES)[number];
@@ -9,7 +11,11 @@ export type PetCreationStatus = (typeof PET_CREATION_STATUS_VALUES)[number];
 export const PetCreationStatus = {
   PhotosUploaded: 'photos_uploaded',
   ProfileCreated: 'profile_created',
+  CheckoutStarted: 'checkout_started',
+  Paid: 'paid',
 } as const satisfies Record<string, PetCreationStatus>;
+
+export const DEFAULT_PET_CREATION_STATUS = PetCreationStatus.ProfileCreated;
 
 /** In-progress creator pets (maker draft only; not yet profile-complete). */
 export const PET_CREATOR_IN_PROGRESS_STATUSES = [

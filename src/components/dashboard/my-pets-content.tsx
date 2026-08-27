@@ -19,6 +19,7 @@ export type UserPetListItem = {
   breed: string;
   sex: string | null;
   avatar: string | null;
+  status: string;
   createdAt: Date;
 };
 

@@ -12,6 +12,7 @@ import { getDb } from '@/db';
 import { payment } from '@/db/app.schema';
 import { findPlanByPlanId, findPriceInPlan } from '@/lib/price-plan';
 import { sendPaymentNotification } from '@/notification';
+import { markPetPaidFromCheckoutMetadata } from '@/server/pets/update-pet-status';
 import type {
   CheckoutResult,
   CreateCheckoutParams,
@@ -301,6 +302,7 @@ export class WaffoProvider implements PaymentProvider {
         userName: data.orderMetadata?.userName ?? data.buyerEmail,
         amount: Number(data.amount),
       });
+      await markPetPaidFromCheckoutMetadata(data.orderMetadata);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         console.log('Waffo one-time payment already exists, skipping');

@@ -7,6 +7,7 @@ import {
   fileIdFromKey,
   isPetMakerStagingKeyForDraft,
 } from '@/utils/pets/pet-maker-storage-keys';
+import { PetCreationStatus } from '@/utils/pets/pet-creation-status';
 import { eq } from 'drizzle-orm';
 
 export type CreatePetFromDraftInput = {
@@ -86,6 +87,7 @@ export async function createPetFromDraft(
     sex: input.sex,
     avatar: finalAvatarKey,
     photoKeys: finalPhotoKeys,
+    status: PetCreationStatus.ProfileCreated,
     createdAt: now,
     updatedAt: now,
   });

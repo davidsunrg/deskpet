@@ -2,6 +2,7 @@ import { getBaseUrl } from '@/lib/urls';
 import { deleteObject, getPresignedUploadUrl } from '@/lib/storage/r2-s3';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
 import { createPetFromDraft } from '@/server/pets/create-pet-from-draft';
+import { updatePetStatusForUser } from '@/server/pets/update-pet-status';
 import { listHeroPets } from '@/pets/catalog';
 import { HERO_PET_PREVIEW_COUNT } from '@/utils/showcase-pets';
 import {
@@ -10,6 +11,7 @@ import {
   isUuid,
 } from '@/utils/pets/pet-maker-storage-keys';
 import { PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
+import { PetCreationStatus } from '@/utils/pets/pet-creation-status';
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
 
@@ -122,6 +124,7 @@ export const listUserPetsFn = createServerFn({ method: 'GET' })
         breed: pet.breed,
         sex: pet.sex,
         avatar: pet.avatar,
+        status: pet.status,
         createdAt: pet.createdAt,
       })
       .from(pet)
@@ -152,6 +155,7 @@ export const getUserPetFn = createServerFn({ method: 'GET' })
         sex: pet.sex,
         avatar: pet.avatar,
         photoKeys: pet.photoKeys,
+        status: pet.status,
         createdAt: pet.createdAt,
         updatedAt: pet.updatedAt,
       })
@@ -159,4 +163,23 @@ export const getUserPetFn = createServerFn({ method: 'GET' })
       .where(and(eq(pet.id, data.petId), eq(pet.userId, context.userId)))
       .limit(1);
     return { pet: rows[0] ?? null };
+  });
+
+const markPetCheckoutStartedSchema = z.object({
+  petId: z.string().refine(isUuid, 'Invalid pet id'),
+});
+
+export const markPetCheckoutStartedFn = createServerFn({ method: 'POST' })
+  .validator(markPetCheckoutStartedSchema)
+  .middleware([authApiMiddleware])
+  .handler(async ({ data, context }) => {
+    const updated = await updatePetStatusForUser(
+      data.petId,
+      context.userId,
+      PetCreationStatus.CheckoutStarted
+    );
+    if (!updated) {
+      throw new Error('Pet not found');
+    }
+    return { ok: true as const };
   });
