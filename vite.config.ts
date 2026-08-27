@@ -45,6 +45,13 @@ const creemE2EConfig =
 const config = defineConfig({
   server: {
     allowedHosts: ['.trycloudflare.com', '.tanstarter.dev'],
+    proxy: {
+      '/pet-cdn': {
+        target: 'https://pub-60af85e07778489ab23b43e5f7c97203.r2.dev',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pet-cdn/, ''),
+      },
+    },
   },
   resolve: {
     alias: {

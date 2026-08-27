@@ -541,7 +541,6 @@ export const PlaygroundPetStage = forwardRef<
         transform: `translate3d(var(--pet-x), var(--pet-y), 0)`,
       }}
       aria-hidden={!isStartupReady}
-      aria-label={`${pet.key} companion. Drag to move${supportsLookControl ? ', hover to look' : ''}.`}
       data-pet-mount-id={mountId ?? undefined}
       data-pet-startup-ready={isStartupReady ? 'true' : 'false'}
       onPointerDown={isStartupReady ? handlePointerDown : undefined}

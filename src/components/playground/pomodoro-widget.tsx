@@ -46,7 +46,7 @@ export function PomodoroWidget({
   const towardLongBreak = completedFocusCount % longBreakEvery;
 
   return (
-    <div
+    <section
       className={cn(
         'mb-2 space-y-3 rounded-md border border-[color:var(--picker-ring)] bg-[color:var(--picker-selected)]/40 p-3',
         !visible && 'hidden'
@@ -111,6 +111,6 @@ export function PomodoroWidget({
           Skip
         </Button>
       </div>
-    </div>
+    </section>
   );
 }

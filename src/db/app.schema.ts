@@ -86,3 +86,66 @@ export const userFilesRelations = relations(userFiles, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+/**
+ * Core pet identity (adopted/custom and optional preset rows).
+ */
+export const pet = sqliteTable(
+  'pet',
+  {
+    id: text('id').primaryKey(),
+    handle: text('handle'),
+    name: text('name').notNull(),
+    breed: text('breed').notNull(),
+    species: text('species').notNull().default('cat'),
+    sex: text('sex'),
+    avatar: text('avatar'),
+    isPreset: integer('is_preset', { mode: 'boolean' }).notNull().default(false),
+    creationStatus: text('creation_status')
+      .notNull()
+      .default('profile_created'),
+    creatorRecognition: text('creator_recognition'),
+    templateId: text('template_id'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('pet_handle_idx').on(table.handle),
+    index('pet_breed_idx').on(table.breed),
+    index('pet_creation_status_idx').on(table.creationStatus),
+    index('pet_template_id_idx').on(table.templateId),
+  ]
+);
+
+/**
+ * User ↔ pet management relationship.
+ */
+export const userPet = sqliteTable(
+  'user_pet',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    petId: text('pet_id')
+      .notNull()
+      .references(() => pet.id, { onDelete: 'cascade' }),
+    enabled: integer('enabled', { mode: 'boolean' }).notNull().default(false),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('user_pet_user_id_idx').on(table.userId),
+    index('user_pet_pet_id_idx').on(table.petId),
+    index('user_pet_user_pet_uidx').on(table.userId, table.petId),
+  ]
+);
+
+export const petRelations = relations(pet, ({ many }) => ({
+  userPets: many(userPet),
+}));
+
+export const userPetRelations = relations(userPet, ({ one }) => ({
+  user: one(user, { fields: [userPet.userId], references: [user.id] }),
+  pet: one(pet, { fields: [userPet.petId], references: [pet.id] }),
+}));

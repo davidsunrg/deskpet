@@ -30,7 +30,7 @@ export function StickyNotesLayer({
   }
 
   return (
-    <div
+    <section
       className="pointer-events-none absolute inset-0 z-30"
       aria-label="Sticky notes"
     >
@@ -45,6 +45,6 @@ export function StickyNotesLayer({
           onRemove={() => onRemove(note.id)}
         />
       ))}
-    </div>
+    </section>
   );
 }

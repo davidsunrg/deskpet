@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
+import { Route as PetsRouteImport } from './routes/pets'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -41,6 +42,8 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-passw
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardActionsRouteImport } from './routes/dashboard/actions'
+import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
 import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
@@ -80,6 +83,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
   id: '/manifest.json',
   path: '/manifest.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PetsRoute = PetsRouteImport.update({
+  id: '/pets',
+  path: '/pets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlaygroundRoute = PlaygroundRouteImport.update({
@@ -217,6 +225,16 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardActionsRoute = DashboardActionsRouteImport.update({
+  id: '/actions',
+  path: '/actions',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -299,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRouteWithChildren
@@ -323,6 +342,8 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/actions': typeof DashboardActionsRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -346,6 +367,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -369,6 +391,8 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/actions': typeof DashboardActionsRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -395,6 +419,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRouteWithChildren
@@ -419,6 +444,8 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/actions': typeof DashboardActionsRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -446,6 +473,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/manifest.json'
+    | '/pets'
     | '/playground'
     | '/robots.txt'
     | '/settings'
@@ -470,6 +498,8 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/dashboard/actions'
+    | '/dashboard/overview'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -493,6 +523,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/manifest.json'
+    | '/pets'
     | '/playground'
     | '/robots.txt'
     | '/sitemap.xml'
@@ -516,6 +547,8 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/dashboard/actions'
+    | '/dashboard/overview'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -541,6 +574,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/manifest.json'
+    | '/pets'
     | '/playground'
     | '/robots.txt'
     | '/settings'
@@ -565,6 +599,8 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/dashboard/actions'
+    | '/dashboard/overview'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -591,6 +627,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
+  PetsRoute: typeof PetsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SettingsRoute: typeof SettingsRouteWithChildren
@@ -654,6 +691,13 @@ declare module '@tanstack/react-router' {
       path: '/manifest.json'
       fullPath: '/manifest.json'
       preLoaderRoute: typeof ManifestDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pets': {
+      id: '/pets'
+      path: '/pets'
+      fullPath: '/pets'
+      preLoaderRoute: typeof PetsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/playground': {
@@ -845,6 +889,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/actions': {
+      id: '/dashboard/actions'
+      path: '/actions'
+      fullPath: '/dashboard/actions'
+      preLoaderRoute: typeof DashboardActionsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/overview': {
+      id: '/dashboard/overview'
+      path: '/overview'
+      fullPath: '/dashboard/overview'
+      preLoaderRoute: typeof DashboardOverviewRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/settings/': {
       id: '/settings/'
       path: '/'
@@ -984,10 +1042,14 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardActionsRoute: typeof DashboardActionsRoute
+  DashboardOverviewRoute: typeof DashboardOverviewRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardActionsRoute: DashboardActionsRoute,
+  DashboardOverviewRoute: DashboardOverviewRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
@@ -1027,6 +1089,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
+  PetsRoute: PetsRoute,
   PlaygroundRoute: PlaygroundRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SettingsRoute: SettingsRouteWithChildren,

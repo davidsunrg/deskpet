@@ -37,7 +37,7 @@ export function CountdownWidget({
   } = useCountdownTimer();
 
   return (
-    <div
+    <section
       className={cn(
         'mb-2 space-y-3 rounded-md border border-[color:var(--picker-ring)] bg-[color:var(--picker-selected)]/40 p-3',
         !visible && 'hidden'
@@ -126,6 +126,6 @@ export function CountdownWidget({
           Reset
         </Button>
       </div>
-    </div>
+    </section>
   );
 }

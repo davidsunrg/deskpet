@@ -1,6 +1,6 @@
 import { HeaderSection } from '@/components/layout/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
@@ -122,7 +122,9 @@ export default function ViralPetVideosSection() {
                           : 'pointer-events-none opacity-0'
                       )}
                       onEnded={() => setPlayingId(null)}
-                    />
+                    >
+                      <track kind="captions" label="No dialogue" />
+                    </video>
 
                     {!isPlaying ? (
                       <button
@@ -170,14 +172,15 @@ export default function ViralPetVideosSection() {
 
         <ScrollReveal delay={200}>
           <div className="mt-8 flex flex-col items-center gap-5">
-            <Button
-              asChild
-              size="lg"
-              variant="brutal"
-              className="h-11 px-6 text-sm"
+            <LocaleLink
+              href={Routes.PetVideoCreator}
+              className={cn(
+                buttonVariants({ variant: 'brutal', size: 'lg' }),
+                'h-11 px-6 text-sm'
+              )}
             >
-              <LocaleLink href={Routes.PetVideoCreator}>{t('cta')}</LocaleLink>
-            </Button>
+              {t('cta')}
+            </LocaleLink>
 
             <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] font-semibold text-deskpet-muted dark:text-muted-foreground">
               {STAT_IDS.map((id) => (

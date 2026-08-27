@@ -8,9 +8,8 @@ export function PlaygroundLoadingPets() {
   const t = useTranslations('Pets');
 
   return (
-    <div
+    <output
       className="pointer-events-none absolute inset-0 z-10 grid place-items-center"
-      role="status"
       aria-live="polite"
       aria-busy="true"
     >
@@ -20,6 +19,6 @@ export function PlaygroundLoadingPets() {
           {t('loadingPets')}
         </span>
       </div>
-    </div>
+    </output>
   );
 }

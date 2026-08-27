@@ -598,26 +598,28 @@ export function PetProfileDialog(props: PetProfileDialogProps) {
                 <div className="space-y-2">
                   <Label htmlFor="pet-profile-breed">{t('breedLabel')}</Label>
                   <Popover modal open={breedOpen} onOpenChange={setBreedOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="pet-profile-breed"
-                        type="button"
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={breedOpen}
-                        disabled={busy}
-                        className="h-11 w-full justify-between px-3 font-normal"
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          id="pet-profile-breed"
+                          type="button"
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={breedOpen}
+                          disabled={busy}
+                          className="h-11 w-full justify-between px-3 font-normal"
+                        />
+                      }
+                    >
+                      <span
+                        className={cn(
+                          'truncate',
+                          !selectedBreedLabel && 'text-muted-foreground'
+                        )}
                       >
-                        <span
-                          className={cn(
-                            'truncate',
-                            !selectedBreedLabel && 'text-muted-foreground'
-                          )}
-                        >
-                          {selectedBreedLabel ?? t('breedPlaceholder')}
-                        </span>
-                        <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
-                      </Button>
+                        {selectedBreedLabel ?? t('breedPlaceholder')}
+                      </span>
+                      <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
                     </PopoverTrigger>
                     <PopoverContent
                       className="w-[var(--radix-popover-trigger-width)] p-0"

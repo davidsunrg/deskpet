@@ -606,13 +606,12 @@ export function CameraHandPreview({
 
           <div className="flex items-center justify-between gap-2 border-t border-white/15 px-3 py-2">
             <div className="min-w-0">
-              <p
+              <output
                 className="truncate text-xs font-medium text-white"
-                role="status"
                 aria-live="polite"
               >
                 {STATUS_LABEL[status]}
-              </p>
+              </output>
               {errorMessage ? (
                 <p className="truncate text-[11px] text-red-300">
                   {errorMessage}

@@ -204,10 +204,11 @@ export function SelectedCatPreview({
       : (showcasePetActionMessageKey(actionKey) ?? 'sitIdle');
 
   const companion = (
-    <div
+    <button
+      type="button"
       ref={companionRef}
       className={cn(
-        'deskpet-companion',
+        'deskpet-companion border-0 bg-transparent p-0',
         isDragging && 'dragging',
         supportsLookControl && !isDragging && 'cursor-pointer',
         className
@@ -225,8 +226,6 @@ export function SelectedCatPreview({
       onPointerMove={handlePointerMove}
       onPointerUp={finishDrag}
       onPointerCancel={finishDrag}
-      role="button"
-      tabIndex={0}
       aria-label={`${pet.breedLabel} desktop pet. Drag to move, right-click for actions.`}
       aria-haspopup="menu"
     >
@@ -254,7 +253,7 @@ export function SelectedCatPreview({
           />
         )}
       </div>
-    </div>
+    </button>
   );
 
   const actionItems = logicalMenuItems.map((item, index, list) => {

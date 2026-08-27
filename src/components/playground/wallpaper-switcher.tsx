@@ -14,34 +14,37 @@ export function WallpaperSwitcher({
 }: WallpaperSwitcherProps) {
   return (
     <div className="pointer-events-auto absolute top-4 right-4 z-40">
-      <div
-        className="wallpaper-switcher !static !top-auto !right-auto !z-auto flex-wrap justify-end"
-        role="radiogroup"
+      <fieldset
+        className="wallpaper-switcher !static !top-auto !right-auto !z-auto flex-wrap justify-end border-0 p-0"
         aria-label="Desktop wallpaper"
       >
         {WALLPAPERS.map((wallpaper) => {
           const selected = wallpaper.id === wallpaperId;
           return (
-            <button
+            <label
               key={wallpaper.id}
-              type="button"
-              role="radio"
-              aria-checked={selected}
-              aria-label={wallpaper.label}
-              title={wallpaper.label}
               className={`wallpaper-switcher-option${selected ? ' is-selected' : ''}`}
               data-wallpaper-id={wallpaper.id}
               style={{ ['--wallpaper-swatch' as string]: wallpaper.swatch }}
-              onClick={() => onWallpaperChange(wallpaper.id)}
+              title={wallpaper.label}
             >
+              <input
+                type="radio"
+                name="playground-wallpaper"
+                value={wallpaper.id}
+                checked={selected}
+                onChange={() => onWallpaperChange(wallpaper.id)}
+                className="sr-only"
+                aria-label={wallpaper.label}
+              />
               <span className="wallpaper-switcher-swatch" aria-hidden="true" />
               <span className="wallpaper-switcher-label">
                 {wallpaper.label}
               </span>
-            </button>
+            </label>
           );
         })}
-      </div>
+      </fieldset>
     </div>
   );
 }

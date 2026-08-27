@@ -46,6 +46,8 @@ export const Routes = {
 
   // Dashboard routes
   Dashboard: '/dashboard',
+  DashboardOverview: '/dashboard/overview',
+  DashboardActions: '/dashboard/actions',
 
   // Settings routes
   Settings: '/settings',
@@ -63,7 +65,7 @@ export const Routes = {
 } as const;
 
 /** Default login redirect route */
-export const DEFAULT_LOGIN_REDIRECT = Routes.Dashboard;
+export const DEFAULT_LOGIN_REDIRECT = Routes.DashboardActions;
 
 /** Canonical pet detail route: `/p/{slug}`. */
 export function petDetailRoute(slug: string): string {

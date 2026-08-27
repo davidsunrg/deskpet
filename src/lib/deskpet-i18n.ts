@@ -62,6 +62,11 @@ export function useTranslations(namespace: string): DeskPetTranslator {
   return createTranslator(namespace, getLocale());
 }
 
+/** Client hook mirroring next-intl `useLocale()`. */
+export function useLocale(): Locale {
+  return getLocale();
+}
+
 /** Server/async helper mirroring next-intl `getTranslations`. */
 export async function getTranslations(options: {
   locale?: Locale;

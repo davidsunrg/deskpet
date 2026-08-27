@@ -39,7 +39,7 @@ export function PetActionMenu({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger asChild>{trigger}</ContextMenuTrigger>
+      <ContextMenuTrigger render={trigger} />
       <ContextMenuContent
         className="z-[2147483647] min-w-44"
         data-testid={menuTestId}
