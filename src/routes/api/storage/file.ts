@@ -2,9 +2,9 @@ import { createFileRoute } from '@tanstack/react-router';
 import { getRequestHeaders } from '@tanstack/react-start/server';
 import { auth } from '@/auth/auth';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
-import { getFile } from '@/storage';
+import { getObject } from '@/lib/storage/r2-s3';
 import { isPublicFolder } from '@/storage/utils';
-import { ConfigurationError } from '@/storage/types';
+import { ConfigurationError, StorageError } from '@/storage/types';
 import {
   isPetMakerFinalKey,
   isPetMakerStagingKey,
@@ -49,10 +49,8 @@ export const Route = createFileRoute('/api/storage/file')({
             return new Response('Not Found', { status: 404 });
           }
 
-          const file = await getFile(key);
-          if (!file) {
-            return new Response('Not Found', { status: 404 });
-          }
+          const file = await getObject(key);
+          const contentType = file.contentType ?? 'application/octet-stream';
 
           const safeInlineTypes = [
             'image/jpeg',
@@ -66,13 +64,13 @@ export const Route = createFileRoute('/api/storage/file')({
           ];
           const isPublicFile = isPublicKey || isStagingKey;
           const responseHeaders: Record<string, string> = {
-            'Content-Type': file.contentType,
+            'Content-Type': contentType,
             'Cache-Control': isPublicFile
               ? 'public, max-age=31536000, immutable'
               : 'private, no-store',
             'X-Content-Type-Options': 'nosniff',
           };
-          if (!safeInlineTypes.includes(file.contentType)) {
+          if (!safeInlineTypes.includes(contentType)) {
             responseHeaders['Content-Disposition'] = 'attachment';
           }
 
@@ -80,6 +78,9 @@ export const Route = createFileRoute('/api/storage/file')({
         } catch (e) {
           if (e instanceof ConfigurationError) {
             return new Response('Storage not configured', { status: 503 });
+          }
+          if (e instanceof StorageError) {
+            return new Response('Not Found', { status: 404 });
           }
           throw e;
         }

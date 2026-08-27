@@ -106,11 +106,14 @@ type WizardPhotoUploadStatus = 'pending' | 'uploading' | 'ready' | 'error';
 type WizardPhoto = {
   id: string;
   name: string;
-  url: string;
+  /** Local blob for in-session preview; server URL only after refresh restore. */
+  displayUrl: string;
   file: File | null;
   status: WizardPhotoUploadStatus;
   progress: number;
   r2Key?: string;
+  /** Same-origin server URL for localStorage restore after refresh. */
+  previewUrl?: string;
   error?: string;
 };
 
@@ -148,10 +151,12 @@ function patchPhoto(
 function wizardPhotosFromLocalDraft(): WizardPhoto[] {
   const draft = readDraft();
   if (!draft) return [];
+  // After refresh there is no blob; fall back to stored server preview URLs.
   return draft.photos.map((photo) => ({
     id: photo.localId,
     name: photo.name,
-    url: photo.previewUrl,
+    displayUrl: photo.previewUrl,
+    previewUrl: photo.previewUrl,
     file: null,
     status: 'ready' as const,
     progress: 100,
@@ -213,7 +218,7 @@ export function CreatePetWizard() {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
-      for (const photo of photosRef.current) revokeBlobUrl(photo.url);
+      for (const photo of photosRef.current) revokeBlobUrl(photo.displayUrl);
       revokeBlobUrl(avatarUrlRef.current);
     };
   }, []);
@@ -233,7 +238,9 @@ export function CreatePetWizard() {
             localId: photo.id,
             name: photo.name,
             r2Key: photo.r2Key!,
-            previewUrl: photo.url,
+            previewUrl:
+              photo.previewUrl ??
+              `${window.location.origin}/api/storage/file?key=${encodeURIComponent(photo.r2Key!)}`,
           })),
       })
     );
@@ -246,7 +253,7 @@ export function CreatePetWizard() {
   );
   const firstPhoto = readyPhotos[0] ?? photos[0] ?? null;
   const hasReferenceSources = readyPhotos.length > 0;
-  const displayAvatarUrl = avatarUrl ?? firstPhoto?.url ?? null;
+  const displayAvatarUrl = avatarUrl ?? firstPhoto?.displayUrl ?? null;
 
   const isBasicsComplete =
     petName.trim().length > 0 && (sex === PetSex.Male || sex === PetSex.Female);
@@ -403,19 +410,15 @@ export function CreatePetWizard() {
         );
         if (!isMountedRef.current) return;
 
-        setPhotos((current) => {
-          const existing = current.find((photo) => photo.id === localId);
-          if (existing && existing.url !== slot.previewUrl) {
-            revokeBlobUrl(existing.url);
-          }
-          return patchPhoto(current, localId, {
+        setPhotos((current) =>
+          patchPhoto(current, localId, {
             status: 'ready',
             progress: 100,
             r2Key: slot.r2Key,
-            url: slot.previewUrl,
+            previewUrl: slot.previewUrl,
             error: undefined,
-          });
-        });
+          })
+        );
       } catch (error) {
         console.error('wizard photo upload error:', error);
         if (!isMountedRef.current) return;
@@ -451,7 +454,7 @@ export function CreatePetWizard() {
       next.push({
         id: nextId(),
         name: file.name,
-        url: URL.createObjectURL(file),
+        displayUrl: URL.createObjectURL(file),
         file,
         status: 'pending',
         progress: 0,
@@ -462,7 +465,7 @@ export function CreatePetWizard() {
     const room = Math.max(0, MAX_CREATOR_PHOTOS - photos.length);
     const accepted = next.slice(0, room);
     const unused = next.slice(room);
-    for (const photo of unused) revokeBlobUrl(photo.url);
+    for (const photo of unused) revokeBlobUrl(photo.displayUrl);
     if (accepted.length === 0) {
       toast.error(t('photos.maxReached', { count: MAX_CREATOR_PHOTOS }));
       return;
@@ -499,7 +502,7 @@ export function CreatePetWizard() {
         if (!isMountedRef.current) return;
         setPhotos((current) => {
           const removed = current.find((photo) => photo.id === id);
-          if (removed) revokeBlobUrl(removed.url);
+          if (removed) revokeBlobUrl(removed.displayUrl);
           const next = current.filter((photo) => photo.id !== id);
           if (next.filter((photo) => photo.status === 'ready').length === 0) {
             clearAvatar();
@@ -687,8 +690,8 @@ export function CreatePetWizard() {
           if (localReady?.file) {
             const compressed = await compressSquareAvatar(localReady.file);
             avatarFile = compressed.file;
-          } else if (readyPhotos[0]?.url) {
-            const response = await fetch(readyPhotos[0].url);
+          } else if (readyPhotos[0]?.displayUrl) {
+            const response = await fetch(readyPhotos[0].displayUrl);
             if (!response.ok) {
               throw new Error('Failed to download photo for avatar.');
             }
@@ -912,7 +915,7 @@ export function CreatePetWizard() {
                 <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-deskpet-ink/12 bg-deskpet-paper">
                   {/* eslint-disable-next-line @next/next/no-img-element -- local or signed preview */}
                   <img
-                    src={photo.url}
+                    src={photo.displayUrl}
                     alt={photo.name}
                     className="size-full object-contain"
                   />
