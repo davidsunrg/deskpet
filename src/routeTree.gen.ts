@@ -64,6 +64,7 @@ import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/str
 import { Route as ApiWebhooksWaffoRouteImport } from './routes/api/webhooks/waffo'
 import { Route as BlogCategorySlugRouteImport } from './routes/blog/category.$slug'
 import { Route as BlogPagePageRouteImport } from './routes/blog/page.$page'
+import { Route as DashboardPetsPetIdRouteImport } from './routes/dashboard/pets.$petId'
 import { Route as ApiAuthExtensionGoogleRouteImport } from './routes/api/auth/extension/google'
 import { Route as BlogCategorySlugPagePageRouteImport } from './routes/blog/category.$slug.page.$page'
 
@@ -342,6 +343,11 @@ const BlogPagePageRoute = BlogPagePageRouteImport.update({
   path: '/blog/page/$page',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardPetsPetIdRoute = DashboardPetsPetIdRouteImport.update({
+  id: '/$petId',
+  path: '/$petId',
+  getParentRoute: () => DashboardPetsRoute,
+} as any)
 const ApiAuthExtensionGoogleRoute = ApiAuthExtensionGoogleRouteImport.update({
   id: '/api/auth/extension/google',
   path: '/api/auth/extension/google',
@@ -388,7 +394,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
-  '/dashboard/pets': typeof DashboardPetsRoute
+  '/dashboard/pets': typeof DashboardPetsRouteWithChildren
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -410,6 +416,7 @@ export interface FileRoutesByFullPath {
   '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
+  '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
   '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
@@ -444,7 +451,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
-  '/dashboard/pets': typeof DashboardPetsRoute
+  '/dashboard/pets': typeof DashboardPetsRouteWithChildren
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -466,6 +473,7 @@ export interface FileRoutesByTo {
   '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
+  '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
   '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
@@ -504,7 +512,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
-  '/dashboard/pets': typeof DashboardPetsRoute
+  '/dashboard/pets': typeof DashboardPetsRouteWithChildren
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -526,6 +534,7 @@ export interface FileRoutesById {
   '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
+  '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
   '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
@@ -587,6 +596,7 @@ export interface FileRouteTypes {
     | '/api/webhooks/waffo'
     | '/blog/category/$slug'
     | '/blog/page/$page'
+    | '/dashboard/pets/$petId'
     | '/api/auth/extension/google'
     | '/blog/category/$slug/page/$page'
   fileRoutesByTo: FileRoutesByTo
@@ -643,6 +653,7 @@ export interface FileRouteTypes {
     | '/api/webhooks/waffo'
     | '/blog/category/$slug'
     | '/blog/page/$page'
+    | '/dashboard/pets/$petId'
     | '/api/auth/extension/google'
     | '/blog/category/$slug/page/$page'
   id:
@@ -702,6 +713,7 @@ export interface FileRouteTypes {
     | '/api/webhooks/waffo'
     | '/blog/category/$slug'
     | '/blog/page/$page'
+    | '/dashboard/pets/$petId'
     | '/api/auth/extension/google'
     | '/blog/category/$slug/page/$page'
   fileRoutesById: FileRoutesById
@@ -1134,6 +1146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogPagePageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/pets/$petId': {
+      id: '/dashboard/pets/$petId'
+      path: '/$petId'
+      fullPath: '/dashboard/pets/$petId'
+      preLoaderRoute: typeof DashboardPetsPetIdRouteImport
+      parentRoute: typeof DashboardPetsRoute
+    }
     '/api/auth/extension/google': {
       id: '/api/auth/extension/google'
       path: '/api/auth/extension/google'
@@ -1183,17 +1202,29 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface DashboardPetsRouteChildren {
+  DashboardPetsPetIdRoute: typeof DashboardPetsPetIdRoute
+}
+
+const DashboardPetsRouteChildren: DashboardPetsRouteChildren = {
+  DashboardPetsPetIdRoute: DashboardPetsPetIdRoute,
+}
+
+const DashboardPetsRouteWithChildren = DashboardPetsRoute._addFileChildren(
+  DashboardPetsRouteChildren,
+)
+
 interface DashboardRouteChildren {
   DashboardActionsRoute: typeof DashboardActionsRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
-  DashboardPetsRoute: typeof DashboardPetsRoute
+  DashboardPetsRoute: typeof DashboardPetsRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActionsRoute: DashboardActionsRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
-  DashboardPetsRoute: DashboardPetsRoute,
+  DashboardPetsRoute: DashboardPetsRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

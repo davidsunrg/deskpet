@@ -63,6 +63,11 @@ export function petDetailRoute(slug: string): string {
   return `/p/${slug}`;
 }
 
+/** Dashboard pet detail route: `/dashboard/pets/{petId}`. */
+export function dashboardPetDetailRoute(petId: string): string {
+  return `${Routes.DashboardPets}/${petId}`;
+}
+
 /** Query key for the selected preset pet on `/playground`. */
 export const PLAYGROUND_PET_QUERY = 'pet';
 

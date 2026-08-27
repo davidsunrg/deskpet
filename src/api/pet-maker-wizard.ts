@@ -130,3 +130,33 @@ export const listUserPetsFn = createServerFn({ method: 'GET' })
       .limit(20);
     return { pets: rows };
   });
+
+const getUserPetSchema = z.object({
+  petId: z.string().refine(isUuid, 'Invalid pet id'),
+});
+
+export const getUserPetFn = createServerFn({ method: 'GET' })
+  .validator(getUserPetSchema)
+  .middleware([authApiMiddleware])
+  .handler(async ({ data, context }) => {
+    const { getDb } = await import('@/db');
+    const { pet } = await import('@/db/app.schema');
+    const { and, eq } = await import('drizzle-orm');
+    const db = getDb();
+    const rows = await db
+      .select({
+        id: pet.id,
+        name: pet.name,
+        species: pet.species,
+        breed: pet.breed,
+        sex: pet.sex,
+        avatar: pet.avatar,
+        photoKeys: pet.photoKeys,
+        createdAt: pet.createdAt,
+        updatedAt: pet.updatedAt,
+      })
+      .from(pet)
+      .where(and(eq(pet.id, data.petId), eq(pet.userId, context.userId)))
+      .limit(1);
+    return { pet: rows[0] ?? null };
+  });

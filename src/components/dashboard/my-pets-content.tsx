@@ -5,7 +5,7 @@ import { CtaButton } from '@/components/ui/cta-button';
 import { formatDate } from '@/lib/formatter';
 import { getFileAccessUrl } from '@/lib/urls';
 import { LocaleLink } from '@/lib/i18n/navigation';
-import { Routes } from '@/lib/routes';
+import { dashboardPetDetailRoute, Routes } from '@/lib/routes';
 import {
   getPetBreedLabel,
   getPetSpeciesLabel,
@@ -65,25 +65,32 @@ export function MyPetsContent({ pets }: MyPetsContentProps) {
             key={pet.id}
             className="flex flex-col rounded-2xl border-2 border-deskpet-ink/10 bg-deskpet-paper p-4 shadow-[4px_4px_0_0_rgba(55,39,51,0.06)]"
           >
-            <div className="flex items-start gap-3">
-              <PetAvatar src={avatarUrl} alt={pet.name} size="sm" />
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate text-lg font-black tracking-tight text-deskpet-ink">
-                  {pet.name}
-                </h3>
-                <p className="mt-0.5 text-sm font-semibold text-deskpet-muted">
-                  {getPetSpeciesLabel(pet.species)}
-                  {' · '}
-                  {getPetBreedLabel(pet.breed)}
-                </p>
-                {sexLabel ? (
-                  <p className="mt-1 text-sm text-deskpet-muted">{sexLabel}</p>
-                ) : null}
+            <LocaleLink
+              href={dashboardPetDetailRoute(pet.id)}
+              className="flex flex-1 flex-col"
+            >
+              <div className="flex items-start gap-3">
+                <PetAvatar src={avatarUrl} alt={pet.name} size="sm" />
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-lg font-black tracking-tight text-deskpet-ink">
+                    {pet.name}
+                  </h3>
+                  <p className="mt-0.5 text-sm font-semibold text-deskpet-muted">
+                    {getPetSpeciesLabel(pet.species)}
+                    {' · '}
+                    {getPetBreedLabel(pet.breed)}
+                  </p>
+                  {sexLabel ? (
+                    <p className="mt-1 text-sm text-deskpet-muted">
+                      {sexLabel}
+                    </p>
+                  ) : null}
+                </div>
               </div>
-            </div>
-            <p className="mt-4 text-xs font-medium text-deskpet-muted">
-              Created {formatDate(pet.createdAt)}
-            </p>
+              <p className="mt-4 text-xs font-medium text-deskpet-muted">
+                Created {formatDate(pet.createdAt)}
+              </p>
+            </LocaleLink>
           </article>
         );
       })}
