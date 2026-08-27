@@ -11,7 +11,14 @@ import { getSidebarLinks } from '@/config/sidebar-config';
 import type { MenuItemConfig } from '@/types';
 import { Link, useRouterState } from '@tanstack/react-router';
 import type { SessionUser } from '@/auth/types';
-import { useMemo } from 'react';
+import { isValidElement, useMemo, type ComponentType } from 'react';
+
+function renderMenuIcon(icon: MenuItemConfig['icon']) {
+  if (!icon) return null;
+  if (isValidElement(icon)) return icon;
+  const Icon = icon as ComponentType<{ className?: string }>;
+  return <Icon className="size-4 shrink-0" />;
+}
 
 /**
  * Filters sidebar links based on user role (authorizeOnly)
@@ -65,30 +72,24 @@ export function SidebarMain({ user }: SidebarMainProps) {
   };
 
   const renderItem = (item: MenuItemConfig, key: string) => {
-    const Icon = item.icon;
     if (item.items && item.items.length > 0) {
       return (
         <SidebarGroup key={key}>
           <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
           <SidebarGroupContent className="flex flex-col gap-0.5">
             <SidebarMenu>
-              {item.items.map((sub) => {
-                const SubIcon = sub.icon;
-                return (
-                  <SidebarMenuItem key={sub.title} className="py-1">
-                    <SidebarMenuButton asChild isActive={isActive(sub.href)}>
-                      <Link to={sub.href ?? '#'} onClick={closeMobileSidebar}>
-                        {SubIcon ? (
-                          <SubIcon className="size-4 shrink-0" />
-                        ) : null}
-                        <span className="truncate font-medium text-sm">
-                          {sub.title}
-                        </span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+              {item.items.map((sub) => (
+                <SidebarMenuItem key={sub.title} className="py-1">
+                  <SidebarMenuButton asChild isActive={isActive(sub.href)}>
+                    <Link to={sub.href ?? '#'} onClick={closeMobileSidebar}>
+                      {renderMenuIcon(sub.icon)}
+                      <span className="truncate font-medium text-sm">
+                        {sub.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -101,7 +102,7 @@ export function SidebarMain({ user }: SidebarMainProps) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isActive(item.href)}>
                 <Link to={item.href ?? '#'} onClick={closeMobileSidebar}>
-                  {Icon ? <Icon className="size-4 shrink-0" /> : null}
+                  {renderMenuIcon(item.icon)}
                   <span className="truncate font-medium text-sm">
                     {item.title}
                   </span>

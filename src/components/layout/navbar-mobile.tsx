@@ -28,10 +28,7 @@ const mobileSubLinkClass =
 
 interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function NavbarMobile({
-  className,
-  ...props
-}: NavbarMobileProps) {
+export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
   const localePathname = useLocalePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);

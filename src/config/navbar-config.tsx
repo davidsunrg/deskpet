@@ -40,22 +40,22 @@ export function useNavbarLinks(): MenuItemConfig[] {
         {
           title: t('resources.items.download.title'),
           description: t('resources.items.download.description'),
+          icon: <DownloadIcon className="size-4 shrink-0" />,
           href: Routes.Download,
-          icon: DownloadIcon,
           external: false,
         },
         {
           title: t('resources.items.health.title'),
           description: t('resources.items.health.description'),
+          icon: <HeartPulseIcon className="size-4 shrink-0" />,
           href: Routes.Health,
-          icon: HeartPulseIcon,
           external: false,
         },
         {
           title: t('resources.items.expense.title'),
           description: t('resources.items.expense.description'),
+          icon: <ReceiptTextIcon className="size-4 shrink-0" />,
           href: Routes.Expense,
-          icon: ReceiptTextIcon,
           external: false,
         },
         ...(websiteConfig.payment?.enable
@@ -63,8 +63,8 @@ export function useNavbarLinks(): MenuItemConfig[] {
               {
                 title: t('resources.items.pricing.title'),
                 description: t('resources.items.pricing.description'),
+                icon: <TagIcon className="size-4 shrink-0" />,
                 href: Routes.Pricing,
-                icon: TagIcon,
                 external: false,
               },
             ]
@@ -74,8 +74,8 @@ export function useNavbarLinks(): MenuItemConfig[] {
               {
                 title: t('resources.items.blog.title'),
                 description: t('resources.items.blog.description'),
+                icon: <NewspaperIcon className="size-4 shrink-0" />,
                 href: Routes.Blog,
-                icon: NewspaperIcon,
                 external: false,
               },
             ]

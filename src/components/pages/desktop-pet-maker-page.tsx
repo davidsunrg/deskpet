@@ -1,97 +1,176 @@
-'use client';
-
-import { LoginWrapper } from '@/components/auth/login-wrapper';
+import { CreatePetWizardShell } from '@/components/tools/create-pet-wizard-shell';
+import { DesktopPetMakerPetShowcase } from '@/components/tools/desktop-pet-maker-pet-showcase';
 import { MarketingToolsShell } from '@/components/tools/marketing-tools-shell';
-import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/deskpet-i18n';
-import { useLocalePathname } from '@/lib/i18n/navigation';
-import { Routes } from '@/lib/routes';
+import type { ShowcasePet } from '@/utils/showcase-pets';
 
-const STEP_IDS = ['photos', 'basics', 'details'] as const;
 const WHAT_YOU_GET_IDS = ['profile', 'actions', 'play', 'care'] as const;
+const WHO_FOR_IDS = ['owners', 'curious', 'creators'] as const;
+const FAQ_IDS = [
+  'what',
+  'photos',
+  'presets',
+  'after',
+  'platforms',
+  'edit',
+] as const;
+const STEP_IDS = ['photos', 'basics', 'details'] as const;
 
-export function DesktopPetMakerPage() {
-  const t = useTranslations('CreatePetWizard');
+type DesktopPetMakerPageProps = {
+  heroPets: ShowcasePet[];
+};
+
+export function DesktopPetMakerPage({ heroPets }: DesktopPetMakerPageProps) {
   const tSteps = useTranslations('CreatePetWizard.seoSteps');
   const tContent = useTranslations('CreatePetWizard.seoContent');
-  const pathname = useLocalePathname();
+  const tFaq = useTranslations('CreatePetWizard.faq');
 
   return (
     <MarketingToolsShell>
-      <header className="mx-auto mb-8 max-w-3xl text-center md:mb-10">
-        <p className="m-0 text-sm font-black uppercase tracking-[0.16em] text-[#155b43]">
-          {t('eyebrow')}
-        </p>
-        <h1 className="mt-2 m-0 text-balance font-sans text-[clamp(2rem,5vw,3rem)] font-black tracking-tight text-deskpet-ink">
-          {t('title')}
-        </h1>
-        <p className="mx-auto mt-3 m-0 max-w-2xl text-base font-medium leading-7 text-deskpet-muted">
-          {t('description')}
-        </p>
-      </header>
+      <CreatePetWizardShell />
 
-      <div className="mx-auto max-w-3xl rounded-[28px] border-[3px] border-deskpet-ink bg-deskpet-paper p-8 text-center shadow-[8px_8px_0_0_rgba(55,39,51,0.1)]">
-        <p className="m-0 text-base font-medium text-deskpet-muted">
-          {t('steps.photos.title')} → {t('steps.basics.title')} →{' '}
-          {t('steps.details.title')}
-        </p>
-        <LoginWrapper mode="modal" asChild callbackUrl={pathname}>
-          <Button variant="brutal" size="lg" className="mt-6 min-h-12 px-8">
-            {t('steps.photos.cta')}
-          </Button>
-        </LoginWrapper>
-      </div>
+      <section
+        className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10"
+        aria-labelledby="desktop-pet-maker-steps-title"
+      >
+        <div className="max-w-3xl">
+          <p className="m-0 text-sm font-black uppercase tracking-[0.16em] text-deskpet-muted">
+            {tSteps('eyebrow')}
+          </p>
+          <h2
+            id="desktop-pet-maker-steps-title"
+            className="mt-2 m-0 font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-black tracking-tight text-deskpet-ink"
+          >
+            {tSteps('title')}
+          </h2>
+          <p className="mt-3 m-0 text-base leading-7 text-deskpet-muted">
+            {tSteps('description')}
+          </p>
+        </div>
 
-      <section className="mx-auto mt-12 max-w-4xl">
-        <h2 className="text-center text-2xl font-black text-deskpet-ink">
-          {tContent('whatYouGet.title')}
-        </h2>
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-          {WHAT_YOU_GET_IDS.map((id) => (
+        <ol className="mt-7 grid list-none gap-3 p-0 sm:grid-cols-2">
+          {STEP_IDS.map((stepId, index) => (
             <li
-              key={id}
-              className="rounded-2xl border-2 border-deskpet-ink/15 bg-white p-5 text-sm font-bold text-deskpet-ink"
+              key={stepId}
+              className="grid gap-2 rounded-2xl border-2 border-deskpet-ink/10 bg-white px-4 py-4"
             >
-              {tContent(`whatYouGet.items.${id}`)}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mx-auto mt-12 max-w-3xl">
-        <h2 className="text-center text-2xl font-black text-deskpet-ink">
-          {tSteps('title')}
-        </h2>
-        <ol className="mt-6 space-y-4">
-          {STEP_IDS.map((id, index) => (
-            <li
-              key={id}
-              className="rounded-2xl border-2 border-deskpet-ink bg-white p-5 shadow-[4px_4px_0_0_rgba(55,39,51,0.08)]"
-            >
-              <span className="text-xs font-black uppercase tracking-[0.12em] text-[#155b43]">
-                Step {index + 1}
+              <span className="text-xs font-black uppercase tracking-[0.12em] text-[#18866d]">
+                {tSteps('stepLabel', { number: index + 1 })}
               </span>
-              <p className="mt-2 m-0 font-black text-deskpet-ink">
-                {tSteps(`${id}.title`)}
-              </p>
-              <p className="mt-1 m-0 text-sm font-medium text-deskpet-muted">
-                {tSteps(`${id}.description`)}
+              <h3 className="m-0 text-base font-black text-deskpet-ink">
+                {tSteps(`items.${stepId}.title`)}
+              </h3>
+              <p className="m-0 text-sm leading-6 text-deskpet-muted">
+                {tSteps(`items.${stepId}.description`)}
               </p>
             </li>
           ))}
         </ol>
       </section>
 
-      <p className="mx-auto mt-10 max-w-xl text-center text-sm text-deskpet-muted">
-        Already have an account?{' '}
-        <a
-          href={Routes.DashboardActions}
-          className="font-bold text-deskpet-ink underline"
-        >
-          Open your dashboard
-        </a>{' '}
-        to continue building your pet.
-      </p>
+      <DesktopPetMakerPetShowcase pets={heroPets} />
+
+      <section
+        className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10"
+        aria-labelledby="desktop-pet-maker-results-title"
+      >
+        <div className="max-w-3xl">
+          <p className="m-0 text-sm font-black uppercase tracking-[0.16em] text-deskpet-muted">
+            {tContent('whatYouGet.eyebrow')}
+          </p>
+          <h2
+            id="desktop-pet-maker-results-title"
+            className="mt-2 m-0 font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-black tracking-tight text-deskpet-ink"
+          >
+            {tContent('whatYouGet.title')}
+          </h2>
+          <p className="mt-3 m-0 text-base leading-7 text-deskpet-muted">
+            {tContent('whatYouGet.intro')}
+          </p>
+        </div>
+        <div className="mt-7 grid gap-4 sm:grid-cols-2">
+          {WHAT_YOU_GET_IDS.map((id) => (
+            <article
+              key={id}
+              className="rounded-2xl border-2 border-deskpet-ink/10 bg-white px-4 py-4"
+            >
+              <h3 className="m-0 text-base font-black text-deskpet-ink">
+                {tContent(`whatYouGet.items.${id}.title`)}
+              </h3>
+              <p className="mt-2 m-0 text-sm leading-6 text-deskpet-muted">
+                {tContent(`whatYouGet.items.${id}.body`)}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section
+        className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10"
+        aria-labelledby="desktop-pet-maker-audience-title"
+      >
+        <div className="max-w-3xl">
+          <p className="m-0 text-sm font-black uppercase tracking-[0.16em] text-deskpet-muted">
+            {tContent('whoFor.eyebrow')}
+          </p>
+          <h2
+            id="desktop-pet-maker-audience-title"
+            className="mt-2 m-0 font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-black tracking-tight text-deskpet-ink"
+          >
+            {tContent('whoFor.title')}
+          </h2>
+          <p className="mt-3 m-0 text-base leading-7 text-deskpet-muted">
+            {tContent('whoFor.intro')}
+          </p>
+        </div>
+        <div className="mt-7 grid gap-4">
+          {WHO_FOR_IDS.map((id) => (
+            <article
+              key={id}
+              className="rounded-2xl border-2 border-deskpet-ink/10 bg-white px-4 py-4"
+            >
+              <h3 className="m-0 text-base font-black text-deskpet-ink">
+                {tContent(`whoFor.items.${id}.title`)}
+              </h3>
+              <p className="mt-2 m-0 text-sm leading-6 text-deskpet-muted">
+                {tContent(`whoFor.items.${id}.body`)}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section
+        className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10 pb-4"
+        aria-labelledby="desktop-pet-maker-faq-title"
+      >
+        <div className="max-w-3xl">
+          <p className="m-0 text-sm font-black uppercase tracking-[0.16em] text-deskpet-muted">
+            {tFaq('eyebrow')}
+          </p>
+          <h2
+            id="desktop-pet-maker-faq-title"
+            className="mt-2 m-0 font-sans text-[clamp(1.75rem,4vw,2.5rem)] font-black tracking-tight text-deskpet-ink"
+          >
+            {tFaq('title')}
+          </h2>
+        </div>
+        <dl className="mt-7 grid gap-4">
+          {FAQ_IDS.map((id) => (
+            <div
+              key={id}
+              className="rounded-2xl border-2 border-deskpet-ink/10 bg-white px-4 py-4"
+            >
+              <dt className="m-0 text-base font-black text-deskpet-ink">
+                {tFaq(`items.${id}.question`)}
+              </dt>
+              <dd className="mt-2 m-0 text-sm leading-6 text-deskpet-muted">
+                {tFaq(`items.${id}.answer`)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </MarketingToolsShell>
   );
 }

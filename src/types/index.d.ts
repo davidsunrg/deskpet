@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import type { PricePlan } from '@/payment/types';
 
 /** Website config */
@@ -133,7 +133,7 @@ export interface MenuItemConfig {
   title: string;                                    // The text to display
   description?: string;                             // The description of the item
   href?: string;                                    // The url to link to
-  icon?: ComponentType<{ className?: string }>;     // The icon to display
+  icon?: ReactNode | ComponentType<{ className?: string }>; // Icon element or component
   external?: boolean;                               // Whether the link is external
   authorizeOnly?: string[];                         // The roles that are authorized to see the item
   items?: MenuItemConfig[];                         // Nested items for dropdown/group
