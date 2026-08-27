@@ -26,9 +26,7 @@ const protectedPages = [
 ] as const;
 
 const smokeMatrix: Array<{ locale: LocaleMode; theme: ThemeMode }> = [
-  { locale: 'en', theme: 'dark' },
   { locale: 'en', theme: 'light' },
-  { locale: 'zh', theme: 'dark' },
   { locale: 'zh', theme: 'light' },
 ];
 

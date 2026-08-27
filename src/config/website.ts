@@ -47,8 +47,8 @@ const priceIds = {
 export const websiteConfig: WebsiteConfig = {
   ui: {
     mode: {
-      defaultMode: 'dark',
-      enableSwitch: true,
+      defaultMode: 'light',
+      enableSwitch: false,
     },
   },
   metadata: {

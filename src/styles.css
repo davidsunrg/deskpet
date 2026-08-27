@@ -194,5 +194,6 @@
   html {
     @apply scroll-smooth;
     font-family: var(--font-brand);
+    color-scheme: light;
   }
 }

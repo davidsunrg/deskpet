@@ -30,9 +30,7 @@ const publicPages = [
 ] as const;
 
 const smokeMatrix: Array<{ locale: LocaleMode; theme: ThemeMode }> = [
-  { locale: 'en', theme: 'dark' },
   { locale: 'en', theme: 'light' },
-  { locale: 'zh', theme: 'dark' },
   { locale: 'zh', theme: 'light' },
 ];
 
@@ -56,10 +54,10 @@ test.describe('public page smoke coverage', () => {
   }
 
   test('opens the home page login modal', async ({ page }) => {
-    await setTheme(page, 'dark');
+    await setTheme(page, 'light');
     const monitor = installPageHealthMonitor(page);
 
-    await expectHealthyPage(page, monitor, '/', { theme: 'dark' });
+    await expectHealthyPage(page, monitor, '/', { theme: 'light' });
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /^log in$/i }).click();
 
@@ -69,34 +67,6 @@ test.describe('public page smoke coverage', () => {
     await expect(dialog.locator('input[name="password"]')).toBeVisible();
     monitor.expectNoErrors('home login modal');
   });
-
-  for (const theme of ['dark', 'light'] as const) {
-    test(`renders one theme-specific marketing image in ${theme} mode`, async ({
-      page,
-    }) => {
-      await setTheme(page, theme);
-      await page.goto('/');
-      await expect(page.locator('html')).toHaveClass(
-        new RegExp(`\\b${theme}\\b`)
-      );
-
-      const heroImage = page.locator('#hero img');
-      await expect(heroImage).toHaveCount(1);
-      await expect(heroImage).toHaveAttribute(
-        'alt',
-        new RegExp(`${theme} mode`)
-      );
-      await expect(heroImage).toHaveAttribute('width', '2796');
-      await expect(heroImage).toHaveAttribute('height', '2008');
-
-      const featuresImage = page.locator('#features img');
-      await expect(featuresImage).toHaveCount(1);
-      await expect(featuresImage).toHaveAttribute('width');
-      await expect(featuresImage).toHaveAttribute('height');
-
-      await expect(page.locator('#features2 img')).toHaveCount(1);
-    });
-  }
 
   test('keeps desktop auth action width stable while session loads', async ({
     page,

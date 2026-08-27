@@ -8,10 +8,10 @@ import {
 
 test.describe('DeskPet public shell', () => {
   test('homepage renders DeskPet hero and primary CTAs', async ({ page }) => {
-    await setTheme(page, 'dark');
+    await setTheme(page, 'light');
     const monitor = installPageHealthMonitor(page);
 
-    await expectHealthyPage(page, monitor, '/', { theme: 'dark' });
+    await expectHealthyPage(page, monitor, '/', { theme: 'light' });
 
     await expect(
       page.getByRole('heading', {
@@ -27,7 +27,7 @@ test.describe('DeskPet public shell', () => {
   });
 
   test('playground loads pet picker and pet media', async ({ page }) => {
-    await setTheme(page, 'dark');
+    await setTheme(page, 'light');
     const monitor = installPageHealthMonitor(page);
 
     await page.goto('/playground');
@@ -44,7 +44,7 @@ test.describe('DeskPet public shell', () => {
   });
 
   test('playground deep link selects the requested pet', async ({ page }) => {
-    await setTheme(page, 'dark');
+    await setTheme(page, 'light');
     const monitor = installPageHealthMonitor(page);
 
     await page.goto('/playground?pet=orange-cat');

@@ -20,47 +20,61 @@ type ThemeProviderState = {
   systemTheme?: 'light' | 'dark';
 };
 
+const themeSwitchEnabled = websiteConfig.ui?.mode?.enableSwitch !== false;
+const configuredDefault: 'light' | 'dark' =
+  websiteConfig.ui?.mode?.defaultMode === 'dark' ? 'dark' : 'light';
+
 const initialState: ThemeProviderState = {
-  theme: 'system',
+  theme: themeSwitchEnabled ? 'system' : configuredDefault,
   setTheme: () => null,
-  resolvedTheme: 'dark',
+  resolvedTheme: configuredDefault,
   systemTheme: undefined,
 };
 
 const ThemeProviderContext =
   React.createContext<ThemeProviderState>(initialState);
 
-const themeScript = `(function() {
+const themeScript = themeSwitchEnabled
+  ? `(function() {
   try {
-    var theme = localStorage.getItem('theme') || '${websiteConfig.ui?.mode?.defaultMode ?? 'dark'}';
+    var theme = localStorage.getItem('theme') || '${configuredDefault}';
     var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     var resolved = theme === 'system' ? systemTheme : theme;
     document.documentElement.classList.add(resolved);
   } catch (e) {
-    document.documentElement.classList.add('${websiteConfig.ui?.mode?.defaultMode ?? 'dark'}');
+    document.documentElement.classList.add('${configuredDefault}');
   }
+})();`
+  : `(function() {
+  document.documentElement.classList.remove('light', 'dark');
+  document.documentElement.classList.add('${configuredDefault}');
 })();`;
 
 /**
  * Single theme provider: SSR-safe, prevents FOUC via inline script, configurable.
- * Default theme from websiteConfig.ui?.mode?.defaultMode when not passed.
+ * When `websiteConfig.ui.mode.enableSwitch` is false, the theme is locked to
+ * `defaultMode` (DeskPet uses light-only).
  */
 export function ThemeProvider({
   children,
-  defaultTheme = websiteConfig.ui?.mode?.defaultMode ?? 'system',
+  defaultTheme = themeSwitchEnabled
+    ? (websiteConfig.ui?.mode?.defaultMode ?? 'system')
+    : configuredDefault,
   storageKey = 'theme',
   attribute = 'class',
-  enableSystem = true,
+  enableSystem = themeSwitchEnabled,
   disableTransitionOnChange = false,
   ...props
 }: ThemeProviderProps) {
   const [theme, setThemeState] = React.useState<Theme>(() => {
-    // During SSR, always return the default theme to avoid hydration mismatch
+    if (!themeSwitchEnabled) {
+      return configuredDefault;
+    }
+
     if (typeof window === 'undefined') {
       return defaultTheme;
     }
 
-    // Client-side: try to get theme from localStorage
     try {
       const stored = localStorage.getItem(storageKey) as Theme;
       return stored || defaultTheme;
@@ -72,12 +86,10 @@ export function ThemeProvider({
   const [systemTheme, setSystemTheme] = React.useState<
     'light' | 'dark' | undefined
   >(() => {
-    // During SSR, return undefined
-    if (typeof window === 'undefined') {
+    if (!themeSwitchEnabled || typeof window === 'undefined') {
       return undefined;
     }
 
-    // Client-side: detect system theme
     return window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light';
@@ -85,10 +97,18 @@ export function ThemeProvider({
 
   const [isMounted, setIsMounted] = React.useState(false);
 
-  const resolvedTheme = theme === 'system' ? systemTheme : theme;
+  const resolvedTheme = themeSwitchEnabled
+    ? theme === 'system'
+      ? systemTheme
+      : theme
+    : configuredDefault;
 
   const setTheme = React.useCallback(
     (newTheme: Theme) => {
+      if (!themeSwitchEnabled) {
+        return;
+      }
+
       try {
         localStorage.setItem(storageKey, newTheme);
       } catch {
@@ -114,7 +134,6 @@ export function ThemeProvider({
         );
         document.head.appendChild(css);
 
-        // Force reflow
         (() => window.getComputedStyle(document.body))();
 
         setTimeout(() => {
@@ -132,14 +151,12 @@ export function ThemeProvider({
     [attribute, disableTransitionOnChange]
   );
 
-  // Apply theme on mount and when resolvedTheme changes
   React.useEffect(() => {
     if (isMounted) {
       applyTheme(resolvedTheme);
     }
   }, [resolvedTheme, applyTheme, isMounted]);
 
-  // Handle system theme changes
   React.useEffect(() => {
     if (!enableSystem || typeof window === 'undefined') return;
 
@@ -156,9 +173,13 @@ export function ThemeProvider({
     };
   }, [enableSystem]);
 
-  // Hydration effect - apply theme immediately on client
   React.useEffect(() => {
     setIsMounted(true);
+
+    if (!themeSwitchEnabled) {
+      applyTheme(configuredDefault);
+      return;
+    }
 
     let hydratedTheme = theme;
     try {
@@ -171,7 +192,6 @@ export function ThemeProvider({
       // Ignore localStorage errors and keep the configured default theme.
     }
 
-    // Immediately apply the correct theme on hydration
     const currentTheme =
       hydratedTheme === 'system' ? systemTheme : hydratedTheme;
     applyTheme(currentTheme);
@@ -179,10 +199,10 @@ export function ThemeProvider({
 
   const value = React.useMemo(
     () => ({
-      theme,
+      theme: themeSwitchEnabled ? theme : configuredDefault,
       setTheme,
       resolvedTheme:
-        isMounted && resolvedTheme ? resolvedTheme : systemTheme || 'dark',
+        isMounted && resolvedTheme ? resolvedTheme : configuredDefault,
       systemTheme: isMounted ? systemTheme : undefined,
     }),
     [theme, setTheme, resolvedTheme, systemTheme, isMounted]
@@ -208,7 +228,7 @@ export const useTheme = () => {
 
 export function useResolvedTheme() {
   const [resolvedTheme, setResolvedTheme] = React.useState<'light' | 'dark'>(
-    'dark'
+    configuredDefault
   );
 
   React.useEffect(() => {
