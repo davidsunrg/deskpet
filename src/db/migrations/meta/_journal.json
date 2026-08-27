@@ -43,6 +43,13 @@
       "when": 1787800222680,
       "tag": "0005_bitter_queen_noir",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1787802015061,
+      "tag": "0006_hard_skin",
+      "breakpoints": true
     }
   ]
 }

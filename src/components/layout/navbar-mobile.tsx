@@ -1,9 +1,7 @@
 import { m } from '@/locale/paraglide/messages';
 import { useNavbarLinks } from '@/config/navbar-config';
-import { authClient } from '@/auth/client';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
-import { Routes } from '@/lib/routes';
 import { buttonVariants } from '@/components/ui/button';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,33 +12,39 @@ import {
 import { Link, useLocation } from '@tanstack/react-router';
 import { IconChevronRight, IconMenu2, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/shared/logo';
-import { ModeSwitcherHorizontal } from '@/components/theme/mode-switcher-horizontal';
-import { LocaleSwitcher } from '@/components/layout/locale-switcher';
-import { UserButtonMobile } from '@/components/shared/user-button-mobile';
+import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
+import { MarketingUserButton } from '@/components/auth/marketing-user-button';
 import { LoginWrapper } from '@/components/auth/login-wrapper';
+import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
 import { websiteConfig } from '@/config/website';
+
 const mobileLinkClass =
-  'flex h-8 w-full items-center rounded-lg px-2.5 text-base text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 dark:aria-expanded:bg-muted/50';
-const mobileLinkActiveClass =
-  'bg-muted font-semibold text-foreground dark:bg-muted/50';
+  'flex h-8 w-full items-center rounded-lg px-2.5 text-base text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground';
+const mobileLinkActiveClass = 'bg-muted font-semibold text-foreground';
 const mobileSubLinkClass =
-  'flex w-full items-center gap-4 rounded-md p-2 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-muted/50';
-interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {}
-export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
+  'flex w-full items-center gap-4 rounded-md p-2 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground';
+
+interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {
+  identity: MarketingNavbarIdentity;
+}
+
+export function NavbarMobile({
+  className,
+  identity,
+  ...props
+}: NavbarMobileProps) {
   const pathname = useLocation().pathname;
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { data: session, isPending } = authClient.useSession();
-  const user = session?.user;
   const menuLinks = useNavbarLinks();
-  // Sync mount (avoid hydration mismatch) and close drawer on route change
+  const showAuth =
+    websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
+  const signedIn = !!identity.user;
+
   useEffect(() => {
-    setMounted(true);
     setOpen(false);
   }, [pathname]);
-  if (!mounted) return null;
+
   return (
     <>
       <div
@@ -55,19 +59,16 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
         </Link>
 
         <div className="flex items-center gap-4">
-          {websiteConfig.auth?.enable &&
-            (isPending ? (
-              <Skeleton className="size-8 rounded-full" />
-            ) : user ? (
-              <UserButtonMobile user={user} />
-            ) : null)}
+          {showAuth && signedIn ? (
+            <MarketingUserButton identity={identity} />
+          ) : null}
           <Button
             type="button"
             variant="ghost"
             size="icon"
             aria-expanded={open}
             aria-label={m.common_toggle_menu()}
-            onClick={() => setOpen((o) => !o)}
+            onClick={() => setOpen((value) => !value)}
             className="size-8 rounded-md border"
           >
             {open ? (
@@ -87,28 +88,20 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
           className="fixed inset-0 top-14.25 z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200 lg:hidden"
         >
           <div className="flex flex-1 flex-col items-start gap-4 p-4">
-            {websiteConfig.auth?.enable && !user && (
-              <div className="flex w-full flex-col gap-4">
-                <LoginWrapper mode="redirect" asChild>
-                  <Button
+            {showAuth && !signedIn ? (
+              <div className="flex w-full flex-col gap-3">
+                <MarketingLoginButton className="w-full" variant="outline" />
+                <LoginWrapper mode="modal" initialView="signup" asChild>
+                  <button
                     type="button"
-                    variant="outline"
-                    size="lg"
-                    className="w-full"
+                    className={cn(buttonVariants({ size: 'lg' }), 'w-full')}
                     onClick={() => setOpen(false)}
                   >
-                    {m.auth_common_login()}
-                  </Button>
+                    {m.auth_common_signup()}
+                  </button>
                 </LoginWrapper>
-                <Link
-                  to={Routes.Register}
-                  onClick={() => setOpen(false)}
-                  className={cn(buttonVariants({ size: 'lg' }), 'w-full')}
-                >
-                  {m.auth_common_signup()}
-                </Link>
               </div>
-            )}
+            ) : null}
 
             <ul className="w-full space-y-1">
               {menuLinks?.map((item) => {
@@ -183,11 +176,6 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
                 );
               })}
             </ul>
-
-            <div className="mt-auto w-full border-t border-border/50 p-4 flex items-center justify-end gap-2">
-              <LocaleSwitcher onLocaleChange={() => setOpen(false)} />
-              <ModeSwitcherHorizontal />
-            </div>
           </div>
         </div>
       )}

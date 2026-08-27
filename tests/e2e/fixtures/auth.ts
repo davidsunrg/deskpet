@@ -5,12 +5,29 @@ const e2eHeaders = {
   'x-e2e-secret': E2E_TEST_SECRET,
 };
 
+type OtpType = 'sign-in' | 'email-verification';
+
 export async function cleanupE2EUsers(request: APIRequestContext) {
   const response = await request.delete('/api/e2e/users', {
     headers: e2eHeaders,
   });
 
   expect(response.ok(), await response.text()).toBeTruthy();
+}
+
+export async function getE2EOtp(
+  request: APIRequestContext,
+  email: string,
+  otpType: OtpType
+) {
+  const query = new URLSearchParams({ email, otpType });
+  const response = await request.get(`/api/e2e/users?${query}`, {
+    headers: e2eHeaders,
+  });
+  expect(response.ok(), await response.text()).toBeTruthy();
+  const body = (await response.json()) as { otp?: string };
+  expect(body.otp).toBeTruthy();
+  return body.otp as string;
 }
 
 export async function registerE2EUser(
@@ -22,13 +39,13 @@ export async function registerE2EUser(
   const response = await request.post('/api/auth/sign-up/email', {
     headers: {
       Origin: origin,
-      Referer: `${origin}/auth/register`,
+      Referer: `${origin}/auth/signup`,
     },
     data: {
       email: user.email,
       password: user.password,
       name: user.name,
-      callbackURL: '/dashboard',
+      callbackURL: '/dashboard/actions',
     },
   });
 
@@ -59,17 +76,28 @@ export async function updateE2EUser(
   expect(response.ok(), await response.text()).toBeTruthy();
 }
 
-export async function loginByForm(page: Page, user: E2EUser) {
+export async function loginByOtpForm(
+  page: Page,
+  request: APIRequestContext,
+  user: E2EUser
+) {
   await page.goto('/auth/login');
   await page.waitForLoadState('networkidle');
   await page.locator('input[name="email"]').fill(user.email);
-  await page.locator('input[name="password"]').fill(user.password);
-  const signInButton = page.getByRole('button', {
-    name: /^sign in$|^登录$/i,
-  });
-  await expect(signInButton).toBeEnabled();
-  await signInButton.click();
-  await expect(page).toHaveURL(/\/dashboard\/?$/);
+  await page.getByRole('button', { name: /^continue$|^继续$/i }).click();
+  await expect(page.locator('input[name="otp"]')).toBeVisible();
+
+  const otp = await getE2EOtp(request, user.email, 'sign-in');
+  await page.locator('input[name="otp"]').fill(otp);
+  await page
+    .getByRole('button', { name: /^verify and continue$|^验证并继续$/i })
+    .click();
+  await expect(page).toHaveURL(/\/dashboard/);
+}
+
+/** @deprecated Use {@link loginByOtpForm} for OTP-based auth UI. */
+export async function loginByForm(page: Page, user: E2EUser) {
+  await loginByOtpForm(page, page.request, user);
 }
 
 /**
@@ -178,11 +206,6 @@ export async function waitForE2EPayment(
   return null;
 }
 
-/**
- * Poll until a paid payment row for the given E2E user exists, returning the
- * payment count and the latest subscription row exposed by the E2E API.
- * Used by the Waffo renewal journey to assert webhook lifecycle state.
- */
 export async function waitForSubscription(
   request: APIRequestContext,
   email: string,

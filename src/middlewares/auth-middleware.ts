@@ -1,4 +1,5 @@
 import { auth } from '@/auth/auth';
+import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { redirect } from '@tanstack/react-router';
 import { createMiddleware } from '@tanstack/react-start';
 import { getRequestHeaders } from '@tanstack/react-start/server';
@@ -19,7 +20,7 @@ export const authRouteMiddleware = createMiddleware().server(
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (!session?.user) {
+    if (!session?.user || !isRealSignedInUser(session.user)) {
       throw redirect({ to: Routes.Login });
     }
 
@@ -42,7 +43,7 @@ export const authApiMiddleware = createMiddleware().server(async ({ next }) => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
 
-  if (!session?.user) {
+  if (!session?.user || !isRealSignedInUser(session.user)) {
     return Response.json(
       { error: 'Unauthorized' },
       { status: 401, headers: { 'Content-Type': 'application/json' } }

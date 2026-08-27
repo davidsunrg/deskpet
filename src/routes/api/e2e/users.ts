@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { and, desc, eq, inArray, like } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { account, apikey, session, user } from '@/db/auth.schema';
+import { account, apikey, session, user, verification } from '@/db/auth.schema';
 import { payment, userFiles } from '@/db/app.schema';
 import { PaymentTypes } from '@/payment/types';
 
@@ -42,6 +42,24 @@ export const Route = createFileRoute('/api/e2e/users')({
           );
         }
         const paidOnly = url.searchParams.get('paid') === 'true';
+        const otpType = url.searchParams.get('otpType');
+
+        if (otpType === 'sign-in' || otpType === 'email-verification') {
+          const identifier = `${otpType}-otp-${email}`;
+          const [row] = await getDb()
+            .select({ value: verification.value })
+            .from(verification)
+            .where(eq(verification.identifier, identifier))
+            .orderBy(desc(verification.createdAt))
+            .limit(1);
+
+          if (!row) {
+            return Response.json({ error: 'OTP not found' }, { status: 404 });
+          }
+
+          const otp = row.value.split(':')[0] ?? '';
+          return Response.json({ otp });
+        }
 
         const db = getDb();
         const [row] = await db

@@ -32,6 +32,7 @@ export const Routes = {
   Auth: '/auth',
   Login: '/auth/login',
   Register: '/auth/register',
+  Signup: '/auth/signup',
   AuthError: '/auth/error',
   ForgotPassword: '/auth/forgot-password',
   ResetPassword: '/auth/reset-password',

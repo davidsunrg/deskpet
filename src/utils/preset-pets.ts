@@ -1,5 +1,5 @@
 import { getPublicPetMediaBase } from '@/lib/pet-media';
-import { PetSpecies } from '@/utils/pet-catalog';
+import type { PetSpecies } from '@/utils/pet-catalog';
 import type { PetBreed } from '@/utils/pet-catalog';
 import {
   listPetResources,

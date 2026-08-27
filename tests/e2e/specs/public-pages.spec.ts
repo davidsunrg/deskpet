@@ -24,7 +24,8 @@ const publicPages = [
   { path: '/privacy', name: 'privacy policy' },
   { path: '/terms', name: 'terms of service' },
   { path: '/auth/login', name: 'login' },
-  { path: '/auth/register', name: 'register' },
+  { path: '/auth/signup', name: 'signup' },
+  { path: '/auth/register', name: 'register alias' },
   { path: '/auth/forgot-password', name: 'forgot password' },
   { path: '/auth/reset-password', name: 'reset password' },
 ] as const;
@@ -64,49 +65,22 @@ test.describe('public page smoke coverage', () => {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog.locator('input[name="email"]')).toBeVisible();
-    await expect(dialog.locator('input[name="password"]')).toBeVisible();
+    await expect(dialog.locator('input[name="password"]')).toHaveCount(0);
     monitor.expectNoErrors('home login modal');
   });
 
-  test('keeps desktop auth action width stable while session loads', async ({
+  test('shows marketing auth controls without loading placeholders', async ({
     page,
   }) => {
-    let releaseSession = () => {};
-    const sessionGate = new Promise<void>((resolve) => {
-      releaseSession = resolve;
-    });
-
-    await page.route('**/api/auth/get-session', async (route) => {
-      await sessionGate;
-      await route.continue();
-    });
-
     await page.goto('/');
 
-    const placeholder = page.locator('[data-slot="auth-actions-placeholder"]');
-    await expect(placeholder).toBeVisible();
-    await expect(placeholder).toContainText('Log in');
-    await expect(placeholder).toContainText('Sign up');
-    const placeholderBox = await placeholder.boundingBox();
-    expect(placeholderBox).not.toBeNull();
-
-    releaseSession();
-
-    const loginButton = page.getByRole('button', { name: 'Log in' });
-    const signupLink = page.getByRole('link', { name: 'Sign up' });
-    await expect(loginButton).toBeVisible();
-    await expect(signupLink).toBeVisible();
-    await expect(placeholder).toHaveCount(0);
-
-    const loginBox = await loginButton.boundingBox();
-    const signupBox = await signupLink.boundingBox();
-    expect(loginBox).not.toBeNull();
-    expect(signupBox).not.toBeNull();
-    expect(
-      Math.abs(
-        signupBox!.x + signupBox!.width - loginBox!.x - placeholderBox!.width
-      )
-    ).toBeLessThanOrEqual(1);
+    await expect(
+      page.locator('[data-slot="auth-actions-placeholder"]')
+    ).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /^log in$/i })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /^sign up$/i })
+    ).toBeVisible();
   });
 
   test('hides open mobile navigation at the desktop breakpoint', async ({

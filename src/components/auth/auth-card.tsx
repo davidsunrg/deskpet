@@ -15,6 +15,7 @@ interface AuthCardProps {
   headerLabel: string;
   bottomButtonLabel: string;
   bottomButtonHref: string;
+  onBottomButtonClick?: () => void;
   className?: string;
 }
 
@@ -23,6 +24,7 @@ export function AuthCard({
   headerLabel,
   bottomButtonLabel,
   bottomButtonHref,
+  onBottomButtonClick,
   className,
 }: AuthCardProps) {
   return (
@@ -38,7 +40,11 @@ export function AuthCard({
       </CardHeader>
       <CardContent>{children}</CardContent>
       <CardFooter>
-        <BottomLink label={bottomButtonLabel} href={bottomButtonHref} />
+        <BottomLink
+          label={bottomButtonLabel}
+          href={bottomButtonHref}
+          onClick={onBottomButtonClick}
+        />
       </CardFooter>
     </Card>
   );

@@ -13,6 +13,8 @@ export type MailProviderName = NonNullable<
 export type EmailTemplate =
   | 'forgotPassword'
   | 'verifyEmail'
+  | 'signInOtp'
+  | 'signUpOtp'
   | 'subscribeNewsletter'
   | 'contactMessage';
 

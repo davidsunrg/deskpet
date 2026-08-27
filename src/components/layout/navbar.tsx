@@ -1,10 +1,8 @@
 import { m } from '@/locale/paraglide/messages';
 import { useNavbarLinks } from '@/config/navbar-config';
 import { useScroll } from '@/hooks/use-scroll';
-import { authClient } from '@/auth/client';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
-import { Routes } from '@/lib/routes';
 import { buttonVariants } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -17,32 +15,35 @@ import {
 } from '@/components/ui/navigation-menu';
 import Container from '@/components/layout/container';
 import { Logo } from '@/components/shared/logo';
-import { ModeSwitcher } from '@/components/theme/mode-switcher';
 import { NavbarMobile } from '@/components/layout/navbar-mobile';
-import { LocaleSwitcher } from '@/components/layout/locale-switcher';
-import { UserButton } from '@/components/shared/user-button';
+import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
+import { MarketingUserButton } from '@/components/auth/marketing-user-button';
 import { LoginWrapper } from '@/components/auth/login-wrapper';
+import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
 import { IconArrowUpRight } from '@tabler/icons-react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { websiteConfig } from '@/config/website';
+
 interface NavbarProps {
   scroll?: boolean;
+  identity: MarketingNavbarIdentity;
 }
-export function Navbar({ scroll = true }: NavbarProps) {
+
+export function Navbar({ scroll = true, identity }: NavbarProps) {
   const pathname = useLocation().pathname;
   const scrolled = useScroll(50);
   const menuLinks = useNavbarLinks();
-  const [mounted, setMounted] = useState(false);
   const [menuValue, setMenuValue] = useState<string | null>(null);
-  const { data: session, isPending } = authClient.useSession();
-  const user = session?.user;
   const showBarBg = scroll && scrolled;
-  // Sync mount (avoid auth hydration mismatch) and close menu on route change
+  const showAuth =
+    websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
+  const signedIn = !!identity.user;
+
   useEffect(() => {
-    setMounted(true);
     setMenuValue(null);
   }, [pathname]);
+
   return (
     <header
       className={cn(
@@ -78,19 +79,16 @@ export function Navbar({ scroll = true }: NavbarProps) {
               onValueChange={setMenuValue}
               className="flex-1 justify-center"
             >
-              <NavigationMenuList
-                aria-orientation={undefined}
-                className="gap-1"
-              >
+              <NavigationMenuList className="gap-1">
                 {menuLinks?.map((item) =>
                   item.items ? (
                     <NavigationMenuItem key={item.title} value={item.title}>
                       <NavigationMenuTrigger
                         className={cn(
-                          'bg-transparent',
+                          'bg-transparent rounded-none border-b-2 border-transparent px-3',
                           item.items.some((sub) =>
                             isLinkActive(sub.href, pathname)
-                          ) && 'font-semibold text-foreground'
+                          ) && 'border-primary font-semibold text-foreground'
                         )}
                       >
                         {item.title}
@@ -149,9 +147,9 @@ export function Navbar({ scroll = true }: NavbarProps) {
                         render={<Link to={item.href ?? '#'} />}
                         className={cn(
                           navigationMenuTriggerStyle(),
-                          'bg-transparent',
+                          'bg-transparent rounded-none border-b-2 border-transparent px-3',
                           isLinkActive(item.href, pathname) &&
-                            'font-semibold text-primary'
+                            'border-primary font-semibold text-foreground'
                         )}
                       >
                         {item.title}
@@ -162,63 +160,31 @@ export function Navbar({ scroll = true }: NavbarProps) {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <div className="flex items-center gap-4 shrink-0">
-              <LocaleSwitcher />
-              <ModeSwitcher />
-              {websiteConfig.auth?.enable &&
-                (!mounted || isPending ? (
-                  <div
-                    data-slot="auth-actions-placeholder"
-                    aria-hidden="true"
-                    className="flex shrink-0 items-center gap-4"
-                  >
-                    <span
-                      className={cn(
-                        buttonVariants({ variant: 'outline', size: 'sm' }),
-                        'pointer-events-none select-none'
-                      )}
-                    >
-                      {m.auth_common_login()}
-                    </span>
-                    <span
-                      className={cn(
-                        buttonVariants({ size: 'sm' }),
-                        'pointer-events-none select-none'
-                      )}
-                    >
-                      {m.auth_common_signup()}
-                    </span>
-                  </div>
-                ) : user ? (
-                  <UserButton user={user} />
+            {showAuth ? (
+              <div className="flex items-center gap-3 shrink-0">
+                {signedIn ? (
+                  <MarketingUserButton identity={identity} />
                 ) : (
                   <>
-                    <LoginWrapper mode="modal" asChild>
+                    <MarketingLoginButton />
+                    <LoginWrapper mode="modal" initialView="signup" asChild>
                       <button
                         type="button"
                         className={cn(
-                          buttonVariants({
-                            variant: 'outline',
-                            size: 'sm',
-                          }),
+                          buttonVariants({ size: 'sm' }),
                           'cursor-pointer'
                         )}
                       >
-                        {m.auth_common_login()}
+                        {m.auth_common_signup()}
                       </button>
                     </LoginWrapper>
-                    <Link
-                      to={Routes.Register}
-                      className={buttonVariants({ size: 'sm' })}
-                    >
-                      {m.auth_common_signup()}
-                    </Link>
                   </>
-                ))}
-            </div>
+                )}
+              </div>
+            ) : null}
           </nav>
 
-          <NavbarMobile className="lg:hidden" />
+          <NavbarMobile className="lg:hidden" identity={identity} />
         </Container>
       </div>
     </header>

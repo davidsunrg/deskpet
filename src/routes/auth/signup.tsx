@@ -1,18 +1,17 @@
 import { m } from '@/locale/paraglide/messages';
 import { createFileRoute, Link, redirect } from '@tanstack/react-router';
-import { LoginForm } from '@/components/auth/login-form';
+import { SignupForm } from '@/components/auth/signup-form';
 import { authClient } from '@/auth/client';
 import { guestRouteMiddleware } from '@/middlewares/guest-middleware';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { websiteConfig } from '@/config/website';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 
-export const Route = createFileRoute('/auth/login')({
+export const Route = createFileRoute('/auth/signup')({
   beforeLoad: async () => {
     if (!websiteConfig.auth?.enable) {
       throw redirect({ to: Routes.Root });
     }
-    // Client-side navigation: check session via auth client
     if (typeof window !== 'undefined') {
       const { data: session } = await authClient.getSession();
       if (session?.user && isRealSignedInUser(session.user)) {
@@ -20,23 +19,22 @@ export const Route = createFileRoute('/auth/login')({
       }
     }
   },
-  component: LoginPage,
+  component: SignupPage,
   server: {
-    // Server-side navigation: check session in server, 302 redirect
     middleware: [guestRouteMiddleware],
   },
   head: () => ({
     meta: [
-      { title: m.auth_login_title() },
-      { name: 'description', content: m.auth_login_description() },
+      { title: m.auth_signup_title() },
+      { name: 'description', content: m.auth_signup_description() },
     ],
   }),
 });
 
-function LoginPage() {
+function SignupPage() {
   return (
     <div className="flex flex-col gap-4">
-      <LoginForm />
+      <SignupForm />
       <div className="text-balance text-center text-xs text-muted-foreground">
         {m.auth_common_by_clicking_continue()}
         <Link

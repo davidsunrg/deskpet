@@ -59,7 +59,11 @@ export interface AuthConfig {
   enable: boolean;                 // Whether to enable the auth (hide auth pages and features)
   enableGoogleLogin?: boolean;     // Whether to enable google login
   enableCredentialLogin?: boolean; // Whether to enable email/password login
+  enableEmailOtpLogin?: boolean;   // Whether to enable passwordless email OTP login
+  enableNavbarLogin?: boolean;     // Whether to show login controls in marketing nav
   enableDeleteAccount?: boolean;   // Whether to enable account deletion
+  /** DeskPet compatibility alias for {@link enableDeleteAccount}. */
+  enableDeleteUser?: boolean;
 }
 
 /** Blog configuration */

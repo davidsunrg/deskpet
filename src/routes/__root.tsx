@@ -6,6 +6,7 @@ import {
   Scripts,
   useRouterState,
 } from '@tanstack/react-router';
+import { getMarketingNavbarIdentityFn } from '@/api/marketing-identity';
 import { Analytics } from '@/components/analytics/analytics';
 import { CrispChat } from '@/components/chatbox/crisp-chat';
 import { ThemeProvider } from '@/components/theme/theme-provider';
@@ -33,6 +34,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
+  loader: async () => ({
+    marketingIdentity: await getMarketingNavbarIdentityFn(),
+  }),
   head: () => {
     const ogImage = getOgImage();
     const twitterSite = websiteConfig.social?.twitter
@@ -125,6 +129,7 @@ export const Route = createRootRouteWithContext<{
  */
 function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
+  const marketingIdentity = Route.useLoaderData();
   const canonicalPathname = getCanonicalPathname(pathname);
   const matches = useRouterState({ select: (s) => s.matches }) ?? [];
   const isPlayground = canonicalPathname === Routes.Playground;
@@ -151,7 +156,7 @@ function RootComponent() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar scroll />
+      <Navbar scroll identity={marketingIdentity} />
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>

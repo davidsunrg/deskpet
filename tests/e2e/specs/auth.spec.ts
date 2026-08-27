@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import {
   cleanupE2EUsers,
-  loginByForm,
+  getE2EOtp,
+  loginByOtpForm,
   registerE2EUser,
-  updateE2EUser,
 } from '../fixtures/auth';
 import { createE2EUser } from '../fixtures/test-data';
 
@@ -23,40 +23,47 @@ test.describe('authentication and protected routes', () => {
     await expect(page.locator('input[name="email"]')).toBeVisible();
   });
 
-  test('allows a verified user to sign in and view dashboard', async ({
+  test('allows a verified user to sign in with email OTP and view dashboard', async ({
     page,
     request,
   }) => {
     const user = await registerE2EUser(request);
 
-    await loginByForm(page, user);
-    await expect(page.getByText('Total Revenue')).toBeVisible();
+    await loginByOtpForm(page, request, user);
+    await expect(
+      page.getByText('Bring your first desk pet home')
+    ).toBeVisible();
   });
 
-  test('allows a user to register from the register page', async ({
+  test('allows a user to register from the signup page with OTP', async ({
     page,
     request,
   }) => {
     const user = createE2EUser();
 
-    await page.goto('/auth/register');
+    await page.goto('/auth/signup');
     await page.waitForLoadState('networkidle');
     await page.locator('input[name="name"]').fill(user.name);
     await page.locator('input[name="email"]').fill(user.email);
-    await page.locator('input[name="password"]').fill(user.password);
-    await page.getByRole('button', { name: /^sign up$|^注册$/i }).click();
+    await page.getByRole('button', { name: /^continue$|^继续$/i }).click();
+    await expect(page.locator('input[name="otp"]')).toBeVisible();
+
+    const otp = await getE2EOtp(request, user.email, 'email-verification');
+    await page.locator('input[name="otp"]').fill(otp);
+    await page
+      .getByRole('button', {
+        name: /^verify and continue$|^验证并继续$/i,
+      })
+      .click();
 
     await expect(
-      page.getByText(/check your email to verify your account|请检查您的邮箱/i)
+      page.getByText('Bring your first desk pet home')
     ).toBeVisible();
+  });
 
-    await updateE2EUser(request, {
-      email: user.email,
-      emailVerified: true,
-      role: 'user',
-    });
-    await loginByForm(page, user);
-    await expect(page.getByText('Total Revenue')).toBeVisible();
+  test('redirects /auth/register to /auth/signup', async ({ page }) => {
+    await page.goto('/auth/register');
+    await expect(page).toHaveURL(/\/auth\/signup/);
   });
 
   test('redirects non-admin users away from admin pages', async ({
@@ -65,10 +72,10 @@ test.describe('authentication and protected routes', () => {
   }) => {
     const user = await registerE2EUser(request);
 
-    await loginByForm(page, user);
+    await loginByOtpForm(page, request, user);
     await page.goto('/admin/users');
 
-    await expect(page).toHaveURL(/\/dashboard\/?$/);
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test('allows admin users to view the users dashboard', async ({
@@ -77,7 +84,7 @@ test.describe('authentication and protected routes', () => {
   }) => {
     const user = await registerE2EUser(request, { role: 'admin' });
 
-    await loginByForm(page, user);
+    await loginByOtpForm(page, request, user);
     await page.goto('/admin/users');
 
     await expect(page).toHaveURL(/\/admin\/users\/?$/);

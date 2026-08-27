@@ -70,8 +70,11 @@ export const websiteConfig: WebsiteConfig = {
   auth: {
     enable: true,
     enableGoogleLogin: true,
-    enableCredentialLogin: true,
+    enableCredentialLogin: false,
+    enableEmailOtpLogin: true,
+    enableNavbarLogin: true,
     enableDeleteAccount: true,
+    enableDeleteUser: true,
   },
   blog: {
     enable: true,

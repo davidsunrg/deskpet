@@ -9,10 +9,11 @@ import { getBaseUrl } from '@/lib/urls';
 import { serverEnv } from '@/env/server';
 import { websiteConfig } from '@/config/website';
 import { createGoogleTokenHandlers } from '@/auth/google-token-handlers';
+import { transferAnonymousPetData } from '@/server/auth/transfer-anonymous-pet-data';
 import { getTrustedOrigins } from '@/auth/trusted-origins';
 import { emailHarmony } from 'better-auth-harmony';
 import { apiKey } from '@better-auth/api-key';
-import { admin, bearer } from 'better-auth/plugins';
+import { admin, anonymous, bearer, emailOTP } from 'better-auth/plugins';
 import { google, verifyGoogleIdToken } from 'better-auth/social-providers';
 import * as z from 'zod';
 
@@ -123,7 +124,10 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     // https://discord.com/channels/1300839113142046730/1300839113594769431/1454280549060444393
-    enabled: websiteConfig.auth?.enableCredentialLogin ?? false,
+    // Keep enabled for E2E helpers; marketing UI uses email OTP instead.
+    enabled:
+      (websiteConfig.auth?.enableCredentialLogin ?? false) ||
+      (websiteConfig.auth?.enableEmailOtpLogin ?? false),
     // https://www.better-auth.com/docs/concepts/email#2-require-email-verification
     requireEmailVerification: true,
     // https://www.better-auth.com/docs/authentication/email-password#forget-password
@@ -179,7 +183,10 @@ export const auth = betterAuth({
     },
     // https://www.better-auth.com/docs/concepts/users-accounts#delete-user
     deleteUser: {
-      enabled: websiteConfig.auth?.enableDeleteAccount ?? false,
+      enabled:
+        websiteConfig.auth?.enableDeleteAccount ??
+        websiteConfig.auth?.enableDeleteUser ??
+        false,
     },
   },
   databaseHooks: {
@@ -193,6 +200,29 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    anonymous({
+      onLinkAccount: async ({ anonymousUser, newUser }) => {
+        await transferAnonymousPetData({
+          anonymousUserId: anonymousUser.user.id,
+          newUserId: newUser.user.id,
+        });
+      },
+    }),
+    emailOTP({
+      otpLength: 6,
+      expiresIn: 60 * 5,
+      allowedAttempts: 3,
+      overrideDefaultEmailVerification: true,
+      sendVerificationOTP: async ({ email, otp, type }) => {
+        const template =
+          type === 'email-verification' ? 'signUpOtp' : 'signInOtp';
+        await sendEmail({
+          to: email,
+          template,
+          context: { otp, name: '' },
+        });
+      },
+    }),
     // https://www.better-auth.com/docs/plugins/bearer
     // Let the browser extension authenticate via `Authorization: Bearer
     // <token>`; the token is returned in the `set-auth-token` header.

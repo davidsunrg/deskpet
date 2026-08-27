@@ -1,9 +1,8 @@
 import { getAuthErrorMessage } from '@/lib/locale';
 import { m } from '@/locale/paraglide/messages';
-import { Link } from '@tanstack/react-router';
 import { AuthCard } from '@/components/auth/auth-card';
+import { EmailOtpForm } from '@/components/auth/email-otp-form';
 import { FormError } from '@/components/shared/form-error';
-import { FormSuccess } from '@/components/shared/form-success';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -20,21 +19,29 @@ import { cn } from '@/lib/utils';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 import { getPathWithLocale } from '@/lib/urls';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconEye, IconEyeOff, IconLoader2 } from '@tabler/icons-react';
+import { IconLoader2 } from '@tabler/icons-react';
+import { useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { SocialLoginButton } from './social-login-button';
+
 interface LoginFormProps {
   className?: string;
   callbackUrl?: string;
   onSuccess?: () => void;
+  onSwitchToSignup?: () => void;
+  bottomButtonHref?: string;
 }
+
 export function LoginForm({
   className,
   callbackUrl: propCallbackUrl,
   onSuccess,
+  onSwitchToSignup,
+  bottomButtonHref = Routes.Signup,
 }: LoginFormProps) {
+  const router = useRouter();
   const paramCallbackUrl =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('callbackUrl')
@@ -43,138 +50,104 @@ export function LoginForm({
   const callbackUrl =
     propCallbackUrl ??
     (paramCallbackUrl ? paramCallbackUrl : defaultCallbackUrl);
-  const [error, setError] = useState<string | undefined>(undefined);
-  const [success, setSuccess] = useState<string | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>();
   const [isPending, setIsPending] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const credentialLoginEnabled =
-    websiteConfig.auth?.enableCredentialLogin ?? false;
-  const LoginSchema = z.object({
+  const [step, setStep] = useState<'email' | 'otp'>('email');
+  const [email, setEmail] = useState('');
+
+  const EmailSchema = z.object({
     email: z.email({ message: m.auth_login_email_required() }),
-    password: z.string().min(1, { message: m.auth_login_password_required() }),
   });
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: { email: '', password: '' },
+
+  const form = useForm<z.infer<typeof EmailSchema>>({
+    resolver: zodResolver(EmailSchema),
+    defaultValues: { email: '' },
   });
-  const urlError =
-    typeof window !== 'undefined'
-      ? new URLSearchParams(window.location.search).get('error')
-      : null;
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    await authClient.signIn.email(
-      {
-        email: values.email,
-        password: values.password,
-        callbackURL: callbackUrl,
-      },
+
+  const handleSuccess = () => {
+    onSuccess?.();
+    if (!onSuccess) {
+      router.navigate({ to: callbackUrl });
+    }
+    void router.invalidate();
+  };
+
+  const onSubmit = async (values: z.infer<typeof EmailSchema>) => {
+    setEmail(values.email);
+    await authClient.emailOtp.sendVerificationOtp(
+      { email: values.email, type: 'sign-in' },
       {
         onRequest: () => {
           setIsPending(true);
-          setError('');
-          setSuccess('');
+          setError(undefined);
         },
         onResponse: () => setIsPending(false),
-        onSuccess: () => {
-          onSuccess?.();
-        },
-        onError: (ctx) => {
-          setError(getAuthErrorMessage(ctx.error));
-        },
+        onSuccess: () => setStep('otp'),
+        onError: (ctx) => setError(getAuthErrorMessage(ctx.error)),
       }
     );
   };
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+
+  if (step === 'otp') {
+    return (
+      <AuthCard
+        headerLabel={m.auth_login_welcome_back()}
+        bottomButtonLabel={m.auth_login_sign_up_hint()}
+        bottomButtonHref={bottomButtonHref}
+        onBottomButtonClick={onSwitchToSignup}
+        className={cn('', className)}
+      >
+        <EmailOtpForm
+          email={email}
+          otpType="sign-in"
+          onBack={() => setStep('email')}
+          onSuccess={handleSuccess}
+        />
+      </AuthCard>
+    );
+  }
+
   return (
     <AuthCard
       headerLabel={m.auth_login_welcome_back()}
       bottomButtonLabel={m.auth_login_sign_up_hint()}
-      bottomButtonHref={Routes.Register}
+      bottomButtonHref={bottomButtonHref}
+      onBottomButtonClick={onSwitchToSignup}
       className={cn('', className)}
     >
-      {credentialLoginEnabled && (
+      {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{m.auth_login_email()}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder={m.auth_login_placeholder_email()}
-                        type="email"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel>{m.auth_login_password()}</FormLabel>
-                      <Link
-                        to={Routes.ForgotPassword}
-                        className="text-xs font-normal text-muted-foreground hover:underline hover:underline-offset-4 hover:text-primary"
-                      >
-                        {m.auth_login_forgot_password()}
-                      </Link>
-                    </div>
-                    <div className="relative">
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder={m.auth_login_placeholder_password()}
-                          type={showPassword ? 'text' : 'password'}
-                          className="pr-10"
-                        />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 border-0 bg-transparent hover:bg-transparent hover:opacity-70 dark:hover:bg-transparent"
-                        onClick={togglePasswordVisibility}
-                        disabled={isPending}
-                      >
-                        {showPassword ? (
-                          <IconEyeOff className="size-4 text-muted-foreground" />
-                        ) : (
-                          <IconEye className="size-4 text-muted-foreground" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword
-                            ? m.auth_login_hide_password()
-                            : m.auth_login_show_password()}
-                        </span>
-                      </Button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormError message={error || urlError || undefined} />
-            <FormSuccess message={success} />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{m.auth_login_email()}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder={m.auth_login_placeholder_email()}
+                      type="email"
+                      name="email"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormError message={error} />
             <Button
               disabled={isPending}
               size="lg"
               type="submit"
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full"
             >
-              {isPending && <IconLoader2 className="size-4 animate-spin" />}
-              <span>{m.auth_login_sign_in()}</span>
+              {isPending && (
+                <IconLoader2 className="mr-2 size-4 animate-spin" />
+              )}
+              {m.auth_otp_continue()}
             </Button>
           </form>
         </Form>
@@ -182,7 +155,7 @@ export function LoginForm({
       <div className="mt-4">
         <SocialLoginButton
           callbackUrl={callbackUrl}
-          showDivider={credentialLoginEnabled}
+          showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
         />
       </div>
     </AuthCard>

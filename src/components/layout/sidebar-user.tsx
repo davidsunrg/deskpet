@@ -19,7 +19,12 @@ import {
 } from '@/components/ui/sidebar';
 import { websiteConfig } from '@/config/website';
 import type { SessionUser } from '@/auth/types';
-import { localeConfig, localeSwitchEnabled, locales, type Locale } from '@/lib/locale';
+import {
+  localeConfig,
+  localeSwitchEnabled,
+  locales,
+  type Locale,
+} from '@/lib/locale';
 import { useLocaleSwitcher } from '@/components/layout/locale-switcher';
 import {
   IconDeviceDesktop,

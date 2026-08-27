@@ -3,12 +3,16 @@ import React, { type ReactElement } from 'react';
 import type { EmailTemplate } from './types';
 import ContactMessage from './templates/contact-message';
 import ForgotPassword from './templates/forgot-password';
+import SignInOtp from './templates/sign-in-otp';
+import SignUpOtp from './templates/sign-up-otp';
 import SubscribeNewsletter from './templates/subscribe-newsletter';
 import VerifyEmail from './templates/verify-email';
 
 const EmailTemplates = {
   forgotPassword: ForgotPassword,
   verifyEmail: VerifyEmail,
+  signInOtp: SignInOtp,
+  signUpOtp: SignUpOtp,
   subscribeNewsletter: SubscribeNewsletter,
   contactMessage: ContactMessage,
 } as const;
@@ -17,6 +21,8 @@ const en = { locale: 'en' as const };
 const EmailSubjects: Record<EmailTemplate, string> = {
   forgotPassword: m.mail_forgot_password_subject(undefined, en),
   verifyEmail: m.mail_verify_email_subject(undefined, en),
+  signInOtp: m.mail_sign_in_otp_subject(undefined, en),
+  signUpOtp: m.mail_sign_up_otp_subject(undefined, en),
   subscribeNewsletter: m.mail_subscribe_newsletter_subject(undefined, en),
   contactMessage: m.mail_contact_message_subject(undefined, en),
 };
