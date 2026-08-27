@@ -179,57 +179,57 @@
 
 @layer base {
   /*
-   * Inter + Noto Sans Mono match deskpet-next marketing chrome.
-   * Bricolage remains available via --font-bricolage-grotesque if needed later.
-   * `font-display: optional` avoids CLS on first paint.
+   * Inter + Noto Sans Mono — self-hosted equivalent of deskpet-next next/font setup.
+   * Use font-display: swap (same as next/font) so Black weights always load;
+   * optional caused fallback system fonts and made logo / Log In look wrong.
    */
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 400;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/inter-400.woff2") format("woff2");
   }
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 500;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/inter-500.woff2") format("woff2");
   }
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 600;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/inter-600.woff2") format("woff2");
   }
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 700;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/inter-700.woff2") format("woff2");
   }
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 800;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/inter-800.woff2") format("woff2");
   }
   @font-face {
     font-family: "Inter";
     font-style: normal;
     font-weight: 900;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/inter-900.woff2") format("woff2");
   }
   @font-face {
     font-family: "Noto Sans Mono";
     font-style: normal;
     font-weight: 400;
-    font-display: optional;
+    font-display: swap;
     src: url("/fonts/noto-mono-400.woff2") format("woff2");
   }
   @font-face {

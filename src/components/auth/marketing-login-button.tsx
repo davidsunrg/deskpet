@@ -5,15 +5,14 @@ import { authClient } from '@/auth/client';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { Routes } from '@/lib/routes';
 import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
+import { m } from '@/locale/paraglide/messages';
 import { useRouter } from '@tanstack/react-router';
 
 interface MarketingLoginButtonProps {
   className?: string;
   callbackUrl?: string;
 }
-
-const signInLabel = 'Sign In';
 
 export function MarketingLoginButton({
   className,
@@ -22,10 +21,15 @@ export function MarketingLoginButton({
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const isSignedIn = isRealSignedInUser(session?.user);
+  const loginLabel = m.auth_common_login();
 
-  const buttonClassName = cn(
-    buttonVariants({ variant: 'outline', size: 'sm' }),
-    'cursor-pointer text-[15px] font-bold font-sans',
+  const loginButtonClass = cn(
+    buttonVariants({
+      variant: 'outline',
+      size: 'sm',
+    }),
+    // Match hero Cat/Dog badges: mono + black weight
+    'cursor-pointer font-mono font-black',
     className
   );
 
@@ -33,18 +37,18 @@ export function MarketingLoginButton({
     return (
       <button
         type="button"
-        className={buttonClassName}
+        className={loginButtonClass}
         onClick={() => router.navigate({ to: Routes.Dashboard })}
       >
-        {signInLabel}
+        {loginLabel}
       </button>
     );
   }
 
   return (
     <LoginWrapper mode="modal" asChild callbackUrl={callbackUrl}>
-      <button type="button" className={buttonClassName}>
-        {signInLabel}
+      <button type="button" className={loginButtonClass}>
+        {loginLabel}
       </button>
     </LoginWrapper>
   );
