@@ -8,6 +8,7 @@ import {
   deLocalizeHref,
   getLocale,
   localeConfig,
+  localeSwitchEnabled,
   locales,
   localizeHref,
   type Locale,
@@ -69,7 +70,7 @@ export function LocaleSwitcher({
     onLocaleChange,
   });
 
-  if (locales.length <= 1) {
+  if (!localeSwitchEnabled || locales.length <= 1) {
     return null;
   }
 

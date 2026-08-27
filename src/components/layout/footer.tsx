@@ -1,17 +1,20 @@
+'use client';
+
 import { m } from '@/locale/paraglide/messages';
 import { useFooterLinks } from '@/config/footer-config';
-import { getSocialLinks } from '@/config/social-config';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import Container from '@/components/layout/container';
 import { Logo } from '@/components/shared/logo';
-import BuiltWithButton from '@/components/shared/built-with-button';
 import { Link, useLocation } from '@tanstack/react-router';
 import { websiteConfig } from '@/config/website';
+import { useTranslations } from '@/lib/deskpet-i18n';
+
 export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
   const pathname = useLocation().pathname;
   const footerLinks = useFooterLinks();
-  const socialLinks = getSocialLinks();
+  const t = useTranslations('Marketing.footer');
+
   return (
     <footer className={cn('border-t', className)}>
       <Container className="px-4">
@@ -23,29 +26,6 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
                 {websiteConfig.metadata?.name}
               </span>
             </div>
-            <p className="text-muted-foreground text-base py-2 md:pr-12">
-              {m.footer_tagline()}
-            </p>
-            <nav
-              aria-label={m.common_social_links()}
-              className="flex items-center gap-4 pt-6"
-            >
-              {socialLinks?.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={link.title}
-                    href={link.href ?? '#'}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={link.title}
-                    className="inline-flex size-8 items-center justify-center rounded-full border border-border hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all duration-200"
-                  >
-                    {Icon ? <Icon className="size-4" /> : null}
-                  </a>
-                );
-              })}
-            </nav>
           </div>
 
           {footerLinks?.map((section) => (
@@ -95,12 +75,14 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
       </Container>
 
       <div className="border-t py-8">
-        <Container className="px-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <span className="text-muted-foreground text-sm">
+        <Container className="flex flex-col items-start gap-2 px-4 text-left">
+          <p className="max-w-md text-base text-muted-foreground">
+            {t('tagline')}
+          </p>
+          <span className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} {websiteConfig.metadata?.name}.{' '}
             {m.footer_rights_reserved()}
           </span>
-          <BuiltWithButton />
         </Container>
       </div>
     </footer>

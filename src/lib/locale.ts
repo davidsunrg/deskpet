@@ -17,6 +17,9 @@ export {
   type Locale,
 };
 
+/** Hide locale switcher UI while the product ships English-only. */
+export const localeSwitchEnabled = false;
+
 type LocaleConfig = {
   flag?: string;
   name: string;
