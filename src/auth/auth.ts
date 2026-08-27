@@ -9,10 +9,9 @@ import { getBaseUrl } from '@/lib/urls';
 import { serverEnv } from '@/env/server';
 import { websiteConfig } from '@/config/website';
 import { createGoogleTokenHandlers } from '@/auth/google-token-handlers';
-import { transferAnonymousPetData } from '@/server/auth/transfer-anonymous-pet-data';
 import { getTrustedOrigins } from '@/auth/trusted-origins';
 import { emailHarmony } from 'better-auth-harmony';
-import { admin, anonymous, bearer, emailOTP } from 'better-auth/plugins';
+import { admin, bearer, emailOTP } from 'better-auth/plugins';
 import { google, verifyGoogleIdToken } from 'better-auth/social-providers';
 import * as z from 'zod';
 
@@ -199,14 +198,6 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    anonymous({
-      onLinkAccount: async ({ anonymousUser, newUser }) => {
-        await transferAnonymousPetData({
-          anonymousUserId: anonymousUser.user.id,
-          newUserId: newUser.user.id,
-        });
-      },
-    }),
     emailOTP({
       otpLength: 6,
       expiresIn: 60 * 5,

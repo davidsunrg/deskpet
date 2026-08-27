@@ -1,158 +1,132 @@
-import { getDb } from '@/db';
-import { userFiles } from '@/db/app.schema';
 import { getBaseUrl } from '@/lib/urls';
-import { sessionApiMiddleware } from '@/middlewares/session-api-middleware';
-import { uploadFile } from '@/storage';
-import { StorageError, UploadError } from '@/storage/types';
-import { createServerFn } from '@tanstack/react-start';
-import { and, desc, eq, like } from 'drizzle-orm';
-import { z } from 'zod';
-import { listHeroPets } from '@/pets/catalog';
 import {
-  isPetMakerPhotoDescription,
-  parsePetMakerPhotoDescription,
-} from '@/utils/pets/pet-maker-file-meta';
-import type { CreatorWizardInitialDraft } from '@/utils/pets/creator-wizard-initial-draft';
+  deleteObject,
+  getPresignedUploadUrl,
+} from '@/lib/storage/r2-s3';
+import { authApiMiddleware } from '@/middlewares/auth-middleware';
+import { createPetFromDraft } from '@/server/pets/create-pet-from-draft';
+import { listHeroPets } from '@/pets/catalog';
 import { HERO_PET_PREVIEW_COUNT } from '@/utils/showcase-pets';
-import { auth } from '@/auth/auth';
-import { getRequestHeaders } from '@tanstack/react-start/server';
+import {
+  buildPetMakerStagingKey,
+  isPetMakerStagingKeyForDraft,
+  isUuid,
+} from '@/utils/pets/pet-maker-storage-keys';
+import { PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
+import { createServerFn } from '@tanstack/react-start';
+import { z } from 'zod';
 
-const uploadSchema = z
-  .custom<FormData>((v): v is FormData => v instanceof FormData)
-  .transform((fd) => {
-    const file = fd.get('file');
-    if (!file || !(file instanceof File)) {
-      throw new Error('File not provided');
-    }
-    const descriptionRaw = fd.get('description');
-    const description =
-      typeof descriptionRaw === 'string' && descriptionRaw !== ''
-        ? descriptionRaw
-        : undefined;
-    return { file, description };
+const ALLOWED_CONTENT_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+] as const;
+
+function extensionForContentType(contentType: string): string {
+  switch (contentType) {
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/png':
+      return 'png';
+    case 'image/webp':
+      return 'webp';
+    default:
+      return 'bin';
+  }
+}
+
+const stagingUploadSchema = z.object({
+  draftId: z.string().refine(isUuid, 'Invalid draft id'),
+  fileId: z.string().refine(isUuid, 'Invalid file id'),
+  contentType: z.enum(ALLOWED_CONTENT_TYPES),
+  byteSize: z.number().int().positive().max(PET_MEDIA_MAX_FILE_SIZE),
+});
+
+export const getPetMakerStagingUploadUrlFn = createServerFn({ method: 'POST' })
+  .validator(stagingUploadSchema)
+  .handler(async ({ data }) => {
+    const extension = extensionForContentType(data.contentType);
+    const r2Key = buildPetMakerStagingKey({
+      draftId: data.draftId,
+      fileId: data.fileId,
+      extension,
+    });
+    const uploadUrl = await getPresignedUploadUrl({
+      key: r2Key,
+      contentType: data.contentType,
+    });
+    const requestOrigin = getBaseUrl();
+    const previewUrl = `${requestOrigin}/api/storage/file?key=${encodeURIComponent(r2Key)}`;
+    return { uploadUrl, r2Key, previewUrl, contentType: data.contentType };
   });
 
-export const uploadPetMakerPhotoFn = createServerFn({ method: 'POST' })
-  .validator(uploadSchema)
-  .middleware([sessionApiMiddleware])
-  .handler(async ({ data, context }) => {
-    const { userId } = context;
-    try {
-      const buffer = Buffer.from(await data.file.arrayBuffer());
-      const requestOrigin = getBaseUrl();
+const stagingDeleteSchema = z.object({
+  draftId: z.string().refine(isUuid, 'Invalid draft id'),
+  r2Key: z.string().min(1),
+});
 
-      const result = await uploadFile(buffer, data.file.name, data.file.type, {
-        folder: 'pet-maker',
-        userId,
-        requestOrigin,
-      });
-
-      if (!result.metadata) {
-        throw new Error('Upload metadata missing');
-      }
-
-      const db = getDb();
-      const now = result.metadata.uploadedAt;
-      await db.insert(userFiles).values({
-        id: result.metadata.id,
-        userId,
-        filename: result.metadata.filename,
-        originalName: result.metadata.originalName,
-        contentType: result.metadata.contentType,
-        size: result.metadata.size,
-        r2Key: result.metadata.r2Key,
-        createdAt: now,
-        updatedAt: now,
-        isPublic: false,
-        description: data.description ?? null,
-      });
-
-      return {
-        userFileId: result.metadata.id,
-        url: result.url,
-        r2Key: result.metadata.r2Key,
-      };
-    } catch (error) {
-      if (error instanceof UploadError || error instanceof StorageError) {
-        throw new Error(error.message);
-      }
-      throw new Error('Something went wrong while uploading the file');
+export const deletePetMakerStagingObjectFn = createServerFn({ method: 'POST' })
+  .validator(stagingDeleteSchema)
+  .handler(async ({ data }) => {
+    if (!isPetMakerStagingKeyForDraft(data.r2Key, data.draftId)) {
+      throw new Error('Invalid staging key');
     }
+    await deleteObject(data.r2Key);
   });
 
-const deleteSchema = z.object({ id: z.string() });
+const createPetSchema = z.object({
+  draftId: z.string().refine(isUuid, 'Invalid draft id'),
+  petName: z.string().trim().min(1).max(120),
+  species: z.string().trim().min(1).max(64),
+  breed: z.string().trim().min(1).max(120),
+  sex: z.string().trim().max(32).nullable(),
+  avatarKey: z.string().nullable(),
+  photoKeys: z.array(z.string()).min(1).max(8),
+});
 
-export const deletePetMakerPhotoFn = createServerFn({ method: 'POST' })
-  .validator(deleteSchema)
-  .middleware([sessionApiMiddleware])
+export const createPetFn = createServerFn({ method: 'POST' })
+  .validator(createPetSchema)
+  .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { userId } = context;
-    const db = getDb();
-    const [row] = await db
-      .select()
-      .from(userFiles)
-      .where(and(eq(userFiles.id, data.id), eq(userFiles.userId, userId)))
-      .limit(1);
-
-    if (!row || !isPetMakerPhotoDescription(row.description)) {
-      throw new Error('File not found');
-    }
-
-    const { deleteFile } = await import('@/storage');
-    await deleteFile(row.r2Key);
-    await db.delete(userFiles).where(eq(userFiles.id, data.id));
+    const result = await createPetFromDraft({
+      userId,
+      draftId: data.draftId,
+      petName: data.petName,
+      species: data.species,
+      breed: data.breed,
+      sex: data.sex,
+      avatarKey: data.avatarKey,
+      photoKeys: data.photoKeys,
+    });
+    return { petId: result.petId };
   });
 
 export const loadDesktopPetMakerPageDataFn = createServerFn({
   method: 'GET',
 }).handler(async () => {
-  const headers = getRequestHeaders();
-  const session = await auth.api.getSession({ headers });
-  const sessionUserId = session?.user?.id ?? null;
-
   const heroPets = await listHeroPets(HERO_PET_PREVIEW_COUNT);
-  let initialDraft: CreatorWizardInitialDraft | null = null;
-
-  if (sessionUserId) {
-    const db = getDb();
-    const requestOrigin = getBaseUrl();
-    const rows = await db
-      .select()
-      .from(userFiles)
-      .where(
-        and(
-          eq(userFiles.userId, sessionUserId),
-          like(userFiles.description, '%pet_maker_photo%')
-        )
-      )
-      .orderBy(desc(userFiles.createdAt))
-      .limit(8);
-
-    if (rows.length > 0) {
-      initialDraft = {
-        petName: '',
-        species: '',
-        breed: '',
-        sex: '',
-        avatarUrl: null,
-        photos: rows
-          .map((row) => {
-            const meta = parsePetMakerPhotoDescription(row.description);
-            if (!meta) return null;
-            return {
-              id: meta.localId,
-              name: row.originalName,
-              url: `${requestOrigin}/api/storage/file?key=${encodeURIComponent(row.r2Key)}`,
-              userFileId: row.id,
-            };
-          })
-          .filter((photo): photo is NonNullable<typeof photo> => photo !== null)
-          .reverse(),
-        recognitionData: null,
-        recognitionMediaFingerprint: null,
-      };
-    }
-  }
-
-  return { heroPets, initialDraft };
+  return { heroPets };
 });
+
+export const listUserPetsFn = createServerFn({ method: 'GET' })
+  .middleware([authApiMiddleware])
+  .handler(async ({ context }) => {
+    const { getDb } = await import('@/db');
+    const { pet } = await import('@/db/app.schema');
+    const { desc, eq } = await import('drizzle-orm');
+    const db = getDb();
+    const rows = await db
+      .select({
+        id: pet.id,
+        name: pet.name,
+        species: pet.species,
+        breed: pet.breed,
+        createdAt: pet.createdAt,
+      })
+      .from(pet)
+      .where(eq(pet.userId, context.userId))
+      .orderBy(desc(pet.createdAt))
+      .limit(20);
+    return { pets: rows };
+  });

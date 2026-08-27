@@ -2,7 +2,6 @@ import { CreatePetWizard } from '@/components/tools/create-pet-wizard';
 import { DesktopPetMakerPetShowcase } from '@/components/tools/desktop-pet-maker-pet-showcase';
 import { MarketingToolsShell } from '@/components/tools/marketing-tools-shell';
 import { useTranslations } from '@/lib/deskpet-i18n';
-import type { CreatorWizardInitialDraft } from '@/utils/pets/creator-wizard-initial-draft';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 
 const WHAT_YOU_GET_IDS = ['profile', 'actions', 'play', 'care'] as const;
@@ -19,20 +18,16 @@ const STEP_IDS = ['photos', 'basics', 'details'] as const;
 
 type DesktopPetMakerPageProps = {
   heroPets: ShowcasePet[];
-  initialDraft?: CreatorWizardInitialDraft | null;
 };
 
-export function DesktopPetMakerPage({
-  heroPets,
-  initialDraft = null,
-}: DesktopPetMakerPageProps) {
+export function DesktopPetMakerPage({ heroPets }: DesktopPetMakerPageProps) {
   const tSteps = useTranslations('CreatePetWizard.seoSteps');
   const tContent = useTranslations('CreatePetWizard.seoContent');
   const tFaq = useTranslations('CreatePetWizard.faq');
 
   return (
     <MarketingToolsShell>
-      <CreatePetWizard initialDraft={initialDraft} />
+      <CreatePetWizard />
 
       <section
         className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10"

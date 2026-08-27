@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { websiteConfig } from '@/config/website';
 import { authClient } from '@/auth/client';
-import { useUploadUserAvatar } from '@/hooks/use-user-files';
+import { useUploadPublicAvatar } from '@/hooks/use-upload-public-file';
 import { cn } from '@/lib/utils';
 import { IconUser } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -28,7 +28,7 @@ export function UpdateAvatarCard({ className }: UpdateAvatarCardProps) {
   const [error, setError] = useState<string | undefined>('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const { data: session, refetch } = authClient.useSession();
-  const uploadMutation = useUploadUserAvatar();
+  const uploadMutation = useUploadPublicAvatar();
   useEffect(() => {
     if (session?.user?.image) setAvatarUrl(session.user.image);
   }, [session]);

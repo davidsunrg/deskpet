@@ -1,16 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getRequestHeaders } from '@tanstack/react-start/server';
-import { eq } from 'drizzle-orm';
 import { auth } from '@/auth/auth';
-import { getDb } from '@/db';
-import { userFiles } from '@/db/app.schema';
+import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { getFile } from '@/storage';
 import { isPublicFolder } from '@/storage/utils';
 import { ConfigurationError } from '@/storage/types';
+import {
+  isPetMakerFinalKey,
+  isPetMakerStagingKey,
+} from '@/utils/pets/pet-maker-storage-keys';
+import { userOwnsStorageKey } from '@/server/pets/create-pet-from-draft';
 
 /**
  * Serves a file by key via the storage provider (same-origin proxy URL).
- * Shared asset folders stay public; private user files require ownership.
+ * Public folders and pet-maker staging keys are readable without auth.
+ * Final pet-maker keys require ownership of a matching pet row.
  */
 export const Route = createFileRoute('/api/storage/file')({
   server: {
@@ -25,24 +29,24 @@ export const Route = createFileRoute('/api/storage/file')({
         try {
           const headers = getRequestHeaders();
           const session = await auth.api.getSession({ headers });
-          const userId = session?.user?.id;
+          const userId =
+            session?.user && isRealSignedInUser(session.user)
+              ? session.user.id
+              : undefined;
           const isPublicKey = isPublicFolder(key);
+          const isStagingKey = isPetMakerStagingKey(key);
+          const isFinalPetMakerKey = isPetMakerFinalKey(key);
 
-          const db = getDb();
-          const [fileRecord] = await db
-            .select({ userId: userFiles.userId, isPublic: userFiles.isPublic })
-            .from(userFiles)
-            .where(eq(userFiles.r2Key, key))
-            .limit(1);
-
-          if (!fileRecord && !isPublicKey) {
-            return new Response('Not Found', { status: 404 });
-          }
-
-          if (fileRecord && !fileRecord.isPublic) {
-            if (!userId || fileRecord.userId !== userId) {
+          if (isFinalPetMakerKey) {
+            if (!userId) {
               return new Response('Forbidden', { status: 403 });
             }
+            const ownsKey = await userOwnsStorageKey(userId, key);
+            if (!ownsKey) {
+              return new Response('Forbidden', { status: 403 });
+            }
+          } else if (!isPublicKey && !isStagingKey) {
+            return new Response('Not Found', { status: 404 });
           }
 
           const file = await getFile(key);
@@ -50,8 +54,6 @@ export const Route = createFileRoute('/api/storage/file')({
             return new Response('Not Found', { status: 404 });
           }
 
-          // Only allow safe content types to be rendered inline;
-          // force download for everything else to prevent stored XSS.
           const safeInlineTypes = [
             'image/jpeg',
             'image/png',
@@ -62,7 +64,7 @@ export const Route = createFileRoute('/api/storage/file')({
             'image/svg+xml',
             'application/pdf',
           ];
-          const isPublicFile = fileRecord?.isPublic === true || isPublicKey;
+          const isPublicFile = isPublicKey || isStagingKey;
           const responseHeaders: Record<string, string> = {
             'Content-Type': file.contentType,
             'Cache-Control': isPublicFile

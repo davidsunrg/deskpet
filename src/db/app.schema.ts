@@ -13,8 +13,8 @@ import type {
   PlanInterval,
 } from '@/payment/types';
 
-/** 
- * Payment: subscription and one-time 
+/**
+ * Payment: subscription and one-time
  */
 export const payment = sqliteTable(
   'payment',
@@ -28,9 +28,9 @@ export const payment = sqliteTable(
     subscriptionId: text('subscription_id'),
     sessionId: text('session_id'),
     invoiceId: text('invoice_id').unique(),
-    type: text('type').notNull().$type<PaymentType>(), // 'subscription' | 'one_time'
-    scene: text('scene').$type<PaymentScene>(), // 'subscription' | 'lifetime'
-    interval: text('interval').$type<PlanInterval>(), // 'month' | 'year'
+    type: text('type').notNull().$type<PaymentType>(),
+    scene: text('scene').$type<PaymentScene>(),
+    interval: text('interval').$type<PlanInterval>(),
     status: text('status').notNull().$type<PaymentStatus>(),
     paid: integer('paid', { mode: 'boolean' }).notNull().default(false),
     periodStart: integer('period_start', { mode: 'timestamp_ms' }),
@@ -56,38 +56,28 @@ export const paymentRelations = relations(payment, ({ one }) => ({
   user: one(user, { fields: [payment.userId], references: [user.id] }),
 }));
 
-/**
- * User files
- * metadata for files uploaded to R2 (path userfiles/{userId}/xxx);
- * filename = stored name on R2 (e.g. uuid.ext);
- * originalName = user's file name.
- */
-export const userFiles = sqliteTable(
-  'user_files',
+/** User-created desktop pet from the pet maker. */
+export const pet = sqliteTable(
+  'pet',
   {
     id: text('id').primaryKey(),
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    filename: text('filename').notNull(),
-    originalName: text('original_name').notNull(),
-    contentType: text('content_type').notNull(),
-    size: integer('size').notNull(),
-    r2Key: text('r2_key').notNull(),
-    isPublic: integer('is_public', { mode: 'boolean' }),
-    description: text('description'),
+    name: text('name').notNull(),
+    species: text('species').notNull(),
+    breed: text('breed').notNull(),
+    sex: text('sex'),
+    avatar: text('avatar'),
+    photoKeys: text('photo_keys', { mode: 'json' })
+      .$type<string[]>()
+      .notNull(),
     createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
     updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
   },
-  (table) => [
-    index('user_files_user_id_idx').on(table.userId),
-    index('user_files_r2_key_idx').on(table.r2Key),
-  ]
+  (table) => [index('pet_user_id_idx').on(table.userId)]
 );
 
-export const userFilesRelations = relations(userFiles, ({ one }) => ({
-  user: one(user, {
-    fields: [userFiles.userId],
-    references: [user.id],
-  }),
+export const petRelations = relations(pet, ({ one }) => ({
+  user: one(user, { fields: [pet.userId], references: [user.id] }),
 }));

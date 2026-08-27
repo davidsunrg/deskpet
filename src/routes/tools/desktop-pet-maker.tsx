@@ -16,8 +16,6 @@ export const Route = createFileRoute('/tools/desktop-pet-maker')({
 });
 
 function DesktopPetMakerRoutePage() {
-  const { heroPets, initialDraft } = Route.useLoaderData();
-  return (
-    <DesktopPetMakerPage heroPets={heroPets} initialDraft={initialDraft} />
-  );
+  const { heroPets } = Route.useLoaderData();
+  return <DesktopPetMakerPage heroPets={heroPets} />;
 }

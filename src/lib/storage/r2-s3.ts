@@ -148,3 +148,32 @@ export async function deleteObject(key: string): Promise<void> {
     throw new StorageError(`DELETE object failed (${response.status}): ${key}`);
   }
 }
+
+export async function putObject(input: {
+  key: string;
+  body: Uint8Array;
+  contentType: string;
+}): Promise<void> {
+  const client = getAwsClient();
+  const response = await client.fetch(objectUrl(input.key), {
+    method: 'PUT',
+    body: input.body,
+    headers: { 'Content-Type': input.contentType },
+  });
+  if (!response.ok) {
+    throw new StorageError(`PUT object failed (${response.status}): ${input.key}`);
+  }
+}
+
+export async function copyObject(input: {
+  sourceKey: string;
+  destinationKey: string;
+  contentType?: string;
+}): Promise<void> {
+  const { body, contentType } = await getObject(input.sourceKey);
+  await putObject({
+    key: input.destinationKey,
+    body,
+    contentType: input.contentType ?? contentType ?? 'application/octet-stream',
+  });
+}

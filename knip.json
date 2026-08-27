@@ -39,7 +39,6 @@
     "src/components/layout/sidebar-layout.tsx": ["exports"],
     "src/hooks/use-auth.ts": ["exports"],
     "src/hooks/use-newsletter.ts": ["exports"],
-    "src/hooks/use-user-files.ts": ["exports"],
     "src/hooks/use-users.ts": ["exports"],
     "src/lib/locale.ts": ["exports"],
     "src/lib/seo.ts": ["exports"],

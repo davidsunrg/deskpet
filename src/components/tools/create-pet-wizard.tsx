@@ -1,8 +1,9 @@
 'use client';
 
 import {
-  deletePetMakerPhotoFn,
-  uploadPetMakerPhotoFn,
+  createPetFn,
+  deletePetMakerStagingObjectFn,
+  getPetMakerStagingUploadUrlFn,
 } from '@/api/pet-maker-wizard';
 import { AuthDialog } from '@/components/auth/auth-dialog';
 import {
@@ -34,7 +35,7 @@ import {
 } from '@/components/ui/select';
 import { authClient } from '@/lib/auth/auth-client';
 import { useLocale, useTranslations } from '@/lib/deskpet-i18n';
-import { ensureAnonymousSession } from '@/lib/auth/ensure-anonymous-session';
+import { uploadFileWithPresignedUrl } from '@/lib/storage/presigned-upload';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { DEFAULT_LOCALE } from '@/lib/i18n/routing';
 import { Routes } from '@/lib/routes';
@@ -50,7 +51,13 @@ import {
   type SquareCropPixels,
 } from '@/utils/compress-square-avatar';
 import { MAX_FILE_SIZE, PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
-import { buildPetMakerPhotoDescription } from '@/utils/pets/pet-maker-file-meta';
+import {
+  clearDraft,
+  createEmptyDraft,
+  ensureDraftId,
+  readDraft,
+  writeDraft,
+} from '@/utils/pets/pet-maker-local-draft';
 import {
   getPetBreedLabel,
   getPetSpeciesLabel,
@@ -64,7 +71,6 @@ import {
   speciesUsesBreeds,
 } from '@/utils/pet-catalog';
 import { ACTION_POSE_REFERENCE_MIME_TYPE } from '@/utils/pets/action-pose';
-import type { CreatorWizardInitialDraft } from '@/utils/pets/creator-wizard-initial-draft';
 import { preparePetActionReferenceImage } from '@/utils/pets/prepare-pet-action-reference-image';
 import {
   isUnsupportedCreatorRecognitionSpecies,
@@ -104,7 +110,7 @@ type WizardPhoto = {
   file: File | null;
   status: WizardPhotoUploadStatus;
   progress: number;
-  userFileId?: string;
+  r2Key?: string;
   error?: string;
 };
 
@@ -139,26 +145,21 @@ function patchPhoto(
   );
 }
 
-function wizardPhotosFromDraft(
-  draft: CreatorWizardInitialDraft | null
-): WizardPhoto[] {
+function wizardPhotosFromLocalDraft(): WizardPhoto[] {
+  const draft = readDraft();
   if (!draft) return [];
   return draft.photos.map((photo) => ({
-    id: photo.id,
+    id: photo.localId,
     name: photo.name,
-    url: photo.url,
+    url: photo.previewUrl,
     file: null,
     status: 'ready' as const,
     progress: 100,
-    userFileId: photo.userFileId,
+    r2Key: photo.r2Key,
   }));
 }
 
-export function CreatePetWizard({
-  initialDraft = null,
-}: {
-  initialDraft?: CreatorWizardInitialDraft | null;
-}) {
+export function CreatePetWizard() {
   const t = useTranslations('CreatePetWizard');
   const locale = useLocale();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -166,42 +167,38 @@ export function CreatePetWizard({
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { data: session } = authClient.useSession();
 
+  const initialLocalDraft = readDraft() ?? createEmptyDraft();
+  const [draftId] = useState(
+    () => ensureDraftId(initialLocalDraft).draftId
+  );
   const [step, setStep] = useState<WizardStep>('photos');
   const [photos, setPhotos] = useState<WizardPhoto[]>(() =>
-    wizardPhotosFromDraft(initialDraft)
+    wizardPhotosFromLocalDraft()
   );
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(
-    () => initialDraft?.avatarUrl ?? null
-  );
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
   const [cropOpen, setCropOpen] = useState(false);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const [croppingAvatar, setCroppingAvatar] = useState(false);
-  const [petName, setPetName] = useState(() => initialDraft?.petName ?? '');
+  const [petName, setPetName] = useState(() => initialLocalDraft.petName);
   const [species, setSpecies] = useState<PetSpeciesId | ''>(
-    () => initialDraft?.species ?? ''
+    () => initialLocalDraft.species
   );
   const [breed, setBreed] = useState<PetBreedId | ''>(
-    () => initialDraft?.breed ?? ''
+    () => initialLocalDraft.breed
   );
-  const [sex, setSex] = useState<PetSex | ''>(() => initialDraft?.sex ?? '');
+  const [sex, setSex] = useState<PetSex | ''>(() => initialLocalDraft.sex);
   const [creatingPet, setCreatingPet] = useState(false);
-  const [recognitionStatus, setRecognitionStatus] = useState<RecognitionStatus>(
-    () => (initialDraft?.recognitionData ? 'success' : 'idle')
-  );
+  const [recognitionStatus, setRecognitionStatus] =
+    useState<RecognitionStatus>('idle');
   const [recognitionData, setRecognitionData] =
-    useState<CreatorPetRecognitionData | null>(
-      () => initialDraft?.recognitionData ?? null
-    );
+    useState<CreatorPetRecognitionData | null>(null);
   const [waitingForRecognition, setWaitingForRecognition] = useState(false);
   const [unsupportedRecognitionOpen, setUnsupportedRecognitionOpen] =
     useState(false);
   const recognitionGenerationRef = useRef(0);
-  const lastRecognizedMediaFingerprintRef = useRef<string | null>(
-    initialDraft?.recognitionMediaFingerprint ?? null
-  );
+  const lastRecognizedMediaFingerprintRef = useRef<string | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
-  const ensuringSessionRef = useRef<Promise<void> | null>(null);
   const photosRef = useRef(photos);
   photosRef.current = photos;
   const avatarUrlRef = useRef(avatarUrl);
@@ -220,6 +217,27 @@ export function CreatePetWizard({
       revokeBlobUrl(avatarUrlRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    writeDraft(
+      ensureDraftId({
+        draftId,
+        petName,
+        species,
+        breed,
+        sex,
+        avatarKey: null,
+        photos: photos
+          .filter((photo) => photo.status === 'ready' && photo.r2Key)
+          .map((photo) => ({
+            localId: photo.id,
+            name: photo.name,
+            r2Key: photo.r2Key!,
+            previewUrl: photo.url,
+          })),
+      })
+    );
+  }, [breed, draftId, petName, photos, sex, species]);
 
   const currentIndex = stepIndex(step);
   const readyPhotos = photos.filter((photo) => photo.status === 'ready');
@@ -333,26 +351,6 @@ export function CreatePetWizard({
     }
   };
 
-  const ensureSession = useCallback(async () => {
-    if (ensuringSessionRef.current) {
-      return ensuringSessionRef.current;
-    }
-
-    const promise = (async () => {
-      const ensured = await ensureAnonymousSession();
-      if (!ensured.ok) {
-        throw new Error(ensured.error);
-      }
-    })();
-
-    ensuringSessionRef.current = promise;
-    try {
-      await promise;
-    } finally {
-      ensuringSessionRef.current = null;
-    }
-  }, []);
-
   const uploadWizardPhoto = useCallback(
     async (localId: string, file: File) => {
       if (!isMountedRef.current) return;
@@ -371,44 +369,50 @@ export function CreatePetWizard({
           throw new Error(t('photos.fileTooLarge'));
         }
 
-        const capturedAt =
-          Number.isFinite(file.lastModified) && file.lastModified > 0
-            ? new Date(file.lastModified).toISOString()
-            : new Date().toISOString();
-
         const uploadFile = new File([reference.file], file.name, {
           type: ACTION_POSE_REFERENCE_MIME_TYPE,
           lastModified: file.lastModified,
         });
-        const formData = new FormData();
-        formData.append('file', uploadFile);
-        formData.append(
-          'description',
-          buildPetMakerPhotoDescription({
-            localId,
-            width: reference.width,
-            height: reference.height,
-            capturedAt,
+
+        const presignResult = await wrapNestedServerFn(() =>
+          getPetMakerStagingUploadUrlFn({
+            data: {
+              draftId,
+              fileId: localId,
+              contentType: ACTION_POSE_REFERENCE_MIME_TYPE,
+              byteSize: reference.byteSize,
+            },
           })
         );
+        if (!isMountedRef.current) return;
+        assertActionSuccess(presignResult, t('photos.uploadError'));
+        const slot = presignResult.data.data;
 
-        const uploadResult = await wrapNestedServerFn(() =>
-          uploadPetMakerPhotoFn({ data: formData })
+        await uploadFileWithPresignedUrl(
+          uploadFile,
+          {
+            uploadUrl: slot.uploadUrl,
+            contentType: slot.contentType,
+          },
+          (percent) => {
+            if (!isMountedRef.current) return;
+            setPhotos((current) =>
+              patchPhoto(current, localId, { progress: percent })
+            );
+          }
         );
         if (!isMountedRef.current) return;
-        assertActionSuccess(uploadResult, t('photos.uploadError'));
-        const uploaded = uploadResult.data.data;
 
         setPhotos((current) => {
           const existing = current.find((photo) => photo.id === localId);
-          if (existing && existing.url !== uploaded.url) {
+          if (existing && existing.url !== slot.previewUrl) {
             revokeBlobUrl(existing.url);
           }
           return patchPhoto(current, localId, {
             status: 'ready',
             progress: 100,
-            userFileId: uploaded.userFileId,
-            url: uploaded.url,
+            r2Key: slot.r2Key,
+            url: slot.previewUrl,
             error: undefined,
           });
         });
@@ -429,7 +433,7 @@ export function CreatePetWizard({
         toast.error(message);
       }
     },
-    [t]
+    [draftId, t]
   );
 
   const handleFiles = (files: FileList | null) => {
@@ -471,38 +475,10 @@ export function CreatePetWizard({
 
     resetDownstreamFromPhotos();
 
-    void (async () => {
-      try {
-        await ensureSession();
-        if (!isMountedRef.current) return;
-        for (const photo of accepted) {
-          if (!photo.file) continue;
-          await uploadWizardPhoto(photo.id, photo.file);
-          if (!isMountedRef.current) return;
-        }
-      } catch (error) {
-        console.error('wizard ensure draft error:', error);
-        if (!isMountedRef.current) return;
-        toast.error(
-          userFacingClientErrorMessage(error, t('draft.createError'))
-        );
-        const acceptedIds = new Set(accepted.map((photo) => photo.id));
-        setPhotos((current) =>
-          current.map((photo) =>
-            acceptedIds.has(photo.id)
-              ? {
-                  ...photo,
-                  status: 'error' as const,
-                  error:
-                    error instanceof Error
-                      ? error.message
-                      : t('draft.createError'),
-                }
-              : photo
-          )
-        );
-      }
-    })();
+    for (const photo of accepted) {
+      if (!photo.file) continue;
+      void uploadWizardPhoto(photo.id, photo.file);
+    }
   };
 
   const removePhoto = (id: string) => {
@@ -511,9 +487,11 @@ export function CreatePetWizard({
 
     void (async () => {
       try {
-        if (target.userFileId) {
+        if (target.r2Key) {
           const result = await wrapNestedServerFn(() =>
-            deletePetMakerPhotoFn({ data: { id: target.userFileId! } })
+            deletePetMakerStagingObjectFn({
+              data: { draftId, r2Key: target.r2Key! },
+            })
           );
           if (!isMountedRef.current) return;
           assertActionSuccess(result, t('photos.removeError'));
@@ -632,20 +610,41 @@ export function CreatePetWizard({
     window.location.assign(pricingHref);
   }, [pricingHref]);
 
-  /** Real users go to pricing; guests open auth first. */
+  /** Real users persist the pet; guests open auth first. */
   const continueAfterPetReady = useCallback(async () => {
-    if (!isRealSignedInUser(session?.user)) {
-      const { data: freshSession } = await authClient.getSession({
-        query: { disableCookieCache: true },
-      });
-      if (!isRealSignedInUser(freshSession?.user)) {
-        setAuthOpen(true);
-        setCreatingPet(false);
-        return;
-      }
+    const photoKeys = readyPhotos
+      .map((photo) => photo.r2Key)
+      .filter((key): key is string => !!key);
+    if (photoKeys.length === 0) {
+      throw new Error(t('photos.required'));
     }
+
+    const createResult = await wrapNestedServerFn(() =>
+      createPetFn({
+        data: {
+          draftId,
+          petName: petName.trim(),
+          species,
+          breed: breed || PetBreed.Any,
+          sex: sex || null,
+          avatarKey: null,
+          photoKeys,
+        },
+      })
+    );
+    assertActionSuccess(createResult, t('profile.createError'));
+    clearDraft();
     navigateToPricing();
-  }, [navigateToPricing, session?.user]);
+  }, [
+    breed,
+    draftId,
+    navigateToPricing,
+    petName,
+    readyPhotos,
+    sex,
+    species,
+    t,
+  ]);
 
   const goToStep = (target: WizardStep) => {
     if (!isStepUnlocked(target)) return;
@@ -679,8 +678,6 @@ export function CreatePetWizard({
 
     setCreatingPet(true);
     try {
-      await ensureSession();
-
       if (ENABLE_PET_MAKER_AVATAR) {
         let avatarFile = pendingAvatarFile;
         if (!avatarFile && !avatarUrl) {
@@ -724,6 +721,15 @@ export function CreatePetWizard({
         }
       }
 
+      const { data: freshSession } = await authClient.getSession({
+        query: { disableCookieCache: true },
+      });
+      if (!isRealSignedInUser(freshSession?.user)) {
+        setAuthOpen(true);
+        setCreatingPet(false);
+        return;
+      }
+
       await continueAfterPetReady();
     } catch (error) {
       console.error('wizard create pet error:', error);
@@ -735,7 +741,6 @@ export function CreatePetWizard({
   }, [
     avatarUrl,
     continueAfterPetReady,
-    ensureSession,
     pendingAvatarFile,
     petName,
     photos,
@@ -748,8 +753,8 @@ export function CreatePetWizard({
 
   const handleAuthAuthenticated = useCallback(() => {
     setAuthOpen(false);
-    navigateToPricing();
-  }, [navigateToPricing]);
+    void executeCreatePetAndContinue();
+  }, [executeCreatePetAndContinue]);
 
   const canContinue =
     step === 'photos'

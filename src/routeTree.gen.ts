@@ -49,7 +49,6 @@ import { Route as PIndexRouteImport } from './routes/p/index'
 import { Route as PSlugRouteImport } from './routes/p/$slug'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
-import { Route as SettingsFilesRouteImport } from './routes/settings/files'
 import { Route as SettingsNotificationsRouteImport } from './routes/settings/notifications'
 import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
@@ -266,11 +265,6 @@ const SettingsBillingRoute = SettingsBillingRouteImport.update({
   path: '/billing',
   getParentRoute: () => SettingsRoute,
 } as any)
-const SettingsFilesRoute = SettingsFilesRouteImport.update({
-  id: '/files',
-  path: '/files',
-  getParentRoute: () => SettingsRoute,
-} as any)
 const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
@@ -384,7 +378,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
-  '/settings/files': typeof SettingsFilesRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
@@ -439,7 +432,6 @@ export interface FileRoutesByTo {
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
-  '/settings/files': typeof SettingsFilesRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
@@ -498,7 +490,6 @@ export interface FileRoutesById {
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
-  '/settings/files': typeof SettingsFilesRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
@@ -558,7 +549,6 @@ export interface FileRouteTypes {
     | '/dashboard/overview'
     | '/p/$slug'
     | '/settings/billing'
-    | '/settings/files'
     | '/settings/notifications'
     | '/settings/payment'
     | '/settings/profile'
@@ -613,7 +603,6 @@ export interface FileRouteTypes {
     | '/dashboard/overview'
     | '/p/$slug'
     | '/settings/billing'
-    | '/settings/files'
     | '/settings/notifications'
     | '/settings/payment'
     | '/settings/profile'
@@ -671,7 +660,6 @@ export interface FileRouteTypes {
     | '/dashboard/overview'
     | '/p/$slug'
     | '/settings/billing'
-    | '/settings/files'
     | '/settings/notifications'
     | '/settings/payment'
     | '/settings/profile'
@@ -1016,13 +1004,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsBillingRouteImport
       parentRoute: typeof SettingsRoute
     }
-    '/settings/files': {
-      id: '/settings/files'
-      path: '/files'
-      fullPath: '/settings/files'
-      preLoaderRoute: typeof SettingsFilesRouteImport
-      parentRoute: typeof SettingsRoute
-    }
     '/settings/notifications': {
       id: '/settings/notifications'
       path: '/notifications'
@@ -1181,7 +1162,6 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 
 interface SettingsRouteChildren {
   SettingsBillingRoute: typeof SettingsBillingRoute
-  SettingsFilesRoute: typeof SettingsFilesRoute
   SettingsNotificationsRoute: typeof SettingsNotificationsRoute
   SettingsPaymentRoute: typeof SettingsPaymentRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
@@ -1191,7 +1171,6 @@ interface SettingsRouteChildren {
 
 const SettingsRouteChildren: SettingsRouteChildren = {
   SettingsBillingRoute: SettingsBillingRoute,
-  SettingsFilesRoute: SettingsFilesRoute,
   SettingsNotificationsRoute: SettingsNotificationsRoute,
   SettingsPaymentRoute: SettingsPaymentRoute,
   SettingsProfileRoute: SettingsProfileRoute,

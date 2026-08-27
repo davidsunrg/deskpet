@@ -1,6 +1,5 @@
 import {
   adminClient,
-  anonymousClient,
   emailOTPClient,
   inferAdditionalFields,
 } from 'better-auth/client/plugins';
@@ -15,7 +14,6 @@ import type { auth } from './auth';
 export const authClient = createAuthClient({
   baseURL: getBaseUrl(),
   plugins: [
-    anonymousClient(),
     emailOTPClient(),
     // https://www.better-auth.com/docs/plugins/admin#add-the-client-plugin
     adminClient(),
