@@ -1,4 +1,8 @@
 import type { PetBreed, PetSex, PetSpecies } from '@/utils/pet-catalog';
+import {
+  isWizardStep,
+  type WizardStep,
+} from '@/utils/pets/pet-maker-wizard-steps';
 
 export const PET_MAKER_DRAFT_STORAGE_KEY = 'deskpet:pet-maker-draft';
 
@@ -14,6 +18,7 @@ export type PetMakerLocalDraftPhoto = {
 
 export type PetMakerLocalDraft = {
   draftId: string;
+  step?: WizardStep;
   petName: string;
   species: PetSpecies | '';
   breed: PetBreed | '';
@@ -47,6 +52,7 @@ export function readDraft(): PetMakerLocalDraft | null {
     if (!parsed.draftId || !Array.isArray(parsed.photos)) return null;
     return {
       draftId: parsed.draftId,
+      step: isWizardStep(parsed.step) ? parsed.step : undefined,
       petName: parsed.petName ?? '',
       species: parsed.species ?? '',
       breed: parsed.breed ?? '',

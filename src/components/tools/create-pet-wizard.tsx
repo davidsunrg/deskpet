@@ -55,7 +55,15 @@ import {
   ensureDraftId,
   readDraft,
   writeDraft,
+  type PetMakerLocalDraft,
 } from '@/utils/pets/pet-maker-local-draft';
+import {
+  clampStepToUnlocked,
+  isWizardStepUnlocked,
+  stepIndex,
+  WIZARD_STEPS,
+  type WizardStep,
+} from '@/utils/pets/pet-maker-wizard-steps';
 import {
   getPetBreedLabel,
   getPetSpeciesLabel,
@@ -89,15 +97,11 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-const WIZARD_STEPS = ['photos', 'basics', 'details'] as const;
-
 /** Flip to `true` to re-enable avatar crop/upload in the pet maker. */
 const ENABLE_PET_MAKER_AVATAR = false;
 
 type RecognitionStatus = 'idle' | 'loading' | 'success' | 'skipped';
 const PRICING_URL = Routes.Pricing;
-
-type WizardStep = (typeof WIZARD_STEPS)[number];
 
 type WizardPhotoUploadStatus = 'pending' | 'uploading' | 'ready' | 'error';
 
@@ -126,10 +130,6 @@ function revokeBlobUrl(url: string | null | undefined) {
   if (url?.startsWith('blob:')) {
     URL.revokeObjectURL(url);
   }
-}
-
-function stepIndex(step: WizardStep): number {
-  return WIZARD_STEPS.indexOf(step);
 }
 
 function defaultBreedForSpecies(species: PetSpeciesId): PetBreedId {
@@ -162,6 +162,27 @@ function wizardPhotosFromLocalDraft(): WizardPhoto[] {
   }));
 }
 
+function isBasicsCompleteFromDraft(draft: {
+  petName: string;
+  sex: PetSex | '';
+}): boolean {
+  return (
+    draft.petName.trim().length > 0 &&
+    (draft.sex === PetSex.Male || draft.sex === PetSex.Female)
+  );
+}
+
+function stepUnlockFromDraft(draft: PetMakerLocalDraft) {
+  return {
+    hasReferenceSources: draft.photos.length > 0,
+    isBasicsComplete: isBasicsCompleteFromDraft(draft),
+  };
+}
+
+function initialStepFromDraft(draft: PetMakerLocalDraft): WizardStep {
+  return clampStepToUnlocked(draft.step, stepUnlockFromDraft(draft));
+}
+
 export function CreatePetWizard() {
   const t = useTranslations('CreatePetWizard');
   const locale = useLocale();
@@ -171,10 +192,10 @@ export function CreatePetWizard() {
   const { data: session } = authClient.useSession();
 
   const initialLocalDraft = readDraft() ?? createEmptyDraft();
-  const [draftId] = useState(
-    () => ensureDraftId(initialLocalDraft).draftId
+  const [draftId] = useState(() => ensureDraftId(initialLocalDraft).draftId);
+  const [step, setStep] = useState<WizardStep>(() =>
+    initialStepFromDraft(initialLocalDraft)
   );
-  const [step, setStep] = useState<WizardStep>('photos');
   const [photos, setPhotos] = useState<WizardPhoto[]>(() =>
     wizardPhotosFromLocalDraft()
   );
@@ -225,6 +246,7 @@ export function CreatePetWizard() {
     writeDraft(
       ensureDraftId({
         draftId,
+        step,
         petName,
         species,
         breed,
@@ -242,7 +264,7 @@ export function CreatePetWizard() {
           })),
       })
     );
-  }, [breed, draftId, petName, photos, sex, species]);
+  }, [breed, draftId, petName, photos, sex, species, step]);
 
   const currentIndex = stepIndex(step);
   const readyPhotos = photos.filter((photo) => photo.status === 'ready');
@@ -259,18 +281,37 @@ export function CreatePetWizard() {
   const isDetailsComplete =
     !!species && (!speciesUsesBreeds(species) || !!breed);
 
-  const isStepUnlocked = (target: WizardStep): boolean => {
-    switch (target) {
-      case 'photos':
-        return true;
-      case 'basics':
-        return hasReferenceSources;
-      case 'details':
-        return hasReferenceSources && isBasicsComplete;
-      default:
-        return false;
+  const isStepUnlocked = (target: WizardStep): boolean =>
+    isWizardStepUnlocked(target, {
+      hasReferenceSources,
+      isBasicsComplete,
+    });
+
+  const goToStep = useCallback(
+    (target: WizardStep) => {
+      if (
+        !isWizardStepUnlocked(target, {
+          hasReferenceSources,
+          isBasicsComplete,
+        })
+      ) {
+        return;
+      }
+      if (target === step) return;
+      setStep(target);
+    },
+    [hasReferenceSources, isBasicsComplete, step]
+  );
+
+  useEffect(() => {
+    const clamped = clampStepToUnlocked(step, {
+      hasReferenceSources,
+      isBasicsComplete,
+    });
+    if (clamped !== step) {
+      setStep(clamped);
     }
-  };
+  }, [hasReferenceSources, isBasicsComplete, step]);
 
   const applyRecognitionPrefill = useCallback(
     (data: CreatorPetRecognitionData | null) => {
@@ -296,7 +337,7 @@ export function CreatePetWizard() {
         }
 
         applyRecognitionPrefill(data);
-        setStep('details');
+        goToStep('details');
         return;
       }
 
@@ -304,9 +345,9 @@ export function CreatePetWizard() {
       // choose species and breed manually instead of surfacing an error.
       setSpecies('');
       setBreed('');
-      setStep('details');
+      goToStep('details');
     },
-    [applyRecognitionPrefill]
+    [applyRecognitionPrefill, goToStep]
   );
 
   useEffect(() => {
@@ -348,13 +389,13 @@ export function CreatePetWizard() {
     });
   };
 
-  const resetDownstreamFromPhotos = () => {
+  const resetDownstreamFromPhotos = useCallback(() => {
     resetRecognition();
 
     if (step === 'basics' || step === 'details') {
-      setStep('basics');
+      goToStep('basics');
     }
-  };
+  }, [goToStep, resetRecognition, step]);
 
   const uploadWizardPhoto = useCallback(
     async (localId: string, file: File) => {
@@ -504,7 +545,6 @@ export function CreatePetWizard() {
           const next = current.filter((photo) => photo.id !== id);
           if (next.filter((photo) => photo.status === 'ready').length === 0) {
             clearAvatar();
-            setStep('photos');
           }
           return next;
         });
@@ -634,7 +674,7 @@ export function CreatePetWizard() {
     }
     if (readyPhotos.length === 0) {
       toast.error(t('photos.required'));
-      setStep('photos');
+      goToStep('photos');
       return false;
     }
     if (readyPhotos.some((photo) => !photo.r2Key)) {
@@ -642,15 +682,7 @@ export function CreatePetWizard() {
       return false;
     }
     return true;
-  }, [
-    breed,
-    petName,
-    readyPhotos,
-    sex,
-    species,
-    t,
-    uploadingPhotos,
-  ]);
+  }, [breed, goToStep, petName, readyPhotos, sex, species, t, uploadingPhotos]);
 
   /** After pet draft is ready: verified users go to pricing; guests open auth first. */
   const continueAfterPetReady = useCallback(async () => {
@@ -666,12 +698,6 @@ export function CreatePetWizard() {
     }
     navigateToPricing();
   }, [navigateToPricing, session?.user]);
-
-  const goToStep = (target: WizardStep) => {
-    if (!isStepUnlocked(target)) return;
-    if (target === step) return;
-    setStep(target);
-  };
 
   const executeCreatePetAndContinue = useCallback(async () => {
     if (!validateCreateReadiness()) return;
@@ -774,7 +800,7 @@ export function CreatePetWizard() {
         return;
       }
       startBackgroundRecognition(photos);
-      setStep('basics');
+      goToStep('basics');
       return;
     }
 
@@ -820,7 +846,7 @@ export function CreatePetWizard() {
 
   const handleChooseDifferentPhotos = () => {
     setUnsupportedRecognitionOpen(false);
-    setStep('photos');
+    goToStep('photos');
     requestAnimationFrame(() => {
       photoPickerButtonRef.current?.focus();
       inputRef.current?.click();
