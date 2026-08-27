@@ -52,15 +52,10 @@ export const websiteConfig: WebsiteConfig = {
     },
   },
   metadata: {
-    get name() {
-      return m.site_name();
-    },
-    get title() {
-      return m.site_title();
-    },
-    get description() {
-      return m.site_description();
-    },
+    name: 'DeskPet.ai',
+    title: 'DeskPet.ai',
+    description:
+      "Play free desktop pets in your browser or download them for your desktop. Create your own from your pet's photo, then manage care, reminders, memories, expenses, and more—all in one place.",
     images: {
       ogImage: '/og.png',
       logoLight: '/logo.png',
@@ -68,10 +63,9 @@ export const websiteConfig: WebsiteConfig = {
     },
   },
   social: {
-    github: 'https://github.com/MkFastHQ',
-    discord: 'https://mksaas.link/discord',
-    twitter: 'https://x.com/TanStarter',
-    youtube: 'https://www.youtube.com/@TanStarter',
+    github: 'https://github.com/MkSaaSHQ',
+    twitter: 'https://x.com/deskpetai',
+    youtube: 'https://www.youtube.com/@deskpetai',
   },
   auth: {
     enable: true,

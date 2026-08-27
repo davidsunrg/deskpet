@@ -1,5 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
-import { getFooterLinks } from '@/config/footer-config';
+import { useFooterLinks } from '@/config/footer-config';
 import { getSocialLinks } from '@/config/social-config';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
@@ -10,7 +10,7 @@ import { Link, useLocation } from '@tanstack/react-router';
 import { websiteConfig } from '@/config/website';
 export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
   const pathname = useLocation().pathname;
-  const footerLinks = getFooterLinks();
+  const footerLinks = useFooterLinks();
   const socialLinks = getSocialLinks();
   return (
     <footer className={cn('border-t', className)}>

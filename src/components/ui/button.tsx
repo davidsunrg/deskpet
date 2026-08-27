@@ -19,6 +19,12 @@ const buttonVariants = cva(
         destructive:
           "border-transparent bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "border-transparent text-primary underline-offset-4 hover:underline",
+        brutal:
+          "rounded-full border-[3px] border-deskpet-ink bg-deskpet-mint font-black text-[#133e31] shadow-[5px_6px_0_0_rgba(56,42,53,0.14)] transition-[box-shadow,background-color] duration-200 hover:bg-deskpet-mint-hover hover:shadow-[9px_10px_0_0_rgba(56,42,53,0.16)] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0_0_rgba(56,42,53,0.16)] dark:border-foreground dark:text-primary-foreground",
+        brutalSecondary:
+          "rounded-full border-[3px] border-deskpet-ink bg-deskpet-sun font-black text-deskpet-ink shadow-[5px_6px_0_0_rgba(56,42,53,0.14)] transition-[box-shadow,background-color] duration-200 hover:bg-[#ffe08a] hover:shadow-[9px_10px_0_0_rgba(56,42,53,0.16)] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0_0_rgba(56,42,53,0.16)] dark:border-foreground dark:text-foreground",
+        brutalOutline:
+          "rounded-full border-[3px] border-deskpet-ink bg-deskpet-paper font-black text-deskpet-ink shadow-[5px_6px_0_0_rgba(56,42,53,0.14)] transition-[box-shadow,background-color] duration-200 hover:bg-white hover:shadow-[9px_10px_0_0_rgba(56,42,53,0.16)] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0_0_rgba(56,42,53,0.16)] dark:border-foreground dark:bg-card dark:text-foreground",
       },
       size: {
         default:

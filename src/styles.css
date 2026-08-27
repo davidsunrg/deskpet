@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "./custom.css";
+@import "./styles/playground.css";
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
@@ -39,6 +40,19 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* DeskPet brand palette */
+  --deskpet-ink: #3a2b36;
+  --deskpet-muted: #6b5d66;
+  --deskpet-mint: #55d9aa;
+  --deskpet-mint-hover: #3fc995;
+  --deskpet-mint-soft: #def7ed;
+  --deskpet-paper: #fffaf0;
+  --deskpet-cream: #fff2c8;
+  --deskpet-lavender: #eee5ff;
+  --deskpet-sun: #ffd767;
+  --deskpet-pink: #ef8ea3;
+  --deskpet-sky: #e5f3ff;
 }
 
 .dark {
@@ -109,6 +123,17 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-deskpet-ink: var(--deskpet-ink);
+  --color-deskpet-muted: var(--deskpet-muted);
+  --color-deskpet-mint: var(--deskpet-mint);
+  --color-deskpet-mint-hover: var(--deskpet-mint-hover);
+  --color-deskpet-mint-soft: var(--deskpet-mint-soft);
+  --color-deskpet-paper: var(--deskpet-paper);
+  --color-deskpet-cream: var(--deskpet-cream);
+  --color-deskpet-lavender: var(--deskpet-lavender);
+  --color-deskpet-sun: var(--deskpet-sun);
+  --color-deskpet-pink: var(--deskpet-pink);
+  --color-deskpet-sky: var(--deskpet-sky);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --radius-sm: calc(var(--radius) - 4px);

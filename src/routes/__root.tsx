@@ -127,6 +127,7 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
   const canonicalPathname = getCanonicalPathname(pathname);
   const matches = useRouterState({ select: (s) => s.matches }) ?? [];
+  const isPlayground = canonicalPathname === Routes.Playground;
   const isAuthPages = canonicalPathname.startsWith(Routes.Auth);
   const isProtectedPages =
     canonicalPathname.startsWith(Routes.Admin) ||
@@ -138,7 +139,7 @@ function RootComponent() {
     canonicalPathname !== '' &&
     matches.length <= 1;
 
-  if (isAuthPages || isProtectedPages || isNotFound) {
+  if (isAuthPages || isProtectedPages || isNotFound || isPlayground) {
     return (
       <div className="flex min-h-screen flex-col">
         <main id="main-content" className="flex-1">

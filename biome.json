@@ -37,6 +37,7 @@
       "!src/payment/types.ts",
       "!src/storage/types.ts",
       "!src/routeTree.gen.ts",
+      "!references",
       "!src/components/ui",
       "!src/components/data-table"
     ]

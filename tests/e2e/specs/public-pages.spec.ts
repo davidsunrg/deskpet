@@ -10,6 +10,7 @@ import {
 
 const publicPages = [
   { path: '/', name: 'home' },
+  { path: '/playground', name: 'playground' },
   { path: '/pricing', name: 'pricing' },
   { path: '/blog', name: 'blog index' },
   { path: '/blog/getting-started', name: 'blog detail' },

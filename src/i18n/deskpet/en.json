@@ -1,0 +1,623 @@
+{
+  "HomePage": {
+    "title": "Desktop Pet",
+    "description": "Turn your pet into a desktop companion—with care tracking, reminders, memories, expense tracking, and more.",
+    "hero": {
+      "title": "Turn Your Pet Into a Desktop Companion.",
+      "description": "Bring your pet to your browser or desktop, then manage memories, care, reminders, expenses, and more—all in one place.",
+      "tags": {
+        "cat": "Cat",
+        "dog": "Dog"
+      },
+      "tagsLabel": "Pet categories",
+      "ctaTitle": "Choose Your Companion",
+      "ctaSelectTooltip": "Bring One Home: Choose a ready-made DeskPet from our pet library and add it to your account.",
+      "ctaMakeMyOwnTooltip": "Make My Own: Create a desktop companion from your pet's photos.",
+      "ctaPlaygroundTooltip": "Playground: Try pets and interactions in your browser.",
+      "primary": "Bring One Home",
+      "secondary": "Make My Own",
+      "playground": "Playground",
+      "openFullPlayground": "Open Full Playground",
+      "viewAll": "View all"
+    },
+    "pets": {
+      "title": "Our Pets",
+      "subtitle": "Meet companions you can play with today.",
+      "description": "Try ready-made DeskPet companions in the playground, then bring one home or make your own from your pet’s photos.",
+      "viewAll": "View all",
+      "deskpetTitle": "Desktop Pets",
+      "deskpetDescription": "Published desktop pets built for Desktop Pet.",
+      "deskpetEmpty": "Published Desktop Pet companions will appear here after creators upload and publish their spritesheets."
+    },
+    "viralPetVideos": {
+      "badge": "Trending ideas",
+      "title": "Viral Pet Videos Made with AI",
+      "description": "Turn pet photos into playful scenes, reactions, and shareable little moments.",
+      "cta": "Make my pet video",
+      "playLabel": "Play {title}",
+      "cards": {
+        "world-cup-striker": {
+          "badge": "Scene",
+          "title": "World Cup Striker",
+          "prompt": "Your pet scores the winning goal in slow motion.",
+          "imageAlt": "AI pet video of a World Cup striker scene"
+        },
+        "penalty-hero": {
+          "badge": "Reaction",
+          "title": "Penalty Hero",
+          "prompt": "Nail the penalty kick and celebrate with the crowd.",
+          "imageAlt": "AI pet video of a penalty hero scene"
+        }
+      },
+      "stats": {
+        "photos": "Pet photos",
+        "scenes": "AI scenes",
+        "clips": "Shareable clips"
+      }
+    },
+    "features": {
+      "title": "Features",
+      "subtitle": "What you can do with DeskPet.ai",
+      "description": "Keep your pet with you in your browser or on your desktop—with care tracking, expenses, inventory, memories, and more.",
+      "comingSoon": "Coming Soon",
+      "items": {
+        "item-1": {
+          "title": "Pet Library & Make Your Own",
+          "description": "Browse our pet library or create a companion from your pet's photo."
+        },
+        "item-2": {
+          "title": "Lifelike Interactions",
+          "description": "Walk, nap, chase your cursor, react to clicks, and unlock new interactions."
+        },
+        "item-3": {
+          "title": "Health & Care",
+          "description": "Keep your pet's health records, weight history, medications, symptoms, and reminders in one place."
+        },
+        "item-4": {
+          "title": "Expense Tracking",
+          "description": "Keep track of food, vet bills, insurance, and every pet expense."
+        },
+        "item-5": {
+          "title": "Inventory",
+          "description": "Organize food, treats, medicine, and supplies with stock and expiry reminders."
+        },
+        "item-6": {
+          "title": "Memories",
+          "description": "Save photos, videos, and notes in a timeline that grows with your pet."
+        }
+      }
+    },
+    "behaviors": {
+      "title": "Behaviors",
+      "subtitle": "What your pet can do in DeskPet.ai",
+      "description": "Every action is designed to make the pet feel alive without becoming distracting.",
+      "items": {
+        "walk": {
+          "title": "Walk Around",
+          "description": "Strolls along your desktop edges."
+        },
+        "nap": {
+          "title": "Take Naps",
+          "description": "Finds a quiet corner and falls asleep."
+        },
+        "cursor": {
+          "title": "Chase Cursor",
+          "description": "Follows quick cursor movements."
+        },
+        "snack": {
+          "title": "Eat Snacks",
+          "description": "Reacts to food and special treats."
+        },
+        "box": {
+          "title": "Hide in Boxes",
+          "description": "Climbs into boxes and peeks outside."
+        },
+        "window": {
+          "title": "Sit on Windows",
+          "description": "Perches near active app windows."
+        },
+        "click": {
+          "title": "React to Clicks",
+          "description": "Responds when you tap or pet it."
+        },
+        "celebrate": {
+          "title": "Celebrate",
+          "description": "Plays special milestone animations."
+        }
+      }
+    },
+    "features2": {
+      "title": "Features2",
+      "subtitle": "The features of your product",
+      "description": "Write the description of your product here",
+      "feature-1": "Product Feature One",
+      "feature-2": "Product Feature Two",
+      "feature-3": "Product Feature Three",
+      "feature-4": "Product Feature Four"
+    },
+    "features3": {
+      "title": "Features3",
+      "subtitle": "The features of your product",
+      "description": "Write the description of your product here",
+      "items": {
+        "item-1": {
+          "title": "Product Feature One",
+          "description": "Please write the detailed description of feature one here"
+        },
+        "item-2": {
+          "title": "Product Feature Two",
+          "description": "Please write the detailed description of feature two here"
+        },
+        "item-3": {
+          "title": "Product Feature Three",
+          "description": "Please write the detailed description of feature three here"
+        },
+        "item-4": {
+          "title": "Product Feature Four",
+          "description": "Please write the detailed description of feature four here"
+        },
+        "item-5": {
+          "title": "Product Feature Five",
+          "description": "Please write the detailed description of feature five here"
+        },
+        "item-6": {
+          "title": "Product Feature Six",
+          "description": "Please write the detailed description of feature six here"
+        }
+      }
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Pricing",
+      "description": "Choose the plan that works best for you"
+    },
+    "faqs": {
+      "title": "Questions",
+      "subtitle": "Frequently Asked",
+      "items": {
+        "item-1": {
+          "question": "What is Desktop Pet?",
+          "answer": "Desktop Pet brings realistic companions like Hua and Gucci to your desktop. They sit, walk, and sleep on your screen—in the browser playground or as a native desktop app."
+        },
+        "item-2": {
+          "question": "Do I need an account to play?",
+          "answer": "No. You can try pets in the browser playground and download the desktop companion without signing up."
+        },
+        "item-3": {
+          "question": "How do I try it in the browser?",
+          "answer": "Open the Playground from the navigation. Hua and Gucci will appear on a simulated desktop—right-click a pet to wander, walk, or sleep."
+        },
+        "item-4": {
+          "question": "Where can I use DeskPet—browser or desktop?",
+          "answer": "Both. Try pets in the browser playground, or download the desktop companion for macOS (universal DMG for Apple Silicon and Intel) and Windows. Visit Download for the matching installer."
+        },
+        "item-5": {
+          "question": "Can I use my own pet?",
+          "answer": "Not yet—custom pets are coming soon. For now you can play with companions like Hua and Gucci in the playground and desktop app."
+        },
+        "item-6": {
+          "question": "What can I use AI credits for?",
+          "answer": "AI credits power pet image generation, pet video generation, custom interactions, medical record summaries, invoice parsing, receipt OCR, and more. Since your pet's photos, health records, expenses, and memories are already organized in DeskPet, AI can provide more personalized results without requiring you to upload or explain everything again."
+        },
+        "item-7": {
+          "question": "What happens if I run out of AI credits?",
+          "answer": "You can buy more AI credits whenever you need them. Your free DeskPet features will keep working even if your credits run out."
+        }
+      }
+    },
+    "stats": {
+      "title": "Stats",
+      "subtitle": "MkSaaS in numbers",
+      "description": "MkSaaS lets you make AI SaaS in days, simply and effortlessly",
+      "items": {
+        "item-1": {
+          "title": "Stars on GitHub"
+        },
+        "item-2": {
+          "title": "Active Users"
+        },
+        "item-3": {
+          "title": "Powered Apps"
+        }
+      }
+    },
+    "calltoaction": {
+      "title": "Start Building",
+      "description": "MkSaaS lets you make AI SaaS in days, simply and effortlessly",
+      "primaryButton": "Get Started",
+      "secondaryButton": "See Demo"
+    }
+  },
+  "Marketing": {
+    "navbar": {
+      "features": {
+        "title": "Features"
+      },
+      "pets": {
+        "title": "Our Pets"
+      },
+      "health": {
+        "title": "Health"
+      },
+      "expense": {
+        "title": "Expense"
+      },
+      "playground": {
+        "title": "Playground"
+      },
+      "download": {
+        "title": "Download"
+      },
+      "resources": {
+        "title": "Resources",
+        "items": {
+          "download": {
+            "title": "Download",
+            "description": "Get DeskPet for Windows or macOS."
+          },
+          "health": {
+            "title": "Health",
+            "description": "Keep care notes, health records, and reminders with your pet."
+          },
+          "expense": {
+            "title": "Expense",
+            "description": "Track food, vet bills, and everyday pet spending in one place."
+          },
+          "pricing": {
+            "title": "Pricing",
+            "description": "Compare plans and choose what works best for you."
+          },
+          "blog": {
+            "title": "Blog",
+            "description": "Read pet care, breed, and desktop companion guides."
+          }
+        }
+      },
+      "makeMyOwn": {
+        "title": "Make My Pet"
+      },
+      "pricing": {
+        "title": "Pricing"
+      },
+      "blog": {
+        "title": "Blog"
+      },
+      "pages": {
+        "title": "Pages",
+        "items": {
+          "about": {
+            "title": "About",
+            "description": "Learn more about our company, mission, and values"
+          },
+          "contact": {
+            "title": "Contact",
+            "description": "Get in touch with our team for support or inquiries"
+          },
+          "waitlist": {
+            "title": "Waitlist",
+            "description": "Join our waitlist for latest news and updates"
+          },
+          "changelog": {
+            "title": "Changelog",
+            "description": "See the latest updates to our products"
+          },
+          "ai": {
+            "title": "AI Playground",
+            "description": "Try AI features with DeepSeek, and OpenAI GPT models"
+          },
+          "roadmap": {
+            "title": "Roadmap",
+            "description": "Explore our future plans and upcoming features"
+          },
+          "cookiePolicy": {
+            "title": "Cookie Policy",
+            "description": "How we use the cookies on our website"
+          },
+          "privacyPolicy": {
+            "title": "Privacy Policy",
+            "description": "How we protect and handle your data"
+          },
+          "termsOfService": {
+            "title": "Terms of Service",
+            "description": "The legal agreements between us"
+          }
+        }
+      }
+    },
+    "footer": {
+      "tagline": "Turn Your Pet Into a Desktop Companion.",
+      "product": {
+        "title": "Product",
+        "items": {
+          "features": "Features",
+          "pricing": "Pricing",
+          "faq": "FAQ"
+        }
+      },
+      "resources": {
+        "title": "Resources",
+        "items": {
+          "petHub": "Pet Hub",
+          "blog": "Blog",
+          "changelog": "Changelog",
+          "roadmap": "Roadmap"
+        }
+      },
+      "company": {
+        "title": "Company",
+        "items": {
+          "about": "About",
+          "contact": "Contact",
+          "waitlist": "Waitlist"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "items": {
+          "cookiePolicy": "Cookie Policy",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfService": "Terms of Service"
+        }
+      }
+    },
+    "avatar": {
+      "dashboard": "Dashboard",
+      "actions": "Actions",
+      "gallery": "Gallery",
+      "health": "Health",
+      "expenses": "Expenses",
+      "credits": "Credits",
+      "petFallback": "My pet"
+    }
+  },
+  "Pets": {
+    "goToPlayground": "Go to Playground",
+    "petUnavailableNotice": "That pet could not be loaded. Showing the default playground instead.",
+    "loadingPets": "Loading pets…"
+  },
+  "PetsPage": {
+    "title": "Our Pets",
+    "description": "Turn your pet into a desktop companion—or explore ready-made cats and companions for your browser and desktop. We’re adding new pets all the time.",
+    "intro": "Explore every showcase pet—and check back often, we’re adding new companions regularly. Keep them with you in your browser or on your desktop.",
+    "cta": {
+      "playground": "Play with Me",
+      "bringMeHome": "Bring Me Home",
+      "playWithMeTooltip": "Interact with this pet using built-in actions."
+    },
+    "adopt": {
+      "button": "Bring Me Home",
+      "buttonTooltip": "Add this pet to your account so you can rename and customize it.",
+      "modalTitle": "Bring this pet home",
+      "modalDescription": "Give your companion a name and choose their sex to add them to your account.",
+      "nameLabel": "Pet name",
+      "namePlaceholder": "e.g. Mochi",
+      "nameRequired": "Please enter a pet name.",
+      "sexLabel": "Sex",
+      "sexMale": "Male",
+      "sexFemale": "Female",
+      "sexRequired": "Please choose a sex.",
+      "cancel": "Cancel",
+      "confirm": "Bring Me Home",
+      "success": "Your pet is home! Welcome to your dashboard.",
+      "alreadyAdopted": "This pet is already home.",
+      "error": "Could not bring this pet home."
+    },
+    "profile": {
+      "titleAdopt": "Bring this pet home",
+      "titleCreate": "Add pet",
+      "titleEdit": "Edit pet profile",
+      "descriptionAdopt": "Confirm your companion’s details to add them to your account.",
+      "descriptionCreate": "Add the basic profile fields for your companion.",
+      "descriptionEdit": "Update your pet’s avatar, name, species, breed, and sex.",
+      "edit": "Edit",
+      "avatarLabel": "Avatar",
+      "avatarChange": "Change avatar",
+      "avatarUploading": "Uploading…",
+      "avatarInvalid": "Please choose a JPEG, PNG, or WebP image.",
+      "avatarUploadFailed": "Could not upload avatar.",
+      "avatarRequired": "Please upload a pet photo.",
+      "avatarRecommendation": "Choose a photo, then crop it to a square.",
+      "avatarCropTitle": "Crop avatar",
+      "avatarCropDescription": "Drag to reposition and use zoom to frame your pet.",
+      "avatarCropZoom": "Zoom",
+      "avatarCropConfirm": "Use photo",
+      "avatarCropCancel": "Cancel",
+      "nameLabel": "Alias",
+      "namePlaceholder": "e.g. Mochi",
+      "nameRequired": "Please enter a pet name.",
+      "speciesLabel": "Species",
+      "speciesPlaceholder": "Select species",
+      "speciesRequired": "Please choose a species.",
+      "breedLabel": "Breed",
+      "breedPlaceholder": "Select breed",
+      "breedSearch": "Search breeds…",
+      "breedEmpty": "No breed found.",
+      "breedRequired": "Please choose a breed.",
+      "isPreset": "Catalog preset",
+      "isPresetHint": "Admin only. Only one preset pet is allowed per breed.",
+      "sexLabel": "Sex",
+      "sexMale": "Male",
+      "sexFemale": "Female",
+      "sexRequired": "Please choose a sex.",
+      "cancel": "Cancel",
+      "adopt": "Continue",
+      "create": "Continue",
+      "save": "Save",
+      "saving": "Saving…",
+      "adoptSuccess": "Your pet is home!",
+      "createSuccess": "Pet created.",
+      "accountRequiredAfterPet": "Create an account to open your dashboard.",
+      "updateSuccess": "Pet profile updated.",
+      "error": "Could not save pet profile."
+    },
+    "actions": {
+      "sitIdle": "Sit",
+      "lookAround": "Look Around",
+      "lick": "Lick",
+      "sitToWalkLeft": "Sit To Walk Left",
+      "stretch": "Stretch",
+      "washFace": "Wash Face",
+      "yawn": "Yawn",
+      "earBlink": "Ear Blink",
+      "tailSway": "Tail Sway",
+      "sideGroom": "Side Groom",
+      "wagTail": "Wag Tail",
+      "playBow": "Play Bow",
+      "pawRaise": "Paw Raise",
+      "shake": "Shake",
+      "earPerk": "Ear Perk",
+      "sit": "Sit",
+      "sitDown": "Sit Down",
+      "walkLeft": "Walk Left",
+      "walkRight": "Walk Right",
+      "scratch": "Scratch",
+      "tease": "Tease",
+      "sleep": "Sleep",
+      "wakeUp": "Wake Up",
+      "hide": "Hide"
+    },
+    "breeds": {
+      "blue-british-shorthair": {
+        "description": "A plush blue British Shorthair with calm idle loops—ideal for quiet focus on your desktop.",
+        "breed": "Blue British Shorthair"
+      },
+      "golden-british-shorthair": {
+        "description": "A warm golden British Shorthair companion that softens long workdays with cozy motion.",
+        "breed": "Golden British Shorthair"
+      },
+      "silver-british-shorthair": {
+        "description": "A cool silver British Shorthair with polished idle clips for clean, modern desks.",
+        "breed": "Silver British Shorthair"
+      },
+      "blue-and-white-british-shorthair": {
+        "description": "A bicolor blue-and-white British Shorthair with balanced everyday desktop energy.",
+        "breed": "Blue-and-White British Shorthair"
+      },
+      "tabby-cat": {
+        "description": "A classic striped tabby with curious idle motion—playful company for browser breaks.",
+        "breed": "Tabby Cat"
+      },
+      "cheese-tabby": {
+        "description": "A sunny orange cheese tabby with bold stripes and upbeat desktop presence.",
+        "breed": "Cheese Tabby"
+      },
+      "scottish-fold": {
+        "description": "A soft Scottish Fold with folded ears and gentle loops for quieter evenings.",
+        "breed": "Scottish Fold"
+      },
+      "tuxedo-cat": {
+        "description": "A crisp black-and-white tuxedo cat with cheeky glances and high-contrast charm.",
+        "breed": "Tuxedo Cat"
+      },
+      "chinese-li-hua": {
+        "description": "Chinese Li Hua is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chinese Li Hua"
+      },
+      "birman": {
+        "description": "Birman is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Birman"
+      },
+      "calico-cat": {
+        "description": "Calico Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Calico Cat"
+      },
+      "chinese-lion-cat": {
+        "description": "Chinese Lion Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chinese Lion Cat"
+      },
+      "orange-cat": {
+        "description": "Orange Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Orange Cat"
+      },
+      "persian-cat": {
+        "description": "Persian Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Persian Cat"
+      },
+      "chinchilla-persian": {
+        "description": "Chinchilla Persian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chinchilla Persian"
+      },
+      "sphynx": {
+        "description": "Sphynx is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Sphynx"
+      },
+      "garfield-cat": {
+        "description": "Garfield Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Garfield Cat"
+      },
+      "bengal-cat": {
+        "description": "Bengal Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bengal Cat"
+      },
+      "maine-coon": {
+        "description": "Maine Coon is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Maine Coon"
+      },
+      "ragdoll": {
+        "description": "Ragdoll is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Ragdoll"
+      },
+      "devon-rex": {
+        "description": "Devon Rex is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Devon Rex"
+      },
+      "american-curl": {
+        "description": "American Curl is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "American Curl"
+      },
+      "siamese-cat": {
+        "description": "Siamese Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Siamese Cat"
+      },
+      "norwegian-forest-cat": {
+        "description": "Norwegian Forest Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Norwegian Forest Cat"
+      },
+      "bombay-cat": {
+        "description": "Bombay Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bombay Cat"
+      },
+      "golden-retriever": {
+        "description": "Golden Retriever is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Golden Retriever"
+      },
+      "labrador-retriever": {
+        "description": "Labrador Retriever is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Labrador Retriever"
+      },
+      "corgi": {
+        "description": "Corgi is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Corgi"
+      },
+      "shiba-inu": {
+        "description": "Shiba Inu is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Shiba Inu"
+      },
+      "poodle": {
+        "description": "Poodle is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Poodle"
+      },
+      "husky": {
+        "description": "Husky is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Husky"
+      },
+      "french-bulldog": {
+        "description": "French Bulldog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "French Bulldog"
+      },
+      "border-collie": {
+        "description": "Border Collie is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Border Collie"
+      }
+    },
+    "species": {
+      "cat": "Cat",
+      "dog": "Dog"
+    }
+  },
+  "Metadata": {
+    "name": "DeskPet.ai",
+    "title": "DeskPet.ai",
+    "description": "Play free desktop pets in your browser or download them for your desktop. Create your own from your pet's photo, then manage care, reminders, memories, expenses, and more—all in one place."
+  }
+}

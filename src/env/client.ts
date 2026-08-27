@@ -9,6 +9,9 @@ export const clientEnv = createEnv({
   client: {
     VITE_BASE_URL: z.url().default('http://localhost:3000'),
 
+    // Public R2/CDN base for registry pet media (avatars, action clips)
+    VITE_STORAGE_PUBLIC_URL: z.string().url().optional(),
+
     // Payment provider: 'stripe' | 'creem' | 'waffo' | '' (empty = disabled)
     VITE_PAYMENT_PROVIDER: z.enum(['stripe', 'creem', 'waffo', '']).default(''),
 

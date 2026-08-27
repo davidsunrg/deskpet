@@ -1,5 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
-import { getNavbarLinks } from '@/config/navbar-config';
+import { useNavbarLinks } from '@/config/navbar-config';
 import { authClient } from '@/auth/client';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
@@ -34,7 +34,7 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
   const [mounted, setMounted] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
-  const menuLinks = getNavbarLinks();
+  const menuLinks = useNavbarLinks();
   // Sync mount (avoid hydration mismatch) and close drawer on route change
   useEffect(() => {
     setMounted(true);

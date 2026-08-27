@@ -1,5 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
-import { getNavbarLinks } from '@/config/navbar-config';
+import { useNavbarLinks } from '@/config/navbar-config';
 import { useScroll } from '@/hooks/use-scroll';
 import { authClient } from '@/auth/client';
 import { isLinkActive } from '@/lib/urls';
@@ -32,7 +32,7 @@ interface NavbarProps {
 export function Navbar({ scroll = true }: NavbarProps) {
   const pathname = useLocation().pathname;
   const scrolled = useScroll(50);
-  const menuLinks = getNavbarLinks();
+  const menuLinks = useNavbarLinks();
   const [mounted, setMounted] = useState(false);
   const [menuValue, setMenuValue] = useState<string | null>(null);
   const { data: session, isPending } = authClient.useSession();
