@@ -17,6 +17,7 @@ import { Route as DownloadRouteImport } from './routes/download'
 import { Route as ExpenseRouteImport } from './routes/expense'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
+import { Route as ManifestDotwebmanifestRouteImport } from './routes/manifest[.]webmanifest'
 import { Route as PetsRouteImport } from './routes/pets'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
@@ -101,6 +102,11 @@ const HealthRoute = HealthRouteImport.update({
 const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
   id: '/manifest.json',
   path: '/manifest.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManifestDotwebmanifestRoute = ManifestDotwebmanifestRouteImport.update({
+  id: '/manifest.webmanifest',
+  path: '/manifest.webmanifest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PetsRoute = PetsRouteImport.update({
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/expense': typeof ExpenseRoute
   '/health': typeof HealthRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -391,6 +398,7 @@ export interface FileRoutesByTo {
   '/expense': typeof ExpenseRoute
   '/health': typeof HealthRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -446,6 +454,7 @@ export interface FileRoutesById {
   '/expense': typeof ExpenseRoute
   '/health': typeof HealthRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
   '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -503,6 +512,7 @@ export interface FileRouteTypes {
     | '/expense'
     | '/health'
     | '/manifest.json'
+    | '/manifest.webmanifest'
     | '/pets'
     | '/playground'
     | '/robots.txt'
@@ -556,6 +566,7 @@ export interface FileRouteTypes {
     | '/expense'
     | '/health'
     | '/manifest.json'
+    | '/manifest.webmanifest'
     | '/pets'
     | '/playground'
     | '/robots.txt'
@@ -610,6 +621,7 @@ export interface FileRouteTypes {
     | '/expense'
     | '/health'
     | '/manifest.json'
+    | '/manifest.webmanifest'
     | '/pets'
     | '/playground'
     | '/robots.txt'
@@ -666,6 +678,7 @@ export interface RootRouteChildren {
   ExpenseRoute: typeof ExpenseRoute
   HealthRoute: typeof HealthRoute
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
+  ManifestDotwebmanifestRoute: typeof ManifestDotwebmanifestRoute
   PetsRoute: typeof PetsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
@@ -750,6 +763,13 @@ declare module '@tanstack/react-router' {
       path: '/manifest.json'
       fullPath: '/manifest.json'
       preLoaderRoute: typeof ManifestDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manifest.webmanifest': {
+      id: '/manifest.webmanifest'
+      path: '/manifest.webmanifest'
+      fullPath: '/manifest.webmanifest'
+      preLoaderRoute: typeof ManifestDotwebmanifestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pets': {
@@ -1153,6 +1173,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExpenseRoute: ExpenseRoute,
   HealthRoute: HealthRoute,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
+  ManifestDotwebmanifestRoute: ManifestDotwebmanifestRoute,
   PetsRoute: PetsRoute,
   PlaygroundRoute: PlaygroundRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,

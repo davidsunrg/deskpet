@@ -2,8 +2,8 @@ import { websiteConfig } from '@/config/website';
 import {
   getCanonicalUrl,
   getCanonicalUrlForLocale,
+  getBaseUrl,
   getOgImage,
-  twitterHandleFromUrl,
 } from '@/lib/urls';
 import {
   baseLocale,
@@ -68,9 +68,7 @@ export const metadata = ({
   keywords?: string;
   type?: 'website' | 'article';
 }) => {
-  const twitterSite = websiteConfig.social?.twitter
-    ? twitterHandleFromUrl(websiteConfig.social.twitter)
-    : null;
+  const twitterSite = getBaseUrl();
   // OG locale format uses underscore (e.g. en_US, zh_CN), unlike BCP 47 used
   // for <html lang> / hreflang which uses hyphens.
   const currentLocale = getLocale();
@@ -107,7 +105,6 @@ export const metadata = ({
     ...(description
       ? [{ name: 'twitter:description', content: description }]
       : []),
-    ...(url ? [{ name: 'twitter:url', content: url }] : []),
     ...(image
       ? [
           { name: 'twitter:card', content: 'summary_large_image' as const },

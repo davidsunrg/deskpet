@@ -1,36 +1,30 @@
 import { HomePage } from '@/components/blocks/homepage';
-import { websiteConfig } from '@/config/website';
 import { getDeskPetMessage } from '@/lib/deskpet-i18n';
 import { seo } from '@/lib/seo';
-import { getCanonicalUrl } from '@/lib/urls';
-import { getLocale, localeConfig } from '@/lib/locale';
+import { listHeroPets, listPlaygroundPresetPets } from '@/pets/catalog';
+import { HERO_PET_PREVIEW_COUNT } from '@/utils/showcase-pets';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
+  loader: async () => {
+    const [homePlayablePets, catalogPets] = await Promise.all([
+      listPlaygroundPresetPets({ visibleIn: 'home' }),
+      listHeroPets(HERO_PET_PREVIEW_COUNT),
+    ]);
+    const floatingPet =
+      homePlayablePets.find((pet) => pet.species === 'dog') ?? null;
+    return { catalogPets, floatingPet };
+  },
   head: () => {
-    const name = websiteConfig.metadata?.name ?? '';
     const title = `Desktop Pet for Free – Play Online & Download | ${getDeskPetMessage('Metadata.title')}`;
     const description = getDeskPetMessage('Metadata.description');
-    const url = getCanonicalUrl('/');
-    const inLanguage = localeConfig[getLocale()].hreflang;
-    const webSiteJsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name,
-      description,
-      url,
-      inLanguage,
-    };
-    const metadata = seo('/', { title, description });
-    return {
-      ...metadata,
-      scripts: [
-        {
-          type: 'application/ld+json',
-          children: JSON.stringify(webSiteJsonLd),
-        },
-      ],
-    };
+    return seo('/', { title, description });
   },
-  component: HomePage,
+  component: IndexPage,
 });
+
+function IndexPage() {
+  const { catalogPets, floatingPet } = Route.useLoaderData();
+
+  return <HomePage catalogPets={catalogPets} floatingPet={floatingPet} />;
+}

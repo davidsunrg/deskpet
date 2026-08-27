@@ -5,30 +5,15 @@ import ViralPetVideosSection from '@/components/blocks/viral-pet-videos/viral-pe
 import FaqSection from '@/components/blocks/faqs/faqs';
 import PricingSection from '@/components/blocks/pricing';
 import { websiteConfig } from '@/config/website';
-import { listHeroPets, listPlaygroundPresetPets } from '@/pets/catalog';
-import { HERO_PET_PREVIEW_COUNT } from '@/utils/showcase-pets';
-import { createServerFn } from '@tanstack/react-start';
-import { useQuery } from '@tanstack/react-query';
+import type { PlaygroundPet } from '@/utils/playground-pet';
+import type { ShowcasePet } from '@/utils/showcase-pets';
 
-const getHomePageData = createServerFn({ method: 'GET' }).handler(async () => {
-  const [homePlayablePets, catalogPets] = await Promise.all([
-    listPlaygroundPresetPets({ visibleIn: 'home' }),
-    listHeroPets(HERO_PET_PREVIEW_COUNT),
-  ]);
-  const floatingPet =
-    homePlayablePets.find((pet) => pet.species === 'dog') ?? null;
-  return { catalogPets, floatingPet };
-});
+type HomePageProps = {
+  catalogPets: ShowcasePet[];
+  floatingPet: PlaygroundPet | null;
+};
 
-export function HomePage() {
-  const { data } = useQuery({
-    queryKey: ['home-page-pets'],
-    queryFn: () => getHomePageData(),
-  });
-
-  const catalogPets = data?.catalogPets ?? [];
-  const floatingPet = data?.floatingPet ?? null;
-
+export function HomePage({ catalogPets, floatingPet }: HomePageProps) {
   return (
     <div className="flex flex-col">
       <HeroSection pets={catalogPets} floatingPet={floatingPet} />

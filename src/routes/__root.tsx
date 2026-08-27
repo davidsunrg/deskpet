@@ -18,7 +18,7 @@ import { m } from '@/locale/paraglide/messages';
 import appCss from '../styles.css?url';
 import { DefaultCatchBoundary } from '@/components/layout/default-catch-boundary';
 import { Routes } from '@/lib/routes';
-import { getCanonicalUrl, getOgImage, twitterHandleFromUrl } from '@/lib/urls';
+import { getCanonicalUrl, getOgImage, getBaseUrl } from '@/lib/urls';
 import {
   getCanonicalPathname,
   getLocale,
@@ -35,9 +35,7 @@ export const Route = createRootRouteWithContext<{
 }>()({
   head: () => {
     const ogImage = getOgImage();
-    const twitterSite = websiteConfig.social?.twitter
-      ? twitterHandleFromUrl(websiteConfig.social.twitter)
-      : null;
+    const twitterSite = getBaseUrl();
     const currentLocale = getLocale();
     // OG locale format uses underscore (e.g. en_US, zh_CN), unlike BCP 47 used
     // for <html lang> / hreflang which uses hyphens.
@@ -51,7 +49,6 @@ export const Route = createRootRouteWithContext<{
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { title: websiteConfig.metadata?.title },
         { name: 'description', content: websiteConfig.metadata?.description },
-        { name: 'theme-color', content: '#4edfa6' },
         // Default OG / Twitter / canonical — pages with their own head()
         // override these with page-specific values. These ensure 404 / error
         // pages and any future route that forgets to call seo() still get
@@ -91,9 +88,16 @@ export const Route = createRootRouteWithContext<{
       links: [
         { rel: 'stylesheet', href: appCss },
         {
-          rel: 'apple-touch-icon',
-          sizes: '180x180',
-          href: '/apple-touch-icon.png',
+          rel: 'manifest',
+          href: `${getBaseUrl()}/manifest.webmanifest`,
+        },
+        { rel: 'shortcut icon', href: '/favicon-32x32.png' },
+        { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '16x16',
+          href: '/favicon-16x16.png',
         },
         {
           rel: 'icon',
@@ -102,13 +106,10 @@ export const Route = createRootRouteWithContext<{
           href: '/favicon-32x32.png',
         },
         {
-          rel: 'icon',
-          type: 'image/png',
-          sizes: '16x16',
-          href: '/favicon-16x16.png',
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          href: '/apple-touch-icon.png',
         },
-        { rel: 'icon', href: '/favicon.ico' },
-        { rel: 'manifest', href: '/manifest.json' },
       ],
     };
   },

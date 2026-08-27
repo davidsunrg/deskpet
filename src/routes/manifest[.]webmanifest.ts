@@ -5,12 +5,9 @@ import {
 } from '@/lib/web-app-manifest';
 
 /**
- * Dynamic Web App Manifest (PWA)
- * Serves /manifest.json with name/description from config instead of a static file
- * https://tanstack.dev/start/latest/docs/framework/react/guide/seo#dynamic-sitemap
- * https://web.dev/add-manifest/
+ * Reference parity: production HTML links manifest.webmanifest (absolute URL).
  */
-export const Route = createFileRoute('/manifest.json')({
+export const Route = createFileRoute('/manifest.webmanifest')({
   server: {
     handlers: {
       GET: async () => {
