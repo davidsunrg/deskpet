@@ -7,9 +7,9 @@ export const Route = createFileRoute('/auth')({
 
 function AuthLayout() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-deskpet-paper p-6 pt-8 md:p-10">
       <BackButtonSmall className="absolute top-6 left-6" />
-      <div className="flex w-full max-w-sm flex-col gap-6">
+      <div className="flex w-full max-w-[400px] flex-col gap-6">
         <Outlet />
       </div>
     </div>

@@ -1,6 +1,8 @@
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+const bottomLinkClass =
+  'w-full text-center text-sm font-bold text-deskpet-muted underline-offset-4 hover:text-deskpet-ink hover:underline';
 
 interface BottomLinkProps {
   href: string;
@@ -11,27 +13,14 @@ interface BottomLinkProps {
 export function BottomLink({ href, label, onClick }: BottomLinkProps) {
   if (onClick) {
     return (
-      <button
-        type="button"
-        onClick={onClick}
-        className={cn(
-          buttonVariants({ variant: 'link', size: 'sm' }),
-          'font-normal w-full text-muted-foreground hover:underline underline-offset-4 hover:text-primary'
-        )}
-      >
+      <button type="button" onClick={onClick} className={cn(bottomLinkClass)}>
         {label}
       </button>
     );
   }
 
   return (
-    <Link
-      to={href}
-      className={cn(
-        buttonVariants({ variant: 'link', size: 'sm' }),
-        'font-normal w-full text-muted-foreground hover:underline underline-offset-4 hover:text-primary'
-      )}
-    >
+    <Link to={href} className={cn(bottomLinkClass)}>
       {label}
     </Link>
   );

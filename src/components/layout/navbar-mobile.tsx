@@ -2,28 +2,26 @@ import { m } from '@/locale/paraglide/messages';
 import { useNavbarLinks } from '@/config/navbar-config';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
 import { Button } from '@/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { Link, useLocation } from '@tanstack/react-router';
-import { IconChevronRight, IconMenu2, IconX } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
-import { Logo } from '@/components/shared/logo';
+import { BrandName } from '@/components/layout/brand-name';
+import { Logo } from '@/components/layout/logo';
+import {
+  mobileNavLinkActiveClass,
+  mobileNavLinkClass,
+  mobileNavSubLinkClass,
+} from '@/components/layout/navbar-link-styles';
 import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
 import { MarketingUserButton } from '@/components/auth/marketing-user-button';
-import { LoginWrapper } from '@/components/auth/login-wrapper';
 import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
+import { IconChevronRight, IconMenu2, IconX } from '@tabler/icons-react';
+import { Link, useLocation } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 import { websiteConfig } from '@/config/website';
-
-const mobileLinkClass =
-  'flex h-8 w-full items-center rounded-lg px-2.5 text-base text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground';
-const mobileLinkActiveClass = 'bg-muted font-semibold text-foreground';
-const mobileSubLinkClass =
-  'flex w-full items-center gap-4 rounded-md p-2 text-sm text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground';
 
 interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {
   identity: MarketingNavbarIdentity;
@@ -48,19 +46,21 @@ export function NavbarMobile({
   return (
     <>
       <div
-        className={cn('flex items-center justify-between', className)}
+        className={cn('flex h-14 items-center justify-between', className)}
         {...props}
       >
-        <Link to="/" className="flex items-center gap-2">
-          <Logo />
-          <span className="text-xl font-semibold">
-            {websiteConfig.metadata?.name}
-          </span>
+        <Link to="/" className="flex min-w-0 items-center gap-2.5">
+          <Logo className="size-8 rounded-lg" />
+          <BrandName className="text-lg" />
         </Link>
 
-        <div className="flex items-center gap-4">
-          {showAuth && signedIn ? (
-            <MarketingUserButton identity={identity} />
+        <div className="flex items-center gap-2">
+          {showAuth ? (
+            signedIn ? (
+              <MarketingUserButton identity={identity} />
+            ) : (
+              <MarketingLoginButton />
+            )
           ) : null}
           <Button
             type="button"
@@ -69,7 +69,7 @@ export function NavbarMobile({
             aria-expanded={open}
             aria-label={m.common_toggle_menu()}
             onClick={() => setOpen((value) => !value)}
-            className="size-8 rounded-md border"
+            className="size-9 rounded-lg border border-deskpet-ink/15 text-deskpet-ink"
           >
             {open ? (
               <IconX className="size-4" />
@@ -80,57 +80,35 @@ export function NavbarMobile({
         </div>
       </div>
 
-      {open && (
+      {open ? (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={m.common_mobile_navigation()}
-          className="fixed inset-0 top-14.25 z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200 lg:hidden"
+          className="fixed inset-0 top-14.25 z-50 flex flex-col overflow-y-auto bg-deskpet-paper animate-in fade-in-0 duration-200 lg:hidden"
         >
-          <div className="flex flex-1 flex-col items-start gap-4 p-4">
-            {showAuth && !signedIn ? (
-              <div className="flex w-full flex-col gap-3">
-                <MarketingLoginButton className="w-full" variant="outline" />
-                <LoginWrapper mode="modal" initialView="signup" asChild>
-                  <button
-                    type="button"
-                    className={cn(buttonVariants({ size: 'lg' }), 'w-full')}
-                    onClick={() => setOpen(false)}
-                  >
-                    {m.auth_common_signup()}
-                  </button>
-                </LoginWrapper>
-              </div>
-            ) : null}
-
+          <div className="flex flex-1 flex-col gap-2 p-4">
             <ul className="w-full space-y-1">
               {menuLinks?.map((item) => {
                 const active = item.href
                   ? isLinkActive(item.href, pathname)
                   : item.items?.some((sub) => isLinkActive(sub.href, pathname));
                 return (
-                  <li key={item.title} className="py-1">
+                  <li key={item.title}>
                     {item.items ? (
                       <Collapsible>
                         <CollapsibleTrigger
-                          render={
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              className={cn(
-                                mobileLinkClass,
-                                'justify-between bg-transparent text-left',
-                                active && mobileLinkActiveClass
-                              )}
-                            >
-                              {item.title}
-                              <IconChevronRight className="size-4" />
-                            </Button>
-                          }
-                          nativeButton={false}
-                        />
+                          className={cn(
+                            mobileNavLinkClass,
+                            'w-full justify-between',
+                            active && mobileNavLinkActiveClass
+                          )}
+                        >
+                          {item.title}
+                          <IconChevronRight className="size-4" />
+                        </CollapsibleTrigger>
                         <CollapsibleContent className="pl-2">
-                          <ul className="mt-2 space-y-2">
+                          <ul className="mt-1 space-y-1">
                             {item.items.map((sub) => (
                               <li key={sub.title}>
                                 <Link
@@ -143,9 +121,9 @@ export function NavbarMobile({
                                   }
                                   onClick={() => setOpen(false)}
                                   className={cn(
-                                    mobileSubLinkClass,
+                                    mobileNavSubLinkClass,
                                     isLinkActive(sub.href, pathname) &&
-                                      mobileLinkActiveClass
+                                      mobileNavLinkActiveClass
                                   )}
                                 >
                                   {sub.icon ? (
@@ -165,8 +143,8 @@ export function NavbarMobile({
                         rel={item.external ? 'noopener noreferrer' : undefined}
                         onClick={() => setOpen(false)}
                         className={cn(
-                          mobileLinkClass,
-                          active && mobileLinkActiveClass
+                          mobileNavLinkClass,
+                          active && mobileNavLinkActiveClass
                         )}
                       >
                         {item.title}
@@ -178,7 +156,7 @@ export function NavbarMobile({
             </ul>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 }

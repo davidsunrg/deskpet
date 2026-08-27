@@ -1,12 +1,6 @@
 import { BottomLink } from '@/components/auth/bottom-link';
-import { Logo } from '@/components/shared/logo';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { BrandName } from '@/components/layout/brand-name';
+import { Logo } from '@/components/layout/logo';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +11,7 @@ interface AuthCardProps {
   bottomButtonHref: string;
   onBottomButtonClick?: () => void;
   className?: string;
+  showBrand?: boolean;
 }
 
 export function AuthCard({
@@ -26,26 +21,29 @@ export function AuthCard({
   bottomButtonHref,
   onBottomButtonClick,
   className,
+  showBrand = true,
 }: AuthCardProps) {
   return (
-    <Card
-      className={cn('shadow-xs border border-border pt-6', className)}
-      size="default"
-    >
-      <CardHeader className="flex flex-col items-center">
-        <Link to="/">
-          <Logo className="mb-2" />
-        </Link>
-        <CardDescription>{headerLabel}</CardDescription>
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-      <CardFooter>
-        <BottomLink
-          label={bottomButtonLabel}
-          href={bottomButtonHref}
-          onClick={onBottomButtonClick}
-        />
-      </CardFooter>
-    </Card>
+    <div className={cn('flex w-full flex-col gap-6', className)}>
+      {showBrand ? (
+        <div className="flex flex-col items-center gap-3 text-center">
+          <Link to="/" className="flex flex-col items-center gap-3">
+            <Logo />
+            <BrandName className="text-xl" />
+          </Link>
+          <p className="text-sm font-bold text-deskpet-muted">{headerLabel}</p>
+        </div>
+      ) : (
+        <p className="text-center text-lg font-black text-deskpet-ink">
+          {headerLabel}
+        </p>
+      )}
+      <div className="flex flex-col gap-6">{children}</div>
+      <BottomLink
+        label={bottomButtonLabel}
+        href={bottomButtonHref}
+        onClick={onBottomButtonClick}
+      />
+    </div>
   );
 }

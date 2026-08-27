@@ -40,12 +40,12 @@ export function AuthDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-100 border-0 p-0 overflow-hidden">
+      <DialogContent className="gap-0 overflow-hidden border-0 bg-deskpet-paper p-6 pt-8 shadow-none ring-0 sm:max-w-[400px]">
         <DialogHeader className="sr-only">
           <DialogTitle>
             {view === 'login'
-              ? m.auth_login_sign_in()
-              : m.auth_register_sign_up()}
+              ? m.auth_login_welcome_back()
+              : m.auth_signup_create_account()}
           </DialogTitle>
         </DialogHeader>
         {view === 'login' ? (
@@ -53,14 +53,12 @@ export function AuthDialog({
             callbackUrl={callbackUrl}
             onSuccess={handleSuccess}
             onSwitchToSignup={() => setView('signup')}
-            className="border-0 shadow-none"
           />
         ) : (
           <SignupForm
             callbackUrl={callbackUrl}
             onSuccess={handleSuccess}
             onSwitchToLogin={() => setView('login')}
-            className="border-0 shadow-none"
           />
         )}
       </DialogContent>

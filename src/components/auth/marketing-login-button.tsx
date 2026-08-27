@@ -6,21 +6,19 @@ import { cn } from '@/lib/utils';
 interface MarketingLoginButtonProps {
   className?: string;
   callbackUrl?: string;
-  variant?: 'outline' | 'default';
 }
 
 export function MarketingLoginButton({
   className,
   callbackUrl,
-  variant = 'outline',
 }: MarketingLoginButtonProps) {
   return (
     <LoginWrapper mode="modal" asChild callbackUrl={callbackUrl}>
       <button
         type="button"
         className={cn(
-          buttonVariants({ variant, size: 'sm' }),
-          'cursor-pointer',
+          buttonVariants({ variant: 'outline', size: 'sm' }),
+          'cursor-pointer border-deskpet-ink/20 bg-white font-mono font-black text-deskpet-ink hover:bg-deskpet-mint-soft',
           className
         )}
       >

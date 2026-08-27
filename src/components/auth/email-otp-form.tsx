@@ -1,5 +1,9 @@
 import { getAuthErrorMessage } from '@/lib/locale';
 import { m } from '@/locale/paraglide/messages';
+import {
+  authFieldClass,
+  authSubmitClass,
+} from '@/components/auth/auth-form-styles';
 import { FormError } from '@/components/shared/form-error';
 import { FormSuccess } from '@/components/shared/form-success';
 import { Button } from '@/components/ui/button';
@@ -111,13 +115,15 @@ export function EmailOtpForm({
     <div className={cn('space-y-6', className)}>
       <FormSuccess message={success ?? m.auth_otp_sent()} />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="otp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{m.auth_otp_code()}</FormLabel>
+                <FormLabel className="text-sm font-bold text-deskpet-ink">
+                  {m.auth_otp_code()}
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -126,6 +132,7 @@ export function EmailOtpForm({
                     disabled={isPending}
                     placeholder={m.auth_otp_placeholder_code()}
                     name="otp"
+                    className={authFieldClass}
                   />
                 </FormControl>
                 <FormMessage />
@@ -135,19 +142,18 @@ export function EmailOtpForm({
           <FormError message={error} />
           <Button
             disabled={isPending}
-            size="lg"
             type="submit"
-            className="w-full"
+            className={authSubmitClass}
           >
             {isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
             {m.auth_otp_verify()}
           </Button>
         </form>
       </Form>
-      <div className="flex flex-col gap-2 text-center text-sm">
+      <div className="flex flex-col gap-2 text-center text-sm font-bold">
         <button
           type="button"
-          className="text-muted-foreground hover:text-primary hover:underline"
+          className="text-deskpet-muted hover:text-deskpet-ink hover:underline"
           onClick={() => void sendOtp()}
           disabled={isPending}
         >
@@ -156,7 +162,7 @@ export function EmailOtpForm({
         {onBack ? (
           <button
             type="button"
-            className="text-muted-foreground hover:text-primary hover:underline"
+            className="text-deskpet-muted hover:text-deskpet-ink hover:underline"
             onClick={onBack}
             disabled={isPending}
           >

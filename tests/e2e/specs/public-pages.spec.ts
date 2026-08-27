@@ -77,9 +77,6 @@ test.describe('public page smoke coverage', () => {
       page.locator('[data-slot="auth-actions-placeholder"]')
     ).toHaveCount(0);
     await expect(page.getByRole('button', { name: /^log in$/i })).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: /^sign up$/i })
-    ).toBeVisible();
   });
 
   test('hides open mobile navigation at the desktop breakpoint', async ({

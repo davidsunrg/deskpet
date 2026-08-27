@@ -156,7 +156,7 @@ function RootComponent() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar scroll identity={marketingIdentity} />
+      <Navbar identity={marketingIdentity} />
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>

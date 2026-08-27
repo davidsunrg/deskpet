@@ -53,7 +53,7 @@ browser console errors or page errors.
 |---|---|---|
 | 1 | Public pages render successfully | Open `/`, `/playground`, `/pricing`, `/blog`, `/blog/getting-started`, `/ai`, `/about`, `/contact`, `/changelog`, `/roadmap`, `/waitlist`, `/cookie`, `/privacy`, `/terms`, `/auth/login`, `/auth/signup`, `/auth/register` (redirects to signup), `/auth/forgot-password`, `/auth/reset-password` in `light` mode. Verify each returns 2xx, renders a visible body, applies the light theme, and emits no browser errors. |
 | 2 | Home login modal opens | Open `/`, click the navbar login button, verify the login dialog and email OTP input flow are visible (no password field), and assert no browser errors. |
-| 3 | Marketing auth controls render immediately | Open `/` and verify login/signup controls are visible without auth loading placeholders. |
+| 3 | Marketing auth controls render immediately | Open `/` and verify the login control is visible without auth loading placeholders. |
 | 4 | Open mobile navigation hides at desktop breakpoint | Open the mobile navigation at a narrow viewport, resize to desktop width, and verify the mobile dialog no longer covers the desktop navigation. |
 | 5 | Mobile navigation uses consistent interactive backgrounds | At a narrow viewport, verify standalone links gain the muted background on hover and active standalone, group, and nested links retain the same background treatment. |
 | 6 | Health check responds with pong | Call `/api/ping` and verify `{ "message": "pong" }`. |

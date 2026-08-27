@@ -1,6 +1,11 @@
 import { getAuthErrorMessage } from '@/lib/locale';
 import { m } from '@/locale/paraglide/messages';
 import { AuthCard } from '@/components/auth/auth-card';
+import {
+  authFieldClass,
+  authLabelClass,
+  authSubmitClass,
+} from '@/components/auth/auth-form-styles';
 import { EmailOtpForm } from '@/components/auth/email-otp-form';
 import { FormError } from '@/components/shared/form-error';
 import { Button } from '@/components/ui/button';
@@ -117,13 +122,15 @@ export function LoginForm({
     >
       {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{m.auth_login_email()}</FormLabel>
+                  <FormLabel className={authLabelClass()}>
+                    {m.auth_login_email()}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -131,6 +138,7 @@ export function LoginForm({
                       placeholder={m.auth_login_placeholder_email()}
                       type="email"
                       name="email"
+                      className={authFieldClass}
                     />
                   </FormControl>
                   <FormMessage />
@@ -140,9 +148,8 @@ export function LoginForm({
             <FormError message={error} />
             <Button
               disabled={isPending}
-              size="lg"
               type="submit"
-              className="w-full"
+              className={authSubmitClass}
             >
               {isPending && (
                 <IconLoader2 className="mr-2 size-4 animate-spin" />
@@ -152,12 +159,10 @@ export function LoginForm({
           </form>
         </Form>
       )}
-      <div className="mt-4">
-        <SocialLoginButton
-          callbackUrl={callbackUrl}
-          showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
-        />
-      </div>
+      <SocialLoginButton
+        callbackUrl={callbackUrl}
+        showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
+      />
     </AuthCard>
   );
 }
