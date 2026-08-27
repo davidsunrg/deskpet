@@ -2,12 +2,8 @@ import { readFile } from 'node:fs/promises';
 
 const JSON_MESSAGE_KEYS = [
   'auth_error_codes',
-  'pricing_plans_free_features',
-  'pricing_plans_free_limits',
-  'pricing_plans_lifetime_features',
-  'pricing_plans_lifetime_limits',
-  'pricing_plans_pro_features',
-  'pricing_plans_pro_limits',
+  'pricing_page_plans_free_features',
+  'pricing_page_plans_customize_my_own_features',
 ] as const;
 
 async function readMessages() {

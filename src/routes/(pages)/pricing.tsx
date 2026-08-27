@@ -1,7 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
 import { authClient } from '@/auth/client';
-import FaqSection from '@/components/blocks/faqs/faqs';
-import Container from '@/components/layout/container';
 import { PricingTable } from '@/components/pricing/pricing-table';
 import { websiteConfig } from '@/config/website';
 import { useCurrentPlan } from '@/hooks/use-payment';
@@ -17,8 +15,8 @@ export const Route = createFileRoute('/(pages)/pricing')({
   },
   head: () =>
     seo('/pricing', {
-      title: `${m.pricing_title()} | ${websiteConfig.metadata?.name}`,
-      description: m.pricing_description(),
+      title: `${m.pricing_page_title()} | ${websiteConfig.metadata?.name}`,
+      description: m.pricing_page_description(),
     }),
   component: PricingPage,
 });
@@ -28,23 +26,11 @@ function PricingPage() {
   const userId = session?.user?.id;
   const { data: planData } = useCurrentPlan(!!userId);
   const currentPlan = planData?.currentPlan ?? null;
+
   return (
-    <Container className="py-16 px-4">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <div className="space-y-4 text-center">
-          <h1 className="text-3xl font-bold tracking-tight">
-            {m.pricing_title()}
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            {m.pricing_subtitle()}
-          </p>
-        </div>
-        <PricingTable
-          currentPlan={currentPlan}
-          metadata={userId ? { userId } : undefined}
-        />
-        <FaqSection />
-      </div>
-    </Container>
+    <PricingTable
+      currentPlan={currentPlan}
+      metadata={userId ? { userId } : undefined}
+    />
   );
 }

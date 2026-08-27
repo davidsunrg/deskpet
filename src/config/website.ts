@@ -17,20 +17,26 @@ const providerPriceIds = {
     proMonthly: clientEnv.VITE_STRIPE_PRICE_PRO_MONTHLY,
     proYearly: clientEnv.VITE_STRIPE_PRICE_PRO_YEARLY,
     lifetime: clientEnv.VITE_STRIPE_PRICE_LIFETIME,
+    customizeMyOwn: clientEnv.VITE_STRIPE_PRICE_LIFETIME,
   },
   creem: {
     proMonthly: clientEnv.VITE_CREEM_PRODUCT_PRO_MONTHLY,
     proYearly: clientEnv.VITE_CREEM_PRODUCT_PRO_YEARLY,
     lifetime: clientEnv.VITE_CREEM_PRODUCT_LIFETIME,
+    customizeMyOwn: clientEnv.VITE_CREEM_PRODUCT_LIFETIME,
   },
   waffo: {
     proMonthly: clientEnv.VITE_WAFFO_PRODUCT_PRO_MONTHLY,
     proYearly: clientEnv.VITE_WAFFO_PRODUCT_PRO_YEARLY,
     lifetime: clientEnv.VITE_WAFFO_PRODUCT_LIFETIME,
+    customizeMyOwn: clientEnv.VITE_WAFFO_PRODUCT_LIFETIME,
   },
 } satisfies Record<
   Exclude<typeof paymentProvider, ''>,
-  Record<'proMonthly' | 'proYearly' | 'lifetime', string | undefined>
+  Record<
+    'proMonthly' | 'proYearly' | 'lifetime' | 'customizeMyOwn',
+    string | undefined
+  >
 >;
 const activePriceIds = isPaymentEnabled
   ? providerPriceIds[paymentProvider]
@@ -39,6 +45,7 @@ const priceIds = {
   proMonthly: activePriceIds?.proMonthly ?? '',
   proYearly: activePriceIds?.proYearly ?? '',
   lifetime: activePriceIds?.lifetime ?? '',
+  customizeMyOwn: activePriceIds?.customizeMyOwn ?? '',
 };
 
 /**
@@ -117,76 +124,47 @@ export const websiteConfig: WebsiteConfig = {
           isFree: true,
           isLifetime: false,
           get name() {
-            return m.pricing_plans_free_name();
+            return m.pricing_page_plans_free_name();
           },
           get description() {
-            return m.pricing_plans_free_description();
+            return m.pricing_page_plans_free_description();
           },
           get features() {
-            return [...getMessageList(m.pricing_plans_free_features())];
+            return [...getMessageList(m.pricing_page_plans_free_features())];
           },
           get limits() {
-            return [...getMessageList(m.pricing_plans_free_limits())];
+            return [];
           },
         },
-        pro: {
-          id: 'pro',
-          prices: [
-            {
-              type: 'subscription',
-              priceId: priceIds.proMonthly,
-              amount: 990,
-              currency: 'USD',
-              interval: 'month',
-            },
-            {
-              type: 'subscription',
-              priceId: priceIds.proYearly,
-              amount: 9900,
-              currency: 'USD',
-              interval: 'year',
-            },
-          ],
-          isFree: false,
-          isLifetime: false,
-          popular: true,
-          get name() {
-            return m.pricing_plans_pro_name();
-          },
-          get description() {
-            return m.pricing_plans_pro_description();
-          },
-          get features() {
-            return [...getMessageList(m.pricing_plans_pro_features())];
-          },
-          get limits() {
-            return [...getMessageList(m.pricing_plans_pro_limits())];
-          },
-        },
-        lifetime: {
-          id: 'lifetime',
+        customizeMyOwn: {
+          id: 'customizeMyOwn',
           prices: [
             {
               type: 'one_time',
-              priceId: priceIds.lifetime,
-              amount: 19900,
+              priceId: priceIds.customizeMyOwn,
+              amount: 7999,
               currency: 'USD',
               allowPromotionCode: true,
             },
           ],
           isFree: false,
           isLifetime: true,
+          popular: true,
           get name() {
-            return m.pricing_plans_lifetime_name();
+            return m.pricing_page_plans_customize_my_own_name();
           },
           get description() {
-            return m.pricing_plans_lifetime_description();
+            return m.pricing_page_plans_customize_my_own_description();
           },
           get features() {
-            return [...getMessageList(m.pricing_plans_lifetime_features())];
+            return [
+              ...getMessageList(
+                m.pricing_page_plans_customize_my_own_features()
+              ),
+            ];
           },
           get limits() {
-            return [...getMessageList(m.pricing_plans_lifetime_limits())];
+            return [];
           },
         },
       },
