@@ -1,5 +1,7 @@
 'use client';
 
+import { AnimatedGroup } from '@/components/tailark/motion/animated-group';
+import { TextEffect } from '@/components/tailark/motion/text-effect';
 import { CtaButton } from '@/components/ui/cta-button';
 import {
   Tooltip,
@@ -19,6 +21,26 @@ const HeroFloatingPetLazy = lazy(() =>
     default: mod.HeroFloatingPet,
   }))
 );
+
+const transitionVariants = {
+  item: {
+    hidden: {
+      opacity: 0,
+      y: 12,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: 'spring' as const,
+        bounce: 0,
+        duration: 0.8,
+      },
+    },
+  },
+};
 
 type HeroSectionProps = {
   pets: ShowcasePet[];
@@ -58,16 +80,42 @@ export default function HeroSection({
       <div className="relative pt-12 pb-0">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
-            <h1 className="mt-8 text-balance text-5xl font-sans font-black lg:mt-8 xl:text-[5rem]">
+            <TextEffect
+              per="line"
+              preset="fade-in-blur"
+              speedSegment={0.3}
+              as="h1"
+              className="mt-8 text-balance text-5xl font-sans font-black lg:mt-8 xl:text-[5rem]"
+            >
               {t('title')}
-            </h1>
+            </TextEffect>
 
-            <p className="mx-auto mt-8 max-w-4xl text-balance text-lg text-muted-foreground">
+            <TextEffect
+              per="line"
+              preset="fade-in-blur"
+              speedSegment={0.3}
+              delay={0.5}
+              as="p"
+              className="mx-auto mt-8 max-w-4xl text-balance text-lg text-muted-foreground"
+            >
               {t('description')}
-            </p>
+            </TextEffect>
 
             <div id="get-started" className="mx-auto mt-10 text-center">
-              <div className="mt-7 flex flex-row flex-wrap items-center justify-center gap-4">
+              <AnimatedGroup
+                variants={{
+                  container: {
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.05,
+                        delayChildren: 0.15,
+                      },
+                    },
+                  },
+                  ...transitionVariants,
+                }}
+                className="mt-7 flex flex-row flex-wrap items-center justify-center gap-4"
+              >
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <CtaButton
@@ -103,7 +151,7 @@ export default function HeroSection({
                     <p>{t('ctaMakeMyOwnTooltip')}</p>
                   </TooltipContent>
                 </Tooltip>
-              </div>
+              </AnimatedGroup>
             </div>
           </div>
         </div>
