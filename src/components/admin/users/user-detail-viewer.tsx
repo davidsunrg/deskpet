@@ -97,17 +97,15 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
           image={user.image ?? null}
           className="size-8 shrink-0 border"
         />
-        <DrawerTrigger
-          render={
-            <Button
-              variant="link"
-              className="w-fit px-0 text-left text-foreground"
-            />
-          }
-        >
-          <span className="font-medium hover:underline hover:underline-offset-4">
-            {user.name}
-          </span>
+        <DrawerTrigger asChild>
+          <Button
+            variant="link"
+            className="w-fit px-0 text-left text-foreground"
+          >
+            <span className="font-medium hover:underline hover:underline-offset-4">
+              {user.name}
+            </span>
+          </Button>
         </DrawerTrigger>
       </div>
       <DrawerContent>
@@ -291,8 +289,8 @@ export function UserDetailViewer({ user }: UserDetailViewerProps) {
               {m.admin_users_ban_button()}
             </Button>
           )}
-          <DrawerClose render={<Button variant="outline" />}>
-            {m.admin_users_close()}
+          <DrawerClose asChild>
+            <Button variant="outline">{m.admin_users_close()}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

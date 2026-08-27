@@ -63,8 +63,8 @@ export function DashboardHeader({
                   {item.isCurrentPage ? (
                     <BreadcrumbPage>{item.label}</BreadcrumbPage>
                   ) : item.href ? (
-                    <BreadcrumbLink render={<Link to={item.href} />}>
-                      {item.label}
+                    <BreadcrumbLink asChild>
+                      <Link to={item.href}>{item.label}</Link>
                     </BreadcrumbLink>
                   ) : (
                     item.label

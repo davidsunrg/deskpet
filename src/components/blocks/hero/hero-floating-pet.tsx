@@ -1,3 +1,5 @@
+'use client';
+
 import { PetActionMenu } from '@/components/pets/pet-action-menu';
 import { usePetActionAutoplay } from '@/components/pets/use-pet-action-autoplay';
 import type { PlaygroundPet } from '@/utils/playground-pet';

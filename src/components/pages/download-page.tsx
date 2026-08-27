@@ -72,15 +72,12 @@ export function DownloadPage() {
               <p className="text-[15px] text-deskpet-muted">
                 {t('contact.prompt')}
               </p>
-              <CtaButton
-                className="mt-5 rounded-2xl text-[17px]"
-                render={
-                  <a href={`mailto:${supportEmail}`}>
-                    <MailIcon className="size-5" aria-hidden />
-                    {t('contact.cta')}
-                  </a>
-                }
-              />
+              <CtaButton asChild className="mt-5 rounded-2xl text-[17px]">
+                <a href={`mailto:${supportEmail}`}>
+                  <MailIcon className="size-5" aria-hidden />
+                  {t('contact.cta')}
+                </a>
+              </CtaButton>
             </section>
           ) : null}
         </div>

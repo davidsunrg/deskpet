@@ -12,10 +12,18 @@ export function DataTableViewOptions<TData>({ table, ...props }: DataTableViewOp
         .getAllColumns()
         .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide()), [table]);
     return (<DropdownMenu>
-      <DropdownMenuTrigger render={(props) => (<Button {...props} type="button" aria-label={m.common_table_view_options()} variant="outline" size="sm" className="ml-auto hidden h-8 font-normal lg:flex">
+      <DropdownMenuTrigger asChild>
+        <Button
+          type="button"
+          aria-label={m.common_table_view_options()}
+          variant="outline"
+          size="sm"
+          className="ml-auto hidden h-8 font-normal lg:flex"
+        >
             <IconSettings2 className="text-muted-foreground"/>
             {m.common_table_view_options()}
-          </Button>)}/>
+          </Button>
+      </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44" align="end" {...props}>
         <DropdownMenuGroup>
           <DropdownMenuLabel>{m.common_table_view_options()}</DropdownMenuLabel>

@@ -135,10 +135,12 @@ export function DataTableFilterMenu<TData>({ table, debounceMs = DEBOUNCE_MS, th
           <IconX />
         </Button>)}
       <Popover open={open} onOpenChange={onOpenChange}>
-        <PopoverTrigger render={(triggerProps) => (<Button {...triggerProps} aria-label={m.common_table_open_filter_menu()} variant="outline" size={filters.length > 0 ? "icon" : "sm"} className={cn(filters.length > 0 && "size-8", "h-8 font-normal")} ref={triggerRef} onKeyDown={onTriggerKeyDown}>
+        <PopoverTrigger asChild>
+        <Button aria-label={m.common_table_open_filter_menu()} variant="outline" size={filters.length > 0 ? "icon" : "sm"} className={cn(filters.length > 0 && "size-8", "h-8 font-normal")} ref={triggerRef} onKeyDown={onTriggerKeyDown}>
               <IconFilter className="text-muted-foreground"/>
               {filters.length > 0 ? null : m.common_table_filter()}
-            </Button>)}/>
+            </Button>
+      </PopoverTrigger>
         <PopoverContent align={align} className="w-full max-w-(--radix-popover-content-available-width) p-0" {...props}>
           <Command loop className="[&_[cmdk-input-wrapper]_svg]:hidden">
             <CommandInput ref={inputRef} placeholder={selectedColumn
@@ -211,10 +213,12 @@ function DataTableFilterItem<TData>({ filter, filterItemId, columns, onFilterUpd
             return null;
         return (<div key={filter.filterId} role="listitem" id={filterItemId} className="flex h-8 items-center rounded-md bg-background" onKeyDown={onItemKeyDown}>
         <Popover open={showFieldSelector} onOpenChange={setShowFieldSelector}>
-          <PopoverTrigger render={(triggerProps) => (<Button {...triggerProps} variant="ghost" size="sm" className="rounded-none rounded-l-md border border-r-0 font-normal dark:bg-input/30">
+          <PopoverTrigger asChild>
+        <Button variant="ghost" size="sm" className="rounded-none rounded-l-md border border-r-0 font-normal dark:bg-input/30">
                 {columnMeta?.icon && (<columnMeta.icon className="text-muted-foreground"/>)}
                 {columnMeta?.label ?? column.id}
-              </Button>)}/>
+              </Button>
+      </PopoverTrigger>
           <PopoverContent align="start" className="w-48 p-0">
             <Command loop>
               <CommandInput placeholder={m.common_table_search_fields()}/>
@@ -368,7 +372,8 @@ function onFilterInputRender<TData>({ filter, column, inputId, onFilterUpdate, s
                 : [filter.value];
             const selectedOptions = options.filter((option) => selectedValues.includes(option.value));
             return (<Popover open={showValueSelector} onOpenChange={setShowValueSelector}>
-          <PopoverTrigger render={(triggerProps) => (<Button {...triggerProps} id={inputId} aria-controls={inputListboxId} variant="ghost" size="sm" className="h-full min-w-16 rounded-none border px-1.5 font-normal dark:bg-input/30">
+          <PopoverTrigger asChild>
+        <Button id={inputId} aria-controls={inputListboxId} variant="ghost" size="sm" className="h-full min-w-16 rounded-none border px-1.5 font-normal dark:bg-input/30">
                 {selectedOptions.length === 0 ? (filter.variant === "multiSelect" ? (m.common_table_select_options()) : (m.common_table_select_option())) : (<>
                     <div className="-space-x-2 flex items-center rtl:space-x-reverse">
                       {selectedOptions.map((selectedOption) => selectedOption.icon ? (<div key={selectedOption.value} className="rounded-full border bg-background p-0.5">
@@ -381,7 +386,8 @@ function onFilterInputRender<TData>({ filter, column, inputId, onFilterUpdate, s
                             : selectedOptions[0]?.label}
                     </span>
                   </>)}
-              </Button>)}/>
+              </Button>
+      </PopoverTrigger>
           <PopoverContent id={inputListboxId} align="start" className="w-48 p-0">
             <Command>
               <CommandInput placeholder={m.common_table_search_options()}/>
@@ -420,10 +426,12 @@ function onFilterInputRender<TData>({ filter, column, inputId, onFilterUpdate, s
                     ? formatDate(new Date(Number(dateValue[0])))
                     : m.common_table_pick_date_ellipsis();
             return (<Popover open={showValueSelector} onOpenChange={setShowValueSelector}>
-          <PopoverTrigger render={(triggerProps) => (<Button {...triggerProps} id={inputId} aria-controls={inputListboxId} variant="ghost" size="sm" className={cn("h-full rounded-none border px-1.5 font-normal dark:bg-input/30", !filter.value && "text-muted-foreground")}>
+          <PopoverTrigger asChild>
+        <Button id={inputId} aria-controls={inputListboxId} variant="ghost" size="sm" className={cn("h-full rounded-none border px-1.5 font-normal dark:bg-input/30", !filter.value && "text-muted-foreground")}>
                 <IconCalendar className="size-3.5"/>
                 <span className="truncate">{displayValue}</span>
-              </Button>)}/>
+              </Button>
+      </PopoverTrigger>
           <PopoverContent id={inputListboxId} align="start" className="w-auto p-0">
             {filter.operator === "isBetween" ? (<Calendar autoFocus captionLayout="dropdown" mode="range" selected={dateValue.length === 2
                         ? {

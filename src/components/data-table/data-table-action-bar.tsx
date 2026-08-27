@@ -47,9 +47,7 @@ function DataTableActionBarAction({ size = "sm", tooltip, isPending, disabled, c
     if (!tooltip)
         return trigger;
     return (<Tooltip>
-      <TooltipTrigger render={(triggerProps) => (<Button {...triggerProps} variant="secondary" size={size} className={cn("gap-1.5 border border-secondary bg-secondary/50 hover:bg-secondary/70 [&>svg]:size-3.5", size === "icon" ? "size-7" : "h-7", className)} disabled={disabled || isPending} {...props}>
-            {isPending ? <IconLoader2 className="size-3.5 animate-spin"/> : children}
-          </Button>)}/>
+      <TooltipTrigger asChild>{trigger}</TooltipTrigger>
       <TooltipContent sideOffset={6} className="border bg-accent font-semibold text-foreground dark:bg-zinc-900 [&>span]:hidden">
         <p>{tooltip}</p>
       </TooltipContent>
@@ -68,9 +66,16 @@ function DataTableActionBarSelection<TData>({ table, }: DataTableActionBarSelect
       </span>
       <Separator orientation="vertical" className="mr-1 ml-2 h-4 self-auto!"/>
       <Tooltip>
-        <TooltipTrigger render={(triggerProps) => (<Button {...triggerProps} variant="ghost" size="icon" className="size-5" onClick={onClearSelection}>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-5"
+            onClick={onClearSelection}
+          >
               <IconX className="size-3.5"/>
-            </Button>)}/>
+            </Button>
+        </TooltipTrigger>
         <TooltipContent sideOffset={10} className="flex items-center gap-2 border bg-accent px-2 py-1 font-semibold text-foreground dark:bg-zinc-900 [&>span]:hidden">
           <p>{m.common_table_clear_selection()}</p>
           <kbd className="select-none rounded border bg-background px-1.5 py-px font-mono font-normal text-[0.7rem] text-foreground shadow-xs">

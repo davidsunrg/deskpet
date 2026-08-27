@@ -37,16 +37,16 @@ export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              render={
-                <Link to={Routes.Root} onClick={closeMobileSidebar}>
-                  <Logo className="size-5" />
-                  <span className="truncate font-semibold text-base">
-                    {websiteConfig.metadata?.name}
-                  </span>
-                </Link>
-              }
+              asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
-            />
+            >
+              <Link to={Routes.Root} onClick={closeMobileSidebar}>
+                <Logo className="size-5" />
+                <span className="truncate font-semibold text-base">
+                  {websiteConfig.metadata?.name}
+                </span>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

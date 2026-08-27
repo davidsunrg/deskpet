@@ -1,7 +1,9 @@
+'use client';
+
 import { FeatureCardVisual } from '@/components/blocks/features/feature-card-visual';
 import { HeaderSection } from '@/components/layout/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { useTranslations } from '@/lib/deskpet-i18n';
 
 const FEATURE_IDS = [

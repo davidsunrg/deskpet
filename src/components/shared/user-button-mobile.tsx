@@ -41,14 +41,14 @@ export function UserButtonMobile({ user }: UserButtonMobileProps) {
   };
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger
-        render={<button type="button" aria-label={m.common_open_user_menu()} />}
-      >
-        <UserAvatar
-          name={user.name ?? null}
-          image={user.image ?? null}
-          className="size-8 shrink-0 border"
-        />
+      <DrawerTrigger asChild>
+        <button type="button" aria-label={m.common_open_user_menu()}>
+          <UserAvatar
+            name={user.name ?? null}
+            image={user.image ?? null}
+            className="size-8 shrink-0 border"
+          />
+        </button>
       </DrawerTrigger>
       <DrawerContent className="rounded-t-[10px] border-t px-3 pb-12 text-sm">
         <DrawerHeader className="p-2 text-left">

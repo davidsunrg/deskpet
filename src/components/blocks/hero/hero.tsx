@@ -1,3 +1,5 @@
+'use client';
+
 import { AnimatedGroup } from '@/components/tailark/motion/animated-group';
 import { TextEffect } from '@/components/tailark/motion/text-effect';
 import { CtaButton } from '@/components/ui/cta-button';
@@ -7,12 +9,12 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { PetCardGrid } from '@/components/pets/pet-card-grid';
+import { useTranslations } from '@/lib/deskpet-i18n';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 import { lazy, Suspense, useRef } from 'react';
-import { useTranslations } from '@/lib/deskpet-i18n';
 
 const HeroFloatingPetLazy = lazy(() =>
   import('./hero-floating-pet').then((mod) => ({
@@ -115,21 +117,17 @@ export default function HeroSection({
                 className="mt-7 flex flex-row flex-wrap items-center justify-center gap-4"
               >
                 <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <LocaleLink
-                        href={Routes.Playground}
-                        data-testid="hero-cta-playground"
-                        className="inline-flex"
-                      />
-                    }
-                  >
+                  <TooltipTrigger asChild>
                     <CtaButton
+                      asChild
                       type="button"
                       variant="brutalOutline"
-                      className="h-11 px-6 pointer-events-none"
+                      className="h-11 px-6"
+                      data-testid="hero-cta-playground"
                     >
-                      <span className="text-nowrap">{t('playground')}</span>
+                      <LocaleLink href={Routes.Playground}>
+                        <span className="text-nowrap">{t('playground')}</span>
+                      </LocaleLink>
                     </CtaButton>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -137,20 +135,16 @@ export default function HeroSection({
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <LocaleLink
-                        href={Routes.DesktopPetCreator}
-                        data-testid="hero-cta-make-pet"
-                        className="inline-flex"
-                      />
-                    }
-                  >
+                  <TooltipTrigger asChild>
                     <CtaButton
+                      asChild
                       type="button"
-                      className="h-11 px-6 pointer-events-none"
+                      className="h-11 px-6"
+                      data-testid="hero-cta-make-pet"
                     >
-                      <span className="text-nowrap">{t('secondary')}</span>
+                      <LocaleLink href={Routes.DesktopPetCreator}>
+                        <span className="text-nowrap">{t('secondary')}</span>
+                      </LocaleLink>
                     </CtaButton>
                   </TooltipTrigger>
                   <TooltipContent>

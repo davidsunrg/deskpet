@@ -253,17 +253,15 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     id: 'actions',
     cell: () => (
       <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              variant="ghost"
-              className="data-open:bg-muted text-muted-foreground flex size-8"
-              size="icon"
-            />
-          }
-        >
-          <IconDotsVertical />
-          <span className="sr-only">Open menu</span>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+            size="icon"
+          >
+            <IconDotsVertical />
+            <span className="sr-only">Open menu</span>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem>Edit</DropdownMenuItem>
@@ -363,12 +361,12 @@ export function DataTable({
         </TabsList>
         <div className="flex items-center gap-2">
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={<Button variant="outline" size="sm" />}
-            >
-              <IconLayoutColumns data-icon="inline-start" />
-              Columns
-              <IconChevronDown data-icon="inline-end" />
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <IconLayoutColumns data-icon="inline-start" />
+                Columns
+                <IconChevronDown data-icon="inline-end" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-32">
               {table
@@ -600,15 +598,10 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
   const isMobile = useIsMobile();
   return (
     <Drawer swipeDirection={isMobile ? 'down' : 'right'}>
-      <DrawerTrigger
-        render={
-          <Button
-            variant="link"
-            className="text-foreground w-fit px-0 text-left"
-          />
-        }
-      >
-        {item.header}
+      <DrawerTrigger asChild>
+        <Button variant="link" className="text-foreground w-fit px-0 text-left">
+          {item.header}
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="gap-1">
@@ -785,7 +778,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
         </div>
         <DrawerFooter>
           <Button>Submit</Button>
-          <DrawerClose render={<Button variant="outline" />}>Close</DrawerClose>
+          <DrawerClose asChild>
+            <Button variant="outline">Close</Button>
+          </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

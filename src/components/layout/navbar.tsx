@@ -1,49 +1,76 @@
-import { m } from '@/locale/paraglide/messages';
-import { useNavbarLinks } from '@/config/navbar-config';
-import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
-import { getCanonicalPathname } from '@/lib/locale';
-import { isLocalePathActive } from '@/lib/urls';
-import { cn } from '@/lib/utils';
-import Container from '@/components/layout/container';
+'use client';
+
 import { BrandName } from '@/components/layout/brand-name';
+import Container from '@/components/layout/container';
 import { Logo } from '@/components/layout/logo';
-import { desktopNavLinkClass } from '@/components/layout/navbar-link-styles';
-import { NavbarMobile } from '@/components/layout/navbar-mobile';
 import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
 import { MarketingUserButton } from '@/components/auth/marketing-user-button';
 import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
+import { NavbarMobile } from '@/components/layout/navbar-mobile';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useNavbarLinks } from '@/config/navbar-config';
 import { websiteConfig } from '@/config/website';
-import { IconArrowUpRight, IconChevronDown } from '@tabler/icons-react';
+import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
+import { cn } from '@/utils/cn';
+import { ArrowUpRightIcon, ChevronDownIcon } from 'lucide-react';
 
-interface NavbarProps {
-  identity: MarketingNavbarIdentity;
+interface NavBarProps {
+  /** Kept for call-site compatibility; header always uses the HTML sticky style. */
+  scroll?: boolean;
+  /** Real signed-in identity from the server layout; null for guests/anonymous. */
+  identity?: MarketingNavbarIdentity | null;
 }
 
-export function Navbar({ identity }: NavbarProps) {
-  const localePathname = getCanonicalPathname(useLocalePathname());
+/** Matches references/html/pet-detail.html .nav-links a hover/active underline. */
+const navLinkClass = cn(
+  'relative inline-flex h-auto items-center gap-1 rounded-none bg-transparent px-0 py-2.5 text-[15px] font-bold text-deskpet-ink shadow-none',
+  'hover:bg-transparent hover:text-deskpet-ink focus:bg-transparent focus:text-deskpet-ink',
+  'after:pointer-events-none after:absolute after:inset-x-0 after:bottom-[3px] after:h-[3px]',
+  'after:origin-center after:scale-x-0 after:rounded-full after:bg-deskpet-mint',
+  'after:transition-transform after:duration-[160ms] after:ease-out',
+  'hover:after:scale-x-100',
+  'data-[state=open]:after:scale-x-100'
+);
+
+const navLinkActiveClass = 'after:scale-x-100';
+
+export function Navbar({ identity = null }: NavBarProps = {}) {
   const menuLinks = useNavbarLinks();
-  const showAuth =
+  const localePathname = useLocalePathname();
+  const showNavbarLogin =
     websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
-  const signedIn = !!identity.user;
+  const authControl = showNavbarLogin ? (
+    identity ? (
+      <MarketingUserButton identity={identity} />
+    ) : (
+      <MarketingLoginButton mode="modal" />
+    )
+  ) : null;
 
   return (
-    <header className="sticky inset-x-0 top-0 z-40 border-b border-[rgba(56,42,53,0.1)] bg-deskpet-paper dark:border-border dark:bg-background">
+    <header
+      className={cn(
+        /* references/html/pet-detail.html .site-header — solid paper, no translucency */
+        'sticky inset-x-0 top-0 z-40 border-b border-[rgba(56,42,53,0.1)]',
+        'bg-deskpet-paper dark:border-border dark:bg-background'
+      )}
+    >
       <div className="relative z-10">
         <Container className="px-4">
+          {/* desktop navbar */}
           <nav
-            aria-label={m.common_main_navigation()}
+            aria-label="Main navigation"
             className="hidden min-h-[84px] lg:flex lg:items-center lg:justify-between lg:gap-6"
           >
             <LocaleLink
               href="/"
-              aria-label={m.common_home()}
-              className="flex shrink-0 items-center gap-3"
+              aria-label="Home"
+              className="flex items-center gap-3 shrink-0"
             >
               <Logo />
               <BrandName />
@@ -53,7 +80,7 @@ export function Navbar({ identity }: NavbarProps) {
               {menuLinks?.map((item) => {
                 if (item.items) {
                   const childActive = item.items.some((sub) =>
-                    isLocalePathActive(sub.href, localePathname)
+                    sub.href ? localePathname.startsWith(sub.href) : false
                   );
 
                   return (
@@ -61,12 +88,13 @@ export function Navbar({ identity }: NavbarProps) {
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           className={cn(
-                            desktopNavLinkClass(childActive),
-                            'group cursor-pointer outline-none'
+                            navLinkClass,
+                            'group outline-none',
+                            childActive && navLinkActiveClass
                           )}
                         >
                           {item.title}
-                          <IconChevronDown
+                          <ChevronDownIcon
                             className="relative top-px size-3 transition-transform duration-200 group-data-[state=open]:rotate-180"
                             aria-hidden="true"
                           />
@@ -77,48 +105,48 @@ export function Navbar({ identity }: NavbarProps) {
                           className="min-w-64 p-2"
                         >
                           {item.items.map((sub) => {
-                            const isSubActive = isLocalePathActive(
-                              sub.href,
-                              localePathname
-                            );
+                            const isSubActive =
+                              !!sub.href && localePathname.startsWith(sub.href);
 
                             return (
                               <DropdownMenuItem
                                 key={sub.title}
+                                asChild
                                 className={cn(
                                   'cursor-pointer gap-3 rounded-md p-2',
                                   'focus:bg-deskpet-mint-soft focus:text-deskpet-ink',
                                   isSubActive &&
                                     'bg-deskpet-mint-soft font-bold text-deskpet-ink'
                                 )}
-                                render={
-                                  <LocaleLink
-                                    href={sub.href ?? '#'}
-                                    target={sub.external ? '_blank' : undefined}
-                                    rel={
-                                      sub.external
-                                        ? 'noopener noreferrer'
-                                        : undefined
-                                    }
-                                  />
-                                }
                               >
-                                {sub.icon ? (
-                                  <sub.icon className="size-4 shrink-0" />
-                                ) : null}
-                                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                                  <span className="text-sm font-medium">
-                                    {sub.title}
-                                  </span>
-                                  {sub.description ? (
-                                    <span className="text-xs font-normal whitespace-normal text-muted-foreground">
-                                      {sub.description}
+                                <LocaleLink
+                                  href={sub.href ?? '#'}
+                                  target={sub.external ? '_blank' : undefined}
+                                  rel={
+                                    sub.external
+                                      ? 'noopener noreferrer'
+                                      : undefined
+                                  }
+                                >
+                                  {sub.icon ? (
+                                    <span className="size-4 shrink-0">
+                                      {sub.icon}
                                     </span>
                                   ) : null}
-                                </span>
-                                {sub.external ? (
-                                  <IconArrowUpRight className="size-4 shrink-0" />
-                                ) : null}
+                                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                                    <span className="text-sm font-medium">
+                                      {sub.title}
+                                    </span>
+                                    {sub.description ? (
+                                      <span className="text-xs font-normal text-muted-foreground whitespace-normal">
+                                        {sub.description}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                  {sub.external ? (
+                                    <ArrowUpRightIcon className="size-4 shrink-0" />
+                                  ) : null}
+                                </LocaleLink>
                               </DropdownMenuItem>
                             );
                           })}
@@ -128,15 +156,19 @@ export function Navbar({ identity }: NavbarProps) {
                   );
                 }
 
-                const active = isLocalePathActive(item.href, localePathname);
+                const active =
+                  !!item.href &&
+                  (item.href === '/'
+                    ? localePathname === '/'
+                    : localePathname.startsWith(item.href));
 
                 return (
                   <li key={item.title}>
                     <LocaleLink
-                      href={item.href ?? '#'}
+                      href={item.href || '#'}
                       target={item.external ? '_blank' : undefined}
                       rel={item.external ? 'noopener noreferrer' : undefined}
-                      className={desktopNavLinkClass(active)}
+                      className={cn(navLinkClass, active && navLinkActiveClass)}
                     >
                       {item.title}
                     </LocaleLink>
@@ -145,17 +177,12 @@ export function Navbar({ identity }: NavbarProps) {
               })}
             </ul>
 
-            {showAuth ? (
-              <div className="flex shrink-0 items-center gap-4">
-                {signedIn ? (
-                  <MarketingUserButton identity={identity} />
-                ) : (
-                  <MarketingLoginButton />
-                )}
-              </div>
-            ) : null}
+            <div className="flex items-center gap-4 shrink-0">
+              {authControl}
+            </div>
           </nav>
 
+          {/* mobile navbar */}
           <NavbarMobile className="lg:hidden" identity={identity} />
         </Container>
       </div>

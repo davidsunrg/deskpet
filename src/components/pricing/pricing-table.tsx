@@ -170,11 +170,8 @@ export function PricingTable({
             let button: ReactNode;
             if (plan.id === 'free') {
               button = (
-                <Button
-                  className={buttonClass}
-                  render={<LocaleLink href={plan.href} />}
-                >
-                  {ctaLabel}
+                <Button asChild className={buttonClass}>
+                  <LocaleLink href={plan.href}>{ctaLabel}</LocaleLink>
                 </Button>
               );
             } else if (onPaidPlanAction && 'priceId' in plan) {

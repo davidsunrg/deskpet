@@ -1,3 +1,5 @@
+'use client';
+
 import { HeaderSection } from '@/components/layout/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
 import {
@@ -6,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { useTranslations } from '@/lib/deskpet-i18n';
 
 type FAQItem = {

@@ -52,14 +52,12 @@ function AboutPage() {
             </p>
 
             {supportEmail ? (
-              <Button
-                render={
-                  <a href={`mailto:${supportEmail}`}>
-                    <MailIcon className="mr-1 size-4" />
-                    {getDeskPetMessage('AboutPage.talkWithMe')}
-                  </a>
-                }
-              />
+              <Button asChild>
+                <a href={`mailto:${supportEmail}`}>
+                  <MailIcon className="mr-1 size-4" />
+                  {getDeskPetMessage('AboutPage.talkWithMe')}
+                </a>
+              </Button>
             ) : null}
           </div>
         </div>

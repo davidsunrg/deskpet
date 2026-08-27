@@ -1,6 +1,8 @@
+'use client';
+
 import { HeaderSection } from '@/components/layout/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { KeyboardIcon, MouseIcon, type LucideIcon } from 'lucide-react';
 import { useTranslations } from '@/lib/deskpet-i18n';
 

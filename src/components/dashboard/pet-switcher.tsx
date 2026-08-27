@@ -139,22 +139,20 @@ export function PetSwitcher({ pets }: { pets: SidebarPet[] }) {
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <SidebarMenuButton
-                  size="lg"
-                  className="border-2 border-deskpet-ink/12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                />
-              }
-            >
-              <PetAvatar src={activePet.avatar} size="xs" />
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activePet.name}</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {activePet.breedLabel}
-                </span>
-              </div>
-              <ChevronsUpDown className="ml-auto" />
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="border-2 border-deskpet-ink/12 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
+                <PetAvatar src={activePet.avatar} size="xs" />
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{activePet.name}</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    {activePet.breedLabel}
+                  </span>
+                </div>
+                <ChevronsUpDown className="ml-auto" />
+              </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"

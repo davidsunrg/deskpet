@@ -75,21 +75,21 @@ export function DashboardSidebarMain({
                     return (
                       <SidebarMenuItem key={sub.title} className="py-1">
                         <SidebarMenuButton
-                          render={
-                            <Link
-                              to={sub.href ?? '#'}
-                              onClick={closeMobileSidebar}
-                            >
-                              {SubIcon ? (
-                                <SubIcon className="size-4 shrink-0" />
-                              ) : null}
-                              <span className="truncate font-medium text-sm">
-                                {sub.title}
-                              </span>
-                            </Link>
-                          }
+                          asChild
                           isActive={isActive(sub.href)}
-                        />
+                        >
+                          <Link
+                            to={sub.href ?? '#'}
+                            onClick={closeMobileSidebar}
+                          >
+                            {SubIcon ? (
+                              <SubIcon className="size-4 shrink-0" />
+                            ) : null}
+                            <span className="truncate font-medium text-sm">
+                              {sub.title}
+                            </span>
+                          </Link>
+                        </SidebarMenuButton>
                       </SidebarMenuItem>
                     );
                   })}
@@ -105,17 +105,14 @@ export function DashboardSidebarMain({
             <SidebarGroupContent className="flex flex-col gap-2">
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton
-                    render={
-                      <Link to={item.href ?? '#'} onClick={closeMobileSidebar}>
-                        {Icon ? <Icon className="size-4 shrink-0" /> : null}
-                        <span className="truncate font-medium text-sm">
-                          {item.title}
-                        </span>
-                      </Link>
-                    }
-                    isActive={isActive(item.href)}
-                  />
+                  <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                    <Link to={item.href ?? '#'} onClick={closeMobileSidebar}>
+                      {Icon ? <Icon className="size-4 shrink-0" /> : null}
+                      <span className="truncate font-medium text-sm">
+                        {item.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>

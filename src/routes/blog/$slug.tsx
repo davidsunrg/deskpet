@@ -83,15 +83,11 @@ function BlogPostPage() {
   return (
     <Container className="py-16 px-4">
       <div className="mx-auto max-w-4xl">
-        <Button
-          variant="outline"
-          size="sm"
-          className="mb-6"
-          nativeButton={false}
-          render={<Link to="/blog" search={{ page: 1 }} />}
-        >
-          <IconArrowLeft className="size-4" aria-hidden="true" />
-          {m.blog_all_posts()}
+        <Button asChild variant="outline" size="sm" className="mb-6">
+          <Link to="/blog" search={{ page: 1 }}>
+            <IconArrowLeft className="size-4" aria-hidden="true" />
+            {m.blog_all_posts()}
+          </Link>
         </Button>
 
         <Card className="px-5 py-8 md:px-10 md:py-12">

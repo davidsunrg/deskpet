@@ -89,13 +89,15 @@ export function DataTableSortList<TData>({ table, ...props }: DataTableSortListP
         }
     }, [sorting.length, onSortingReset]);
     return (<Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger render={(triggerProps) => (<Button {...triggerProps} variant="outline" size="sm" className="font-normal" onKeyDown={onTriggerKeyDown}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="font-normal" onKeyDown={onTriggerKeyDown}>
             <IconArrowsDownUp className="text-muted-foreground"/>
             {m.common_table_sort()}
             {sorting.length > 0 && (<Badge variant="secondary" className="h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]">
                 {sorting.length}
               </Badge>)}
-          </Button>)}/>
+          </Button>
+      </PopoverTrigger>
       <PopoverContent aria-labelledby={labelId} aria-describedby={descriptionId} className="flex w-full flex-col gap-3.5 p-4 sm:min-w-[380px]" {...props}>
         <div className="flex flex-col gap-1">
           <h4 id={labelId} className="font-medium leading-none">
@@ -152,10 +154,12 @@ function DataTableSortItem({ sort, sortItemId, columns, columnLabels, onSortUpda
     }, [sort.id, showFieldSelector, showDirectionSelector, onSortRemove]);
     return (<li id={sortItemId} tabIndex={-1} className="flex items-center gap-2" onKeyDown={onItemKeyDown}>
       <Popover open={showFieldSelector} onOpenChange={setShowFieldSelector}>
-        <PopoverTrigger render={(triggerProps) => (<Button {...triggerProps} id={fieldTriggerId} aria-controls={fieldListboxId} variant="outline" size="sm" className="w-44 justify-between rounded font-normal">
+        <PopoverTrigger asChild>
+        <Button id={fieldTriggerId} aria-controls={fieldListboxId} variant="outline" size="sm" className="w-44 justify-between rounded font-normal">
               <span className="truncate">{columnLabels.get(sort.id)}</span>
               <IconSelector className="opacity-50"/>
-            </Button>)}/>
+            </Button>
+      </PopoverTrigger>
         <PopoverContent id={fieldListboxId} className="w-48 p-0">
           <Command>
             <CommandInput placeholder={m.common_table_search_fields()}/>

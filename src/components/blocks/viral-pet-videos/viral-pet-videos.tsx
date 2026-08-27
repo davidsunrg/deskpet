@@ -1,9 +1,11 @@
+'use client';
+
 import { HeaderSection } from '@/components/layout/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { PlayIcon } from 'lucide-react';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import { useEffect, useRef, useState } from 'react';
@@ -106,6 +108,7 @@ export default function ViralPetVideosSection() {
                   )}
                 >
                   <div className="relative aspect-video w-full overflow-hidden bg-deskpet-ink">
+                    {/* biome-ignore lint/a11y/useMediaCaption: decorative marketing clips without dialogue */}
                     <video
                       ref={(node) => {
                         videoRefs.current[id] = node;
@@ -122,9 +125,7 @@ export default function ViralPetVideosSection() {
                           : 'pointer-events-none opacity-0'
                       )}
                       onEnded={() => setPlayingId(null)}
-                    >
-                      <track kind="captions" label="No dialogue" />
-                    </video>
+                    />
 
                     {!isPlaying ? (
                       <button
@@ -172,15 +173,14 @@ export default function ViralPetVideosSection() {
 
         <ScrollReveal delay={200}>
           <div className="mt-8 flex flex-col items-center gap-5">
-            <LocaleLink
-              href={Routes.PetVideoCreator}
-              className={cn(
-                buttonVariants({ variant: 'brutal', size: 'lg' }),
-                'h-11 px-6 text-sm'
-              )}
+            <Button
+              asChild
+              size="lg"
+              variant="brutal"
+              className="h-11 px-6 text-sm"
             >
-              {t('cta')}
-            </LocaleLink>
+              <LocaleLink href={Routes.PetVideoCreator}>{t('cta')}</LocaleLink>
+            </Button>
 
             <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] font-semibold text-deskpet-muted dark:text-muted-foreground">
               {STAT_IDS.map((id) => (

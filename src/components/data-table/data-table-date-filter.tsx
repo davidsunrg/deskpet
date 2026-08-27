@@ -125,12 +125,14 @@ export function DataTableDateFilter<TData>({ column, title, multiple, }: DataTab
       </span>);
     }, [selectedDates, multiple, formatDateRange, title]);
     return (<Popover>
-      <PopoverTrigger render={(props) => (<Button {...props} variant="outline" size="sm" className="border-dashed font-normal">
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="border-dashed font-normal">
             {hasValue ? (<div role="button" aria-label={`${m.common_table_clear()} ${title} ${m.common_table_filter()}`} tabIndex={0} onClick={onReset} className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                 <IconCircleX />
               </div>) : (<IconCalendar />)}
             {label}
-          </Button>)}/>
+          </Button>
+      </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         {multiple ? (<Calendar autoFocus captionLayout="dropdown" mode="range" selected={getIsDateRange(selectedDates)
                 ? selectedDates

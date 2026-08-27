@@ -100,7 +100,7 @@ export function AdoptPetButton({
     <>
       {tooltip ? (
         <Tooltip>
-          <TooltipTrigger render={button} />
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
           <TooltipContent>
             <p>{tooltip}</p>
           </TooltipContent>

@@ -59,15 +59,15 @@ export function DownloadPlatforms({ cards }: DownloadPlatformsProps) {
 
             {available ? (
               <CtaButton
+                asChild
                 className="mt-7 h-14 w-full rounded-2xl text-[17px]"
                 data-testid={`download-cta-${card.id}`}
-                render={
-                  <a href={card.href!} download>
-                    <DownloadIcon className="size-5" aria-hidden />
-                    {t(`cards.${card.id}.cta`)}
-                  </a>
-                }
-              />
+              >
+                <a href={card.href!} download>
+                  <DownloadIcon className="size-5" aria-hidden />
+                  {t(`cards.${card.id}.cta`)}
+                </a>
+              </CtaButton>
             ) : (
               <p
                 className="mt-7 flex h-14 w-full items-center justify-center rounded-2xl border-2 border-dashed border-deskpet-ink/25 bg-[#f7f1e0] text-[17px] font-black tracking-tight text-deskpet-ink/70"

@@ -43,7 +43,8 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options, 
         column?.setFilterValue(undefined);
     }, [column]);
     return (<Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger render={(props) => (<Button {...props} variant="outline" size="sm" className="border-dashed font-normal">
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="border-dashed font-normal">
             {selectedValues?.size > 0 ? (<div 
             // biome-ignore lint/a11y/useSemanticElements: Using div with role="button" for clear filter functionality within a composite widget
             role="button" tabIndex={0} aria-label={`Clear ${title} filter`} className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" onMouseDown={(event) => {
@@ -69,7 +70,8 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options, 
                         </Badge>)))}
                 </div>
               </>)}
-          </Button>)}/>
+          </Button>
+      </PopoverTrigger>
       <PopoverContent className="w-50 p-0" align="start">
         <Command>
           <CommandInput placeholder={title}/>

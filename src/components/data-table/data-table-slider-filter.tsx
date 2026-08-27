@@ -97,7 +97,8 @@ export function DataTableSliderFilter<TData>({ column, title, }: DataTableSlider
         column.setFilterValue(undefined);
     }, [column]);
     return (<Popover>
-      <PopoverTrigger render={(props) => (<Button {...props} variant="outline" size="sm" className="border-dashed font-normal">
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="border-dashed font-normal">
             {columnFilterValue ? (<div role="button" aria-label={`${m.common_table_clear()} ${title} ${m.common_table_filter()}`} tabIndex={0} className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" onClick={onReset}>
                 <IconCircleX />
               </div>) : (<IconCirclePlus />)}
@@ -108,7 +109,8 @@ export function DataTableSliderFilter<TData>({ column, title, }: DataTableSlider
                 {formatValue(columnFilterValue[1])}
                 {unit ? ` ${unit}` : ""}
               </>) : null}
-          </Button>)}/>
+          </Button>
+      </PopoverTrigger>
       <PopoverContent align="start" className="flex w-auto flex-col gap-4">
         <div className="flex flex-col gap-3">
           <p className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
