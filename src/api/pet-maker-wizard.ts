@@ -51,11 +51,12 @@ export const getPetMakerStagingUploadUrlFn = createServerFn({ method: 'POST' })
       fileId: data.fileId,
       extension,
     });
+    const requestOrigin = getBaseUrl();
     const uploadUrl = await getPresignedUploadUrl({
       key: r2Key,
       contentType: data.contentType,
+      proxyOrigin: requestOrigin,
     });
-    const requestOrigin = getBaseUrl();
     const previewUrl = `${requestOrigin}/api/storage/file?key=${encodeURIComponent(r2Key)}`;
     return { uploadUrl, r2Key, previewUrl, contentType: data.contentType };
   });

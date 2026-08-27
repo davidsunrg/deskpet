@@ -114,6 +114,10 @@ export interface StorageConfig {
   maxFileSize?: number;              // Max file size in bytes (default 4MB)
   allowedTypes?: string[];           // Allowed file extensions or MIME types. e.g. ['.jpg', '.png', 'image/webp']. Empty = all allowed.
   userFilesFolder?: string;          // The folder to store user files (default 'userfiles')
+  /** R2 bucket name (must match wrangler `r2_buckets[].bucket_name`). */
+  bucketName?: string;
+  /** R2 S3-compatible API endpoint for presigned URLs. */
+  s3ApiEndpoint?: string;
 }
 
 /** Payment configuration */

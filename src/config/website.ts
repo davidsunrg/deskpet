@@ -5,6 +5,7 @@ import type { WebsiteConfig } from '../types';
 import {
   DEFAULT_ALLOWED_TYPES,
   DEFAULT_MAX_FILE_SIZE,
+  DEFAULT_R2_BUCKET_NAME,
   DEFAULT_USER_FILES_FOLDER,
 } from '@/storage/constants';
 
@@ -112,6 +113,9 @@ export const websiteConfig: WebsiteConfig = {
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     allowedTypes: DEFAULT_ALLOWED_TYPES,
     userFilesFolder: DEFAULT_USER_FILES_FOLDER,
+    bucketName: DEFAULT_R2_BUCKET_NAME,
+    s3ApiEndpoint:
+      'https://8253e869540591b2387fb67464d8abb4.r2.cloudflarestorage.com',
   },
   desktopDownload: {
     version: '1.1.8',

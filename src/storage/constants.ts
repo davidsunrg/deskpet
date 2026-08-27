@@ -17,3 +17,6 @@ export const DEFAULT_USER_FILES_FOLDER = 'userfiles';
  * Default parent folder for avatars (e.g. avatars => avatars/{userId}/)
  */
 export const DEFAULT_AVATARS_FOLDER = 'avatars';
+
+/** Default R2 bucket (must match wrangler `r2_buckets[].bucket_name`). */
+export const DEFAULT_R2_BUCKET_NAME = 'deskpet';

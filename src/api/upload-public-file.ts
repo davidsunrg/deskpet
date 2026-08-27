@@ -1,7 +1,10 @@
 import { getBaseUrl } from '@/lib/urls';
 import { getPresignedUploadUrl } from '@/lib/storage/r2-s3';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
+import { websiteConfig } from '@/config/website';
 import { DEFAULT_AVATARS_FOLDER, DEFAULT_MAX_FILE_SIZE } from '@/storage/constants';
+import { createServerFn } from '@tanstack/react-start';
+import { z } from 'zod';
 
 const ALLOWED_CONTENT_TYPES = [
   'image/jpeg',
@@ -38,11 +41,12 @@ export const getPublicAvatarUploadUrlFn = createServerFn({ method: 'POST' })
     const fileId = globalThis.crypto.randomUUID();
     const extension = extensionForContentType(data.contentType);
     const r2Key = `${DEFAULT_AVATARS_FOLDER}/${context.userId}/${fileId}.${extension}`;
+    const requestOrigin = getBaseUrl();
     const uploadUrl = await getPresignedUploadUrl({
       key: r2Key,
       contentType: data.contentType,
+      proxyOrigin: requestOrigin,
     });
-    const requestOrigin = getBaseUrl();
     const url = `${requestOrigin}/api/storage/file?key=${encodeURIComponent(r2Key)}`;
     return { uploadUrl, r2Key, url, contentType: data.contentType };
   });
