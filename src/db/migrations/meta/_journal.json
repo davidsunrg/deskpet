@@ -50,6 +50,13 @@
       "when": 1787802015061,
       "tag": "0006_hard_skin",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1787817092636,
+      "tag": "0007_light_enchantress",
+      "breakpoints": true
     }
   ]
 }

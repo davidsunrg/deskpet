@@ -48,7 +48,6 @@ import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overvi
 import { Route as PIndexRouteImport } from './routes/p/index'
 import { Route as PSlugRouteImport } from './routes/p/$slug'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
-import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
 import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
 import { Route as SettingsFilesRouteImport } from './routes/settings/files'
 import { Route as SettingsNotificationsRouteImport } from './routes/settings/notifications'
@@ -262,11 +261,6 @@ const SettingsIndexRoute = SettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SettingsRoute,
 } as any)
-const SettingsApikeysRoute = SettingsApikeysRouteImport.update({
-  id: '/apikeys',
-  path: '/apikeys',
-  getParentRoute: () => SettingsRoute,
-} as any)
 const SettingsBillingRoute = SettingsBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
@@ -389,7 +383,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/p/$slug': typeof PSlugRoute
-  '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -445,7 +438,6 @@ export interface FileRoutesByTo {
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/p/$slug': typeof PSlugRoute
-  '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -505,7 +497,6 @@ export interface FileRoutesById {
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/p/$slug': typeof PSlugRoute
-  '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -566,7 +557,6 @@ export interface FileRouteTypes {
     | '/dashboard/actions'
     | '/dashboard/overview'
     | '/p/$slug'
-    | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
     | '/settings/notifications'
@@ -622,7 +612,6 @@ export interface FileRouteTypes {
     | '/dashboard/actions'
     | '/dashboard/overview'
     | '/p/$slug'
-    | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
     | '/settings/notifications'
@@ -681,7 +670,6 @@ export interface FileRouteTypes {
     | '/dashboard/actions'
     | '/dashboard/overview'
     | '/p/$slug'
-    | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
     | '/settings/notifications'
@@ -1021,13 +1009,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof SettingsRoute
     }
-    '/settings/apikeys': {
-      id: '/settings/apikeys'
-      path: '/apikeys'
-      fullPath: '/settings/apikeys'
-      preLoaderRoute: typeof SettingsApikeysRouteImport
-      parentRoute: typeof SettingsRoute
-    }
     '/settings/billing': {
       id: '/settings/billing'
       path: '/billing'
@@ -1199,7 +1180,6 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 interface SettingsRouteChildren {
-  SettingsApikeysRoute: typeof SettingsApikeysRoute
   SettingsBillingRoute: typeof SettingsBillingRoute
   SettingsFilesRoute: typeof SettingsFilesRoute
   SettingsNotificationsRoute: typeof SettingsNotificationsRoute
@@ -1210,7 +1190,6 @@ interface SettingsRouteChildren {
 }
 
 const SettingsRouteChildren: SettingsRouteChildren = {
-  SettingsApikeysRoute: SettingsApikeysRoute,
   SettingsBillingRoute: SettingsBillingRoute,
   SettingsFilesRoute: SettingsFilesRoute,
   SettingsNotificationsRoute: SettingsNotificationsRoute,

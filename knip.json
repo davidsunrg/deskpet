@@ -37,7 +37,6 @@
     "src/auth/types.ts": ["types"],
     "src/components/dashboard/chart-area-interactive.tsx": ["exports"],
     "src/components/layout/sidebar-layout.tsx": ["exports"],
-    "src/hooks/use-apikeys.ts": ["exports"],
     "src/hooks/use-auth.ts": ["exports"],
     "src/hooks/use-newsletter.ts": ["exports"],
     "src/hooks/use-user-files.ts": ["exports"],

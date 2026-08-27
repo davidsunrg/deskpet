@@ -12,7 +12,6 @@ import { createGoogleTokenHandlers } from '@/auth/google-token-handlers';
 import { transferAnonymousPetData } from '@/server/auth/transfer-anonymous-pet-data';
 import { getTrustedOrigins } from '@/auth/trusted-origins';
 import { emailHarmony } from 'better-auth-harmony';
-import { apiKey } from '@better-auth/api-key';
 import { admin, anonymous, bearer, emailOTP } from 'better-auth/plugins';
 import { google, verifyGoogleIdToken } from 'better-auth/social-providers';
 import * as z from 'zod';
@@ -236,9 +235,6 @@ export const auth = betterAuth({
       bannedUserMessage:
         'You have been banned from this application. Please contact support if you believe this is an error.',
     }),
-    // https://www.better-auth.com/docs/plugins/api-key
-    // support API key management for user authentication
-    apiKey(),
     // https://github.com/gekorm/better-auth-harmony
     // email normalization and validation to prevent duplicate registrations
     emailHarmony({

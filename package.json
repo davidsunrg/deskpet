@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@beehiiv/sdk": "^0.1.9",
-    "@better-auth/api-key": "1.6.25",
     "@cloudflare/vite-plugin": "^1.47.0",
     "@fontsource/bricolage-grotesque": "^5.2.10",
     "@fontsource/inter": "^5.3.0",
