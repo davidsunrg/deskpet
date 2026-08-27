@@ -1,5 +1,7 @@
 import { m } from '@/locale/paraglide/messages';
 import { useNavbarLinks } from '@/config/navbar-config';
+import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
+import { getCanonicalPathname } from '@/lib/locale';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import Container from '@/components/layout/container';
@@ -17,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { IconChevronDown } from '@tabler/icons-react';
-import { Link, useLocation } from '@tanstack/react-router';
 import { websiteConfig } from '@/config/website';
 
 interface NavbarProps {
@@ -25,7 +26,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ identity }: NavbarProps) {
-  const pathname = useLocation().pathname;
+  const pathname = getCanonicalPathname(useLocalePathname());
   const menuLinks = useNavbarLinks();
   const showAuth =
     websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
@@ -38,14 +39,14 @@ export function Navbar({ identity }: NavbarProps) {
           aria-label={m.common_main_navigation()}
           className="hidden min-h-[84px] items-center justify-between gap-8 lg:flex"
         >
-          <Link
-            to="/"
+          <LocaleLink
+            href="/"
             aria-label={m.common_home()}
             className="flex shrink-0 items-center gap-3"
           >
             <Logo />
             <BrandName className="text-[1.35rem]" />
-          </Link>
+          </LocaleLink>
 
           <ul className="flex flex-1 items-center justify-center gap-6">
             {menuLinks?.map((item) => {
@@ -70,9 +71,9 @@ export function Navbar({ identity }: NavbarProps) {
                         className="min-w-56 rounded-xl border-deskpet-ink/10 bg-deskpet-paper p-2 shadow-lg"
                       >
                         {item.items.map((sub) => (
-                          <Link
+                          <LocaleLink
                             key={sub.title}
-                            to={sub.href ?? '#'}
+                            href={sub.href ?? '#'}
                             target={sub.external ? '_blank' : undefined}
                             rel={
                               sub.external ? 'noopener noreferrer' : undefined
@@ -82,7 +83,7 @@ export function Navbar({ identity }: NavbarProps) {
                             <DropdownMenuItem className="rounded-lg px-3 py-2 text-sm font-bold text-deskpet-ink focus:bg-deskpet-mint-soft">
                               {sub.title}
                             </DropdownMenuItem>
-                          </Link>
+                          </LocaleLink>
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -93,14 +94,14 @@ export function Navbar({ identity }: NavbarProps) {
               const active = isLinkActive(item.href, pathname);
               return (
                 <li key={item.title}>
-                  <Link
-                    to={item.href ?? '#'}
+                  <LocaleLink
+                    href={item.href ?? '#'}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
                     className={desktopNavLinkClass(active)}
                   >
                     {item.title}
-                  </Link>
+                  </LocaleLink>
                 </li>
               );
             })}

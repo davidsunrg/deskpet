@@ -79,6 +79,20 @@ test.describe('public page smoke coverage', () => {
     await expect(page.getByRole('button', { name: /^log in$/i })).toBeVisible();
   });
 
+  test('renders DeskPet footer with brand tagline and centered copyright', async ({
+    page,
+  }) => {
+    await setTheme(page, 'light');
+    await page.goto('/');
+
+    const footer = page.locator('footer');
+    await expect(footer.getByText('DeskPet', { exact: false })).toBeVisible();
+    await expect(
+      footer.getByText(/turn your pet into a desktop companion/i)
+    ).toBeVisible();
+    await expect(footer.getByText(/all rights reserved/i)).toBeVisible();
+  });
+
   test('hides open mobile navigation at the desktop breakpoint', async ({
     page,
   }) => {

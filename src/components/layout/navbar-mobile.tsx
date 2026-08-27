@@ -1,5 +1,7 @@
 import { m } from '@/locale/paraglide/messages';
 import { useNavbarLinks } from '@/config/navbar-config';
+import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
+import { getCanonicalPathname } from '@/lib/locale';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -19,7 +21,6 @@ import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
 import { MarketingUserButton } from '@/components/auth/marketing-user-button';
 import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
 import { IconChevronRight, IconMenu2, IconX } from '@tabler/icons-react';
-import { Link, useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { websiteConfig } from '@/config/website';
 
@@ -32,7 +33,7 @@ export function NavbarMobile({
   identity,
   ...props
 }: NavbarMobileProps) {
-  const pathname = useLocation().pathname;
+  const pathname = getCanonicalPathname(useLocalePathname());
   const [open, setOpen] = useState(false);
   const menuLinks = useNavbarLinks();
   const showAuth =
@@ -49,10 +50,10 @@ export function NavbarMobile({
         className={cn('flex h-14 items-center justify-between', className)}
         {...props}
       >
-        <Link to="/" className="flex min-w-0 items-center gap-2.5">
+        <LocaleLink href="/" className="flex min-w-0 items-center gap-2.5">
           <Logo className="size-8 rounded-lg" />
           <BrandName className="text-lg" />
-        </Link>
+        </LocaleLink>
 
         <div className="flex items-center gap-2">
           {showAuth ? (
@@ -111,8 +112,8 @@ export function NavbarMobile({
                           <ul className="mt-1 space-y-1">
                             {item.items.map((sub) => (
                               <li key={sub.title}>
-                                <Link
-                                  to={sub.href ?? '#'}
+                                <LocaleLink
+                                  href={sub.href ?? '#'}
                                   target={sub.external ? '_blank' : undefined}
                                   rel={
                                     sub.external
@@ -130,15 +131,15 @@ export function NavbarMobile({
                                     <sub.icon className="size-4 shrink-0" />
                                   ) : null}
                                   {sub.title}
-                                </Link>
+                                </LocaleLink>
                               </li>
                             ))}
                           </ul>
                         </CollapsibleContent>
                       </Collapsible>
                     ) : (
-                      <Link
-                        to={item.href ?? '#'}
+                      <LocaleLink
+                        href={item.href ?? '#'}
                         target={item.external ? '_blank' : undefined}
                         rel={item.external ? 'noopener noreferrer' : undefined}
                         onClick={() => setOpen(false)}
@@ -148,7 +149,7 @@ export function NavbarMobile({
                         )}
                       >
                         {item.title}
-                      </Link>
+                      </LocaleLink>
                     )}
                   </li>
                 );
