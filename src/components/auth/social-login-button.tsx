@@ -5,16 +5,18 @@ import { websiteConfig } from '@/config/website';
 import { authClient } from '@/auth/client';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 import { getPathWithLocale } from '@/lib/urls';
-import { IconBrandGoogleFilled, IconLoader2 } from '@tabler/icons-react';
+import { IconLoader2 } from '@tabler/icons-react';
 
 interface SocialLoginButtonProps {
   callbackUrl?: string;
   showDivider?: boolean;
+  googleLabel?: string;
 }
 
 export function SocialLoginButton({
   callbackUrl: propCallbackUrl,
   showDivider = true,
+  googleLabel,
 }: SocialLoginButtonProps) {
   const paramCallbackUrl =
     typeof window !== 'undefined'
@@ -59,9 +61,14 @@ export function SocialLoginButton({
         {isLoading === 'google' ? (
           <IconLoader2 className="mr-2 size-4 animate-spin" />
         ) : (
-          <IconBrandGoogleFilled className="mr-2 size-4" />
+          <img
+            src="/google.svg"
+            alt=""
+            aria-hidden
+            className="mr-2 size-4"
+          />
         )}
-        <span>{m.auth_social_sign_in_with_google()}</span>
+        <span>{googleLabel ?? m.auth_social_sign_in_with_google()}</span>
       </Button>
     </div>
   );

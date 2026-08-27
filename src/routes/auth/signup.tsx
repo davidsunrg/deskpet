@@ -42,8 +42,8 @@ function SignupPage() {
           className="underline underline-offset-4 hover:text-primary"
         >
           {m.auth_common_terms_of_service()}
-        </Link>
-        {m.auth_common_and()}
+        </Link>{' '}
+        {m.auth_common_and()}{' '}
         <Link
           to={Routes.PrivacyPolicy}
           className="underline underline-offset-4 hover:text-primary"

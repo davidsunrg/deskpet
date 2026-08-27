@@ -2,6 +2,10 @@ import { getAuthErrorMessage } from '@/lib/locale';
 import { m } from '@/locale/paraglide/messages';
 import { useEffect, useState } from 'react';
 import { AuthCard } from '@/components/auth/auth-card';
+import {
+  authFieldClass,
+  authSubmitClass,
+} from '@/components/auth/auth-form-styles';
 import { FormError } from '@/components/shared/form-error';
 import { FormSuccess } from '@/components/shared/form-success';
 import { Button } from '@/components/ui/button';
@@ -67,6 +71,7 @@ export function ForgotPasswordForm({ className }: { className?: string }) {
       headerLabel={m.auth_forgot_password_title()}
       bottomButtonLabel={m.auth_forgot_password_back_to_login()}
       bottomButtonHref={Routes.Login}
+      showBrand={false}
       className={cn('', className)}
     >
       <Form {...form}>
@@ -84,6 +89,7 @@ export function ForgotPasswordForm({ className }: { className?: string }) {
                       disabled={isPending}
                       placeholder={m.auth_forgot_password_placeholder_email()}
                       type="email"
+                      className={authFieldClass}
                     />
                   </FormControl>
                   <FormMessage />
@@ -95,9 +101,8 @@ export function ForgotPasswordForm({ className }: { className?: string }) {
           <FormSuccess message={success} />
           <Button
             disabled={isPending}
-            size="lg"
             type="submit"
-            className="w-full flex items-center justify-center gap-2"
+            className={authSubmitClass}
           >
             {isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
             <span>{m.auth_forgot_password_send()}</span>

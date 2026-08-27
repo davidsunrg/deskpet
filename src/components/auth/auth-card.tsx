@@ -3,10 +3,11 @@ import { BrandName } from '@/components/layout/brand-name';
 import { Logo } from '@/components/layout/logo';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { cn } from '@/lib/utils';
+import type { ReactNode } from 'react';
 
 interface AuthCardProps {
   children: React.ReactNode;
-  headerLabel: string;
+  headerLabel: ReactNode;
   bottomButtonLabel: string;
   bottomButtonHref?: string;
   bottomButtonPrefix?: string;

@@ -7,15 +7,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { useLocation } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 
-type AuthView = 'login' | 'signup';
+export type AuthDialogMode = 'login' | 'signup';
 
 interface AuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   callbackUrl?: string;
-  initialView?: AuthView;
+  initialView?: AuthDialogMode;
+  defaultMode?: AuthDialogMode;
   onAuthenticated?: () => void;
   preventTranslation?: boolean;
 }
@@ -24,29 +27,42 @@ export function AuthDialog({
   open,
   onOpenChange,
   callbackUrl,
-  initialView = 'login',
+  initialView,
+  defaultMode = 'login',
   onAuthenticated,
-  preventTranslation,
+  preventTranslation = false,
 }: AuthDialogProps) {
-  const [view, setView] = useState<AuthView>(initialView);
+  const resolvedDefaultMode = initialView ?? defaultMode;
+  const location = useLocation();
+  const [mode, setMode] = useState<AuthDialogMode>(resolvedDefaultMode);
 
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (!nextOpen) {
-      setView(initialView);
+  const search = location.searchStr?.replace(/^\?/, '') ?? '';
+  const currentReturnPath = search
+    ? `${location.pathname}?${search}`
+    : location.pathname;
+  const resolvedCallbackUrl = callbackUrl ?? currentReturnPath;
+
+  useEffect(() => {
+    if (open) {
+      setMode(resolvedDefaultMode);
     }
-    onOpenChange(nextOpen);
-  };
+  }, [open, resolvedDefaultMode]);
 
-  const handleSuccess = () => {
+  const handleAuthenticated = () => {
+    if (onAuthenticated) {
+      onAuthenticated();
+      return;
+    }
     onOpenChange(false);
-    setView(initialView);
-    onAuthenticated?.();
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="gap-0 p-6 pt-8 sm:max-w-[400px]"
+        className={cn(
+          'gap-0 p-6 pt-8 sm:max-w-[400px]',
+          preventTranslation && 'notranslate'
+        )}
         {...(preventTranslation
           ? {
               translate: 'no' as const,
@@ -56,25 +72,44 @@ export function AuthDialog({
       >
         <DialogHeader className="hidden">
           <DialogTitle>
-            {view === 'login'
+            {mode === 'login'
               ? m.auth_login_welcome_back()
               : m.auth_signup_create_account()}
           </DialogTitle>
         </DialogHeader>
-        {view === 'login' ? (
+        {mode === 'login' ? (
           <LoginForm
-            callbackUrl={callbackUrl}
-            onSuccess={handleSuccess}
-            onSwitchToSignup={() => setView('signup')}
+            callbackUrl={resolvedCallbackUrl}
+            onAuthenticated={handleAuthenticated}
+            onSwitchToSignup={() => setMode('signup')}
           />
         ) : (
           <SignupForm
-            callbackUrl={callbackUrl}
-            onSuccess={handleSuccess}
-            onSwitchToLogin={() => setView('login')}
+            callbackUrl={resolvedCallbackUrl}
+            onAuthenticated={handleAuthenticated}
+            onSwitchToLogin={() => setMode('login')}
           />
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function LoginDialog({
+  open,
+  onOpenChange,
+  callbackUrl,
+  onAuthenticated,
+  preventTranslation,
+}: Omit<AuthDialogProps, 'defaultMode' | 'initialView'>) {
+  return (
+    <AuthDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      callbackUrl={callbackUrl}
+      onAuthenticated={onAuthenticated}
+      defaultMode="login"
+      preventTranslation={preventTranslation}
+    />
   );
 }

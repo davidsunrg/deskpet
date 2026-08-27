@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  createPetFn,
   deletePetMakerStagingObjectFn,
   getPetMakerStagingUploadUrlFn,
 } from '@/api/pet-maker-wizard';
@@ -52,7 +51,6 @@ import {
 } from '@/utils/compress-square-avatar';
 import { MAX_FILE_SIZE, PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
 import {
-  clearDraft,
   createEmptyDraft,
   ensureDraftId,
   readDraft,
@@ -613,41 +611,59 @@ export function CreatePetWizard() {
     window.location.assign(pricingHref);
   }, [pricingHref]);
 
-  /** Real users persist the pet; guests open auth first. */
-  const continueAfterPetReady = useCallback(async () => {
-    const photoKeys = readyPhotos
-      .map((photo) => photo.r2Key)
-      .filter((key): key is string => !!key);
-    if (photoKeys.length === 0) {
-      throw new Error(t('photos.required'));
+  const validateCreateReadiness = useCallback((): boolean => {
+    if (uploadingPhotos) {
+      toast.error(t('photos.waitForUpload'));
+      return false;
     }
-
-    const createResult = await wrapNestedServerFn(() =>
-      createPetFn({
-        data: {
-          draftId,
-          petName: petName.trim(),
-          species,
-          breed: breed || PetBreed.Any,
-          sex: sex || null,
-          avatarKey: null,
-          photoKeys,
-        },
-      })
-    );
-    assertActionSuccess(createResult, t('profile.createError'));
-    clearDraft();
-    navigateToPricing();
+    if (!petName.trim()) {
+      toast.error(t('profile.nameRequired'));
+      return false;
+    }
+    if (!species) {
+      toast.error(t('profile.speciesRequired'));
+      return false;
+    }
+    if (speciesUsesBreeds(species) && !breed) {
+      toast.error(t('profile.breedRequired'));
+      return false;
+    }
+    if (sex !== PetSex.Male && sex !== PetSex.Female) {
+      toast.error(t('profile.sexRequired'));
+      return false;
+    }
+    if (readyPhotos.length === 0) {
+      toast.error(t('photos.required'));
+      setStep('photos');
+      return false;
+    }
+    if (readyPhotos.some((photo) => !photo.r2Key)) {
+      toast.error(t('photos.waitForUpload'));
+      return false;
+    }
+    return true;
   }, [
     breed,
-    draftId,
-    navigateToPricing,
     petName,
     readyPhotos,
     sex,
     species,
     t,
+    uploadingPhotos,
   ]);
+
+  /** After pet draft is ready: real users go to pricing; guests open auth first. */
+  const continueAfterPetReady = useCallback(async () => {
+    const { data: freshSession } = await authClient.getSession({
+      query: { disableCookieCache: true },
+    });
+    if (!isRealSignedInUser(freshSession?.user)) {
+      setAuthOpen(true);
+      setCreatingPet(false);
+      return;
+    }
+    navigateToPricing();
+  }, [navigateToPricing]);
 
   const goToStep = (target: WizardStep) => {
     if (!isStepUnlocked(target)) return;
@@ -656,28 +672,7 @@ export function CreatePetWizard() {
   };
 
   const executeCreatePetAndContinue = useCallback(async () => {
-    if (!petName.trim()) {
-      toast.error(t('profile.nameRequired'));
-      return;
-    }
-    if (!species) {
-      toast.error(t('profile.speciesRequired'));
-      return;
-    }
-    if (speciesUsesBreeds(species) && !breed) {
-      toast.error(t('profile.breedRequired'));
-      return;
-    }
-    if (sex !== PetSex.Male && sex !== PetSex.Female) {
-      toast.error(t('profile.sexRequired'));
-      return;
-    }
-
-    if (readyPhotos.length === 0) {
-      toast.error(t('photos.required'));
-      setStep('photos');
-      return;
-    }
+    if (!validateCreateReadiness()) return;
 
     setCreatingPet(true);
     try {
@@ -724,15 +719,6 @@ export function CreatePetWizard() {
         }
       }
 
-      const { data: freshSession } = await authClient.getSession({
-        query: { disableCookieCache: true },
-      });
-      if (!isRealSignedInUser(freshSession?.user)) {
-        setAuthOpen(true);
-        setCreatingPet(false);
-        return;
-      }
-
       await continueAfterPetReady();
     } catch (error) {
       console.error('wizard create pet error:', error);
@@ -745,19 +731,21 @@ export function CreatePetWizard() {
     avatarUrl,
     continueAfterPetReady,
     pendingAvatarFile,
-    petName,
     photos,
     readyPhotos,
-    sex,
-    species,
-    breed,
     t,
+    validateCreateReadiness,
   ]);
 
   const handleAuthAuthenticated = useCallback(() => {
     setAuthOpen(false);
-    void executeCreatePetAndContinue();
-  }, [executeCreatePetAndContinue]);
+    if (!validateCreateReadiness()) {
+      setCreatingPet(false);
+      return;
+    }
+    setCreatingPet(true);
+    navigateToPricing();
+  }, [navigateToPricing, validateCreateReadiness]);
 
   const canContinue =
     step === 'photos'

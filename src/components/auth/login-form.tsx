@@ -1,39 +1,25 @@
-import { getAuthErrorMessage } from '@/lib/locale';
+import { getAuthErrorMessage, getAuthErrorMessages } from '@/lib/locale';
 import { m } from '@/locale/paraglide/messages';
 import { AuthCard } from '@/components/auth/auth-card';
 import {
-  authFieldClass,
-  authLabelClass,
-  authSubmitClass,
-} from '@/components/auth/auth-form-styles';
-import { EmailOtpForm } from '@/components/auth/email-otp-form';
+  EmailOtpForm,
+  type EmailOtpFormLabels,
+} from '@/components/auth/email-otp-form';
 import { FormError } from '@/components/shared/form-error';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { websiteConfig } from '@/config/website';
 import { authClient } from '@/auth/client';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 import { getPathWithLocale } from '@/lib/urls';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { IconLoader2 } from '@tabler/icons-react';
 import { useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
 import { SocialLoginButton } from './social-login-button';
 
-interface LoginFormProps {
+export interface LoginFormProps {
   className?: string;
   callbackUrl?: string;
   onSuccess?: () => void;
+  onAuthenticated?: () => void;
   onSwitchToSignup?: () => void;
   bottomButtonHref?: string;
 }
@@ -42,10 +28,19 @@ export function LoginForm({
   className,
   callbackUrl: propCallbackUrl,
   onSuccess,
+  onAuthenticated,
   onSwitchToSignup,
   bottomButtonHref = Routes.Signup,
 }: LoginFormProps) {
   const router = useRouter();
+  const urlError =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('error')
+      : null;
+  const authErrorMessages = getAuthErrorMessages();
+  const urlErrorMessage = urlError
+    ? (authErrorMessages[urlError] ?? urlError)
+    : undefined;
   const paramCallbackUrl =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('callbackUrl')
@@ -54,118 +49,107 @@ export function LoginForm({
   const callbackUrl =
     propCallbackUrl ??
     (paramCallbackUrl ? paramCallbackUrl : defaultCallbackUrl);
+  const emailOtpLoginEnabled = websiteConfig.auth?.enableEmailOtpLogin ?? false;
+  const googleLoginEnabled = websiteConfig.auth?.enableGoogleLogin ?? false;
+
   const [error, setError] = useState<string | undefined>();
-  const [isPending, setIsPending] = useState(false);
-  const [step, setStep] = useState<'email' | 'otp'>('email');
-  const [email, setEmail] = useState('');
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
-  const EmailSchema = z.object({
-    email: z.email({ message: m.auth_login_email_required() }),
-  });
+  const labels: EmailOtpFormLabels = {
+    email: m.auth_login_email(),
+    emailPlaceholder: m.auth_login_email_address_placeholder(),
+    verificationCode: m.auth_otp_code(),
+    codeSentHint: m.auth_otp_code_sent_hint(),
+    continue: m.auth_otp_continue(),
+    clearEmail: m.auth_otp_clear_email(),
+    pleaseEnterCode: m.auth_otp_please_enter_code(),
+    changeEmail: m.auth_otp_use_different_email(),
+    resendCode: m.auth_otp_resend(),
+  };
 
-  const form = useForm<z.infer<typeof EmailSchema>>({
-    resolver: zodResolver(EmailSchema),
-    defaultValues: { email: '' },
-  });
+  const handleSendOtp = async (
+    email: string,
+    _options?: { isResend?: boolean }
+  ) => {
+    const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: 'sign-in',
+    });
+    if (sendError) {
+      const message = getAuthErrorMessage(sendError);
+      setError(message);
+      throw new Error(message);
+    }
+  };
+
+  const handleVerifyOtp = async (email: string, otp: string) => {
+    const result = await authClient.signIn.emailOtp({ email, otp });
+    if (result.error) {
+      const message = getAuthErrorMessage(result.error);
+      setError(message);
+      throw new Error(message);
+    }
+    await authClient.getSession({ query: { disableCookieCache: true } });
+  };
 
   const handleSuccess = () => {
-    onSuccess?.();
-    if (!onSuccess) {
-      router.navigate({ to: callbackUrl });
+    const afterAuth = onAuthenticated ?? onSuccess;
+    if (afterAuth) {
+      afterAuth();
+      return;
     }
+    setIsRedirecting(true);
+    router.navigate({ to: callbackUrl });
     void router.invalidate();
   };
 
-  const onSubmit = async (values: z.infer<typeof EmailSchema>) => {
-    setEmail(values.email);
-    await authClient.emailOtp.sendVerificationOtp(
-      { email: values.email, type: 'sign-in' },
-      {
-        onRequest: () => {
-          setIsPending(true);
-          setError(undefined);
-        },
-        onResponse: () => setIsPending(false),
-        onSuccess: () => setStep('otp'),
-        onError: (ctx) => setError(getAuthErrorMessage(ctx.error)),
-      }
-    );
-  };
-
-  if (step === 'otp') {
-    return (
+  return (
+    <>
+      {isRedirecting ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+          aria-live="polite"
+        >
+          <div className="flex flex-col items-center gap-3">
+            <IconLoader2 className="size-8 animate-spin" />
+            <p className="text-muted-foreground">{m.auth_login_redirecting()}</p>
+          </div>
+        </div>
+      ) : null}
       <AuthCard
         headerLabel={m.auth_login_welcome_back()}
-        bottomButtonLabel={m.auth_login_sign_up_hint()}
+        bottomButtonPrefix={m.auth_login_sign_up_hint()}
+        bottomButtonLabel={m.auth_login_sign_up_link()}
         bottomButtonHref={onSwitchToSignup ? undefined : bottomButtonHref}
         onBottomButtonClick={onSwitchToSignup}
         showBrand={false}
         className={className}
       >
-        <EmailOtpForm
-          email={email}
-          otpType="sign-in"
-          onBack={() => setStep('email')}
-          onSuccess={handleSuccess}
-        />
-      </AuthCard>
-    );
-  }
+        <div className="space-y-4">
+          {emailOtpLoginEnabled ? (
+            <EmailOtpForm
+              onSendOtp={handleSendOtp}
+              onVerifyOtp={handleVerifyOtp}
+              onSuccess={handleSuccess}
+              labels={labels}
+              error={error || urlErrorMessage}
+              onErrorChange={setError}
+              submitDisabled={isRedirecting}
+              hideEmailLabel
+            />
+          ) : (
+            <FormError message={error || urlErrorMessage} />
+          )}
 
-  return (
-    <AuthCard
-      headerLabel={m.auth_login_welcome_back()}
-      bottomButtonLabel={m.auth_login_sign_up_hint()}
-      bottomButtonHref={onSwitchToSignup ? undefined : bottomButtonHref}
-      onBottomButtonClick={onSwitchToSignup}
-      showBrand={false}
-      className={className}
-    >
-      <div className="space-y-4">
-        {(websiteConfig.auth?.enableEmailOtpLogin ?? false) && (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={authLabelClass()}>
-                      {m.auth_login_email()}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder={m.auth_login_placeholder_email()}
-                        type="email"
-                        name="email"
-                        className={authFieldClass}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormError message={error} />
-              <Button
-                disabled={isPending}
-                type="submit"
-                className={authSubmitClass}
-              >
-                {isPending && (
-                  <IconLoader2 className="mr-2 size-4 animate-spin" />
-                )}
-                {m.auth_otp_continue()}
-              </Button>
-            </form>
-          </Form>
-        )}
-        <SocialLoginButton
-          callbackUrl={callbackUrl}
-          showDivider={websiteConfig.auth?.enableEmailOtpLogin ?? false}
-        />
-      </div>
-    </AuthCard>
+          {googleLoginEnabled ? (
+            <SocialLoginButton
+              callbackUrl={callbackUrl}
+              showDivider={emailOtpLoginEnabled}
+              googleLabel={m.auth_login_continue_with_google()}
+            />
+          ) : null}
+        </div>
+      </AuthCard>
+    </>
   );
 }

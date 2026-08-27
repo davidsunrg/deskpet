@@ -5,7 +5,6 @@ import * as z from 'zod';
 
 const signupWithOtpSchema = z.object({
   email: z.email(),
-  name: z.string().trim().min(1),
 });
 
 export const signupWithOtpFn = createServerFn({ method: 'POST' })
@@ -14,7 +13,6 @@ export const signupWithOtpFn = createServerFn({ method: 'POST' })
     const headers = getRequestHeaders();
     return signupWithOtp({
       email: data.email,
-      name: data.name,
       headers,
     });
   });

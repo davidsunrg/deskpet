@@ -4,13 +4,17 @@ import { user } from '@/db/auth.schema';
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
+function displayNameFromEmail(email: string): string {
+  const local = email.split('@')[0]?.trim() ?? '';
+  return local || email;
+}
+
 export async function signupWithOtp(input: {
   email: string;
-  name: string;
   headers: Headers;
 }): Promise<{ success: true }> {
   const email = input.email.trim().toLowerCase();
-  const name = input.name.trim();
+  const name = displayNameFromEmail(email);
   const db = getDb();
 
   const [existing] = await db
@@ -20,7 +24,9 @@ export async function signupWithOtp(input: {
     .limit(1);
 
   if (existing) {
-    throw new Error('An account with this email already exists.');
+    throw new Error(
+      'An account with this email already exists. Sign in instead.'
+    );
   }
 
   const signUpResult = await auth.api.signUpEmail({

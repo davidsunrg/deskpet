@@ -1,173 +1,243 @@
-import { getAuthErrorMessage } from '@/lib/locale';
-import { m } from '@/locale/paraglide/messages';
-import {
-  authFieldClass,
-  authSubmitClass,
-} from '@/components/auth/auth-form-styles';
 import { FormError } from '@/components/shared/form-error';
-import { FormSuccess } from '@/components/shared/form-success';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { authClient } from '@/auth/client';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IconLoader2 } from '@tabler/icons-react';
+import { IconLoader2, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
 
-type OtpType = 'sign-in' | 'email-verification';
-
-interface EmailOtpFormProps {
+export interface EmailOtpFormLabels {
   email: string;
-  otpType: OtpType;
-  className?: string;
-  onBack?: () => void;
+  emailPlaceholder: string;
+  verificationCode: string;
+  codeSentHint: string;
+  continue: string;
+  clearEmail: string;
+  pleaseEnterCode: string;
+  changeEmail: string;
+  resendCode: string;
+}
+
+export interface EmailOtpFormProps {
+  onSendOtp: (email: string, options?: { isResend?: boolean }) => Promise<void>;
+  onVerifyOtp: (email: string, otp: string) => Promise<void>;
   onSuccess?: () => void;
-  verifyOtp?: (otp: string) => Promise<void>;
+  onVerificationChange?: (email: string | null) => void;
+  labels: EmailOtpFormLabels;
+  error?: string;
+  onErrorChange?: (error: string | undefined) => void;
+  submitDisabled?: boolean;
+  className?: string;
+  hideEmailLabel?: boolean;
+  beforeSubmit?: React.ReactNode;
 }
 
 export function EmailOtpForm({
-  email,
-  otpType,
-  className,
-  onBack,
+  onSendOtp,
+  onVerifyOtp,
   onSuccess,
-  verifyOtp,
+  onVerificationChange,
+  labels,
+  error = '',
+  onErrorChange,
+  submitDisabled = false,
+  className,
+  hideEmailLabel = false,
+  beforeSubmit,
 }: EmailOtpFormProps) {
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
+  const [email, setEmail] = useState('');
+  const [verificationEmail, setVerificationEmail] = useState<string | null>(
+    null
+  );
+  const [otp, setOtp] = useState('');
   const [isPending, setIsPending] = useState(false);
 
-  const OtpSchema = z.object({
-    otp: z
-      .string()
-      .min(6, { message: m.auth_otp_code_required() })
-      .max(6, { message: m.auth_otp_code_required() }),
-  });
-
-  const form = useForm<z.infer<typeof OtpSchema>>({
-    resolver: zodResolver(OtpSchema),
-    defaultValues: { otp: '' },
-  });
-
-  const sendOtp = async () => {
-    await authClient.emailOtp.sendVerificationOtp(
-      { email, type: otpType },
-      {
-        onRequest: () => {
-          setIsPending(true);
-          setError(undefined);
-        },
-        onResponse: () => setIsPending(false),
-        onSuccess: () => setSuccess(m.auth_otp_sent()),
-        onError: (ctx) => setError(getAuthErrorMessage(ctx.error)),
-      }
-    );
+  const setError = (msg: string | undefined) => {
+    onErrorChange?.(msg);
   };
 
-  const onSubmit = async (values: z.infer<typeof OtpSchema>) => {
-    setIsPending(true);
+  const enterVerification = (nextEmail: string) => {
+    setVerificationEmail(nextEmail);
+    onVerificationChange?.(nextEmail);
+  };
+
+  const leaveVerification = () => {
+    setVerificationEmail(null);
+    onVerificationChange?.(null);
+  };
+
+  const clearEmailAndOtp = () => {
+    setEmail('');
+    leaveVerification();
+    setOtp('');
     setError(undefined);
+  };
+
+  const handleSendOtp = async () => {
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    setError(undefined);
+    setIsPending(true);
     try {
-      if (verifyOtp) {
-        await verifyOtp(values.otp);
-      } else if (otpType === 'sign-in') {
-        const result = await authClient.signIn.emailOtp({
-          email,
-          otp: values.otp,
-        });
-        if (result.error) {
-          throw result.error;
-        }
-      } else {
-        const result = await authClient.emailOtp.verifyEmail({
-          email,
-          otp: values.otp,
-        });
-        if (result.error) {
-          throw result.error;
-        }
-      }
-      onSuccess?.();
+      await onSendOtp(trimmed);
+      enterVerification(trimmed);
     } catch (caught) {
       setError(
-        getAuthErrorMessage(
-          caught instanceof Error
-            ? { message: caught.message }
-            : { message: m.auth_error_try_again() }
-        )
+        caught instanceof Error ? caught.message : 'Something went wrong'
       );
     } finally {
       setIsPending(false);
     }
   };
 
+  const handleVerifyOtp = async () => {
+    if (!otp || otp.length !== 6 || !verificationEmail) {
+      setError(labels.pleaseEnterCode);
+      return;
+    }
+    setError(undefined);
+    setIsPending(true);
+    try {
+      await onVerifyOtp(verificationEmail, otp);
+      onSuccess?.();
+    } catch (caught) {
+      setError(
+        caught instanceof Error ? caught.message : 'Verification failed'
+      );
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!verificationEmail) return;
+    setError(undefined);
+    setIsPending(true);
+    try {
+      await onSendOtp(verificationEmail, { isResend: true });
+      setOtp('');
+    } catch (caught) {
+      setError(
+        caught instanceof Error ? caught.message : 'Something went wrong'
+      );
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (verificationEmail) {
+      void handleVerifyOtp();
+    } else {
+      void handleSendOtp();
+    }
+  };
+
   return (
-    <div className={cn('space-y-6', className)}>
-      <FormSuccess message={success ?? m.auth_otp_sent()} />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">{m.auth_otp_code()}</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    disabled={isPending}
-                    placeholder={m.auth_otp_placeholder_code()}
-                    name="otp"
-                    className={authFieldClass}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormError message={error} />
-          <Button
-            disabled={isPending}
-            type="submit"
-            className={authSubmitClass}
-          >
-            {isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
-            {m.auth_otp_verify()}
-          </Button>
-        </form>
-      </Form>
-      <div className="flex flex-col gap-2 text-center text-sm">
-        <button
-          type="button"
-          className="text-muted-foreground underline-offset-4 hover:underline"
-          onClick={() => void sendOtp()}
-          disabled={isPending}
-        >
-          {m.auth_otp_resend()}
-        </button>
-        {onBack ? (
-          <button
-            type="button"
-            className="text-muted-foreground underline-offset-4 hover:underline"
-            onClick={onBack}
-            disabled={isPending}
-          >
-            {m.auth_otp_use_different_email()}
-          </button>
-        ) : null}
+    <form onSubmit={handleSubmit} className={cn('space-y-4', className)}>
+      <div className="space-y-3">
+        <div className="space-y-2">
+          {hideEmailLabel ? (
+            <Label htmlFor="email-otp-email" className="sr-only">
+              {labels.email}
+            </Label>
+          ) : (
+            <Label htmlFor="email-otp-email">{labels.email}</Label>
+          )}
+          <div className="relative">
+            <Input
+              id="email-otp-email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => {
+                const value = event.target.value;
+                setEmail(value);
+                if (verificationEmail) {
+                  leaveVerification();
+                  setOtp('');
+                }
+              }}
+              disabled={isPending || submitDisabled || !!verificationEmail}
+              placeholder={labels.emailPlaceholder}
+              className={cn(
+                'h-11 rounded-lg border-deskpet-ink/20 bg-background px-3 text-sm',
+                email ? 'pr-9' : ''
+              )}
+            />
+            {email && !verificationEmail ? (
+              <button
+                type="button"
+                onClick={clearEmailAndOtp}
+                disabled={isPending || submitDisabled}
+                className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+                aria-label={labels.clearEmail}
+              >
+                <IconX className="size-4" />
+              </button>
+            ) : null}
+          </div>
+          {verificationEmail ? (
+            <button
+              type="button"
+              onClick={clearEmailAndOtp}
+              disabled={isPending || submitDisabled}
+              className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
+              {labels.changeEmail}
+            </button>
+          ) : null}
+        </div>
+
+        {verificationEmail ? (
+          <div className="space-y-2">
+            <Label htmlFor="email-otp-code" className="sr-only">
+              {labels.verificationCode}
+            </Label>
+            <Input
+              id="email-otp-code"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={6}
+              value={otp}
+              disabled={isPending || submitDisabled}
+              placeholder={labels.verificationCode}
+              autoFocus
+              onChange={(event) => {
+                setOtp(event.target.value.replace(/\D/g, '').slice(0, 6));
+              }}
+              className="h-11 rounded-lg border-deskpet-ink/20 bg-background px-3 text-sm tracking-widest"
+            />
+            <p className="text-xs text-muted-foreground">
+              {labels.codeSentHint}{' '}
+              <button
+                type="button"
+                onClick={() => void handleResend()}
+                disabled={isPending || submitDisabled}
+                className="underline-offset-4 hover:underline disabled:opacity-50"
+              >
+                {labels.resendCode}
+              </button>
+            </p>
+          </div>
+        ) : (
+          beforeSubmit
+        )}
       </div>
-    </div>
+
+      <FormError message={error || undefined} />
+
+      <Button
+        type="submit"
+        disabled={isPending || submitDisabled}
+        size="lg"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border-2 border-deskpet-ink bg-deskpet-ink font-semibold text-white hover:bg-deskpet-ink/90 dark:border-foreground dark:bg-foreground dark:text-background"
+      >
+        {isPending ? <IconLoader2 className="size-4 animate-spin" /> : null}
+        <span>{labels.continue}</span>
+      </Button>
+    </form>
   );
 }

@@ -3,6 +3,7 @@ import { m } from '@/locale/paraglide/messages';
 import { AuthCard } from '@/components/auth/auth-card';
 import { Routes } from '@/lib/routes';
 import { IconAlertTriangle } from '@tabler/icons-react';
+
 function getDisplayMessage(
   errorCode: string | undefined,
   errorDescription: string | undefined
@@ -19,6 +20,7 @@ function getDisplayMessage(
   }
   return m.auth_error_try_again();
 }
+
 export function ErrorCard({
   errorCode,
   errorDescription,
@@ -32,12 +34,12 @@ export function ErrorCard({
       headerLabel={m.auth_error_title()}
       bottomButtonHref={Routes.Login}
       bottomButtonLabel={m.auth_error_back_to_login()}
-      className="border-none"
+      showBrand={false}
     >
-      <div className="w-full flex flex-col justify-center items-center py-4 gap-2">
+      <div className="flex w-full flex-col items-center justify-center gap-2 py-4">
         <div className="flex items-center gap-2">
-          <IconAlertTriangle className="text-destructive size-4 shrink-0" />
-          <p className="font-medium text-destructive text-center">
+          <IconAlertTriangle className="size-4 shrink-0 text-destructive" />
+          <p className="text-center font-medium text-destructive">
             {displayMessage}
           </p>
         </div>

@@ -3,6 +3,10 @@ import { m } from '@/locale/paraglide/messages';
 import { useState } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { AuthCard } from '@/components/auth/auth-card';
+import {
+  authFieldClass,
+  authSubmitClass,
+} from '@/components/auth/auth-form-styles';
 import { FormError } from '@/components/shared/form-error';
 import { FormSuccess } from '@/components/shared/form-success';
 import { Button } from '@/components/ui/button';
@@ -17,6 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { authClient } from '@/auth/client';
 import { Routes } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconEye, IconEyeOff, IconLoader2 } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
@@ -48,6 +53,7 @@ export function ResetPasswordForm() {
         headerLabel={m.auth_reset_password_title()}
         bottomButtonLabel={m.auth_reset_password_back_to_login()}
         bottomButtonHref={Routes.Login}
+        showBrand={false}
       >
         <p className="text-sm text-destructive py-4">
           {m.auth_reset_password_invalid_token()}
@@ -85,6 +91,7 @@ export function ResetPasswordForm() {
       headerLabel={m.auth_reset_password_title()}
       bottomButtonLabel={m.auth_reset_password_back_to_login()}
       bottomButtonHref={Routes.Login}
+      showBrand={false}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -102,7 +109,7 @@ export function ResetPasswordForm() {
                         disabled={isPending}
                         placeholder={m.auth_reset_password_placeholder_password()}
                         type={showPassword ? 'text' : 'password'}
-                        className="pr-10"
+                        className={cn(authFieldClass, 'pr-10')}
                       />
                     </FormControl>
                     <Button
@@ -132,12 +139,7 @@ export function ResetPasswordForm() {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button
-            disabled={isPending}
-            size="lg"
-            type="submit"
-            className="w-full flex items-center justify-center gap-2"
-          >
+          <Button disabled={isPending} type="submit" className={authSubmitClass}>
             {isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
             <span>{m.auth_reset_password_reset()}</span>
           </Button>
