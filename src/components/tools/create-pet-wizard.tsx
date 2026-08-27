@@ -35,7 +35,7 @@ import {
 import { authClient } from '@/lib/auth/auth-client';
 import { useLocale, useTranslations } from '@/lib/deskpet-i18n';
 import { uploadFileWithPresignedUrl } from '@/lib/storage/presigned-upload';
-import { isRealSignedInUser } from '@/lib/auth/session-identity';
+import { isVerifiedSignedInUser } from '@/lib/auth/session-identity';
 import { DEFAULT_LOCALE } from '@/lib/i18n/routing';
 import { Routes } from '@/lib/routes';
 import type { CreatorPetRecognitionData } from '@/types/creator-recognition';
@@ -652,18 +652,20 @@ export function CreatePetWizard() {
     uploadingPhotos,
   ]);
 
-  /** After pet draft is ready: real users go to pricing; guests open auth first. */
+  /** After pet draft is ready: verified users go to pricing; guests open auth first. */
   const continueAfterPetReady = useCallback(async () => {
-    const { data: freshSession } = await authClient.getSession({
-      query: { disableCookieCache: true },
-    });
-    if (!isRealSignedInUser(freshSession?.user)) {
-      setAuthOpen(true);
-      setCreatingPet(false);
-      return;
+    if (!isVerifiedSignedInUser(session?.user)) {
+      const { data: freshSession } = await authClient.getSession({
+        query: { disableCookieCache: true },
+      });
+      if (!isVerifiedSignedInUser(freshSession?.user)) {
+        setAuthOpen(true);
+        setCreatingPet(false);
+        return;
+      }
     }
     navigateToPricing();
-  }, [navigateToPricing]);
+  }, [navigateToPricing, session?.user]);
 
   const goToStep = (target: WizardStep) => {
     if (!isStepUnlocked(target)) return;

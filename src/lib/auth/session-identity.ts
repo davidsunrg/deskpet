@@ -2,6 +2,7 @@ export type SessionIdentityUser = {
   isAnonymous?: boolean | null;
   name?: string | null;
   email?: string | null;
+  emailVerified?: boolean | null;
 };
 
 export const ANONYMOUS_ACCOUNT_REQUIRED_ERROR =
@@ -17,6 +18,13 @@ export function isRealSignedInUser(
   user: SessionIdentityUser | null | undefined
 ): user is SessionIdentityUser & { isAnonymous?: false | null } {
   return !!user && !isAnonymousSessionUser(user);
+}
+
+/** Real account with verified email — required before pricing/checkout handoffs. */
+export function isVerifiedSignedInUser(
+  user: SessionIdentityUser | null | undefined
+): user is SessionIdentityUser & { isAnonymous?: false | null } {
+  return isRealSignedInUser(user) && user.emailVerified !== false;
 }
 
 export function sessionUserDisplayName(
