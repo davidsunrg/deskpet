@@ -113,7 +113,7 @@ export const listUserPetsFn = createServerFn({ method: 'GET' })
   .middleware([authApiMiddleware])
   .handler(async ({ context }) => {
     const { getDb } = await import('@/db');
-    const { pet } = await import('@/db/app.schema');
+    const { pet } = await import('@/db/pet.schema');
     const { desc, eq } = await import('drizzle-orm');
     const db = getDb();
     const rows = await db
@@ -143,7 +143,7 @@ export const getUserPetFn = createServerFn({ method: 'GET' })
   .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { getDb } = await import('@/db');
-    const { pet } = await import('@/db/app.schema');
+    const { pet } = await import('@/db/pet.schema');
     const { and, eq } = await import('drizzle-orm');
     const db = getDb();
     const rows = await db

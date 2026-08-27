@@ -1,5 +1,5 @@
 import { getDb } from '@/db';
-import { pet } from '@/db/app.schema';
+import { pet } from '@/db/pet.schema';
 import {
   isPetCreationStatus,
   PetCreationStatus,

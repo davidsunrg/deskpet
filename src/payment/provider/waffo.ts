@@ -9,7 +9,7 @@ import {
 } from '@waffo/pancake-ts';
 import { eq, or } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { payment } from '@/db/app.schema';
+import { payment } from '@/db/payment.schema';
 import { findPlanByPlanId, findPriceInPlan } from '@/lib/price-plan';
 import { sendPaymentNotification } from '@/notification';
 import { markPetPaidFromCheckoutMetadata } from '@/server/pets/update-pet-status';

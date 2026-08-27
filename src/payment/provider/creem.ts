@@ -1,5 +1,5 @@
 import { getDb } from '@/db';
-import { payment } from '@/db/app.schema';
+import { payment } from '@/db/payment.schema';
 import { user } from '@/db/auth.schema';
 import { sendPaymentNotification } from '@/notification';
 import { markPetPaidFromCheckoutMetadata } from '@/server/pets/update-pet-status';
