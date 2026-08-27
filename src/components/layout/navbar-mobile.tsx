@@ -3,8 +3,6 @@
 import { BrandName } from '@/components/layout/brand-name';
 import { Logo } from '@/components/layout/logo';
 import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
-import { MarketingUserButton } from '@/components/auth/marketing-user-button';
-import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
 import { Button } from '@/components/ui/button';
 import {
   Collapsible,
@@ -12,7 +10,6 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { useNavbarLinks } from '@/config/navbar-config';
-import { websiteConfig } from '@/config/website';
 import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
 import { cn } from '@/utils/cn';
 import {
@@ -29,30 +26,16 @@ const mobileLinkActiveClass = 'font-bold text-deskpet-ink bg-deskpet-mint-soft';
 const mobileSubLinkClass =
   'flex w-full items-center gap-4 rounded-md p-2 text-[15px] font-bold text-deskpet-muted transition-colors duration-150 hover:bg-deskpet-mint-soft hover:text-deskpet-ink';
 
-interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Real signed-in identity from the server layout; null for guests/anonymous. */
-  identity?: MarketingNavbarIdentity | null;
-}
+interface NavbarMobileProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function NavbarMobile({
   className,
-  identity = null,
   ...props
 }: NavbarMobileProps) {
   const localePathname = useLocalePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const showNavbarLogin =
-    websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
   const menuLinks = useNavbarLinks();
-  const authControl = showNavbarLogin ? (
-    identity ? (
-      <MarketingUserButton identity={identity} />
-    ) : (
-      <MarketingLoginButton mode="modal" />
-    )
-  ) : null;
-
   // Sync mount (drawer only) and close drawer on route change
   useEffect(() => {
     setMounted(true);
@@ -79,7 +62,7 @@ export function NavbarMobile({
         </LocaleLink>
 
         <div className="flex shrink-0 items-center gap-2">
-          {authControl}
+          <MarketingLoginButton />
           <Button
             type="button"
             variant="ghost"

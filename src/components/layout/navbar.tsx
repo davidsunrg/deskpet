@@ -4,8 +4,6 @@ import { BrandName } from '@/components/layout/brand-name';
 import Container from '@/components/layout/container';
 import { Logo } from '@/components/layout/logo';
 import { MarketingLoginButton } from '@/components/auth/marketing-login-button';
-import { MarketingUserButton } from '@/components/auth/marketing-user-button';
-import type { MarketingNavbarIdentity } from '@/lib/auth/marketing-identity';
 import { NavbarMobile } from '@/components/layout/navbar-mobile';
 import {
   DropdownMenu,
@@ -14,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNavbarLinks } from '@/config/navbar-config';
-import { websiteConfig } from '@/config/website';
 import { LocaleLink, useLocalePathname } from '@/lib/i18n/navigation';
 import { cn } from '@/utils/cn';
 import { ArrowUpRightIcon, ChevronDownIcon } from 'lucide-react';
@@ -22,8 +19,6 @@ import { ArrowUpRightIcon, ChevronDownIcon } from 'lucide-react';
 interface NavBarProps {
   /** Kept for call-site compatibility; header always uses the HTML sticky style. */
   scroll?: boolean;
-  /** Real signed-in identity from the server layout; null for guests/anonymous. */
-  identity?: MarketingNavbarIdentity | null;
 }
 
 /** Matches references/html/pet-detail.html .nav-links a hover/active underline. */
@@ -39,19 +34,9 @@ const navLinkClass = cn(
 
 const navLinkActiveClass = 'after:scale-x-100';
 
-export function Navbar({ identity = null }: NavBarProps = {}) {
+export function Navbar(_props: NavBarProps = {}) {
   const menuLinks = useNavbarLinks();
   const localePathname = useLocalePathname();
-  const showNavbarLogin =
-    websiteConfig.auth?.enable && websiteConfig.auth.enableNavbarLogin;
-  const authControl = showNavbarLogin ? (
-    identity ? (
-      <MarketingUserButton identity={identity} />
-    ) : (
-      <MarketingLoginButton mode="modal" />
-    )
-  ) : null;
-
   return (
     <header
       className={cn(
@@ -178,12 +163,12 @@ export function Navbar({ identity = null }: NavBarProps = {}) {
             </ul>
 
             <div className="flex items-center gap-4 shrink-0">
-              {authControl}
+              <MarketingLoginButton />
             </div>
           </nav>
 
           {/* mobile navbar */}
-          <NavbarMobile className="lg:hidden" identity={identity} />
+          <NavbarMobile className="lg:hidden" />
         </Container>
       </div>
     </header>
