@@ -49,6 +49,12 @@ export const serverEnv = createEnv({
 
     // AI image generation (fal.ai)
     FAL_KEY: z.string().optional(),
+
+    // R2 S3-compatible API (presigned uploads/downloads)
+    R2_ACCESS_KEY_ID: z.string().optional(),
+    R2_SECRET_ACCESS_KEY: z.string().optional(),
+    R2_S3_API_ENDPOINT: z.string().optional(),
+    R2_BUCKET_NAME: z.string().optional().default('deskpet'),
   },
   runtimeEnv: process.env,
 });

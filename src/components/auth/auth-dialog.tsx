@@ -16,6 +16,8 @@ interface AuthDialogProps {
   onOpenChange: (open: boolean) => void;
   callbackUrl?: string;
   initialView?: AuthView;
+  onAuthenticated?: () => void;
+  preventTranslation?: boolean;
 }
 
 export function AuthDialog({
@@ -23,6 +25,8 @@ export function AuthDialog({
   onOpenChange,
   callbackUrl,
   initialView = 'login',
+  onAuthenticated,
+  preventTranslation,
 }: AuthDialogProps) {
   const [view, setView] = useState<AuthView>(initialView);
 
@@ -36,11 +40,20 @@ export function AuthDialog({
   const handleSuccess = () => {
     onOpenChange(false);
     setView(initialView);
+    onAuthenticated?.();
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="gap-0 p-6 pt-8 sm:max-w-[400px]">
+      <DialogContent
+        className="gap-0 p-6 pt-8 sm:max-w-[400px]"
+        {...(preventTranslation
+          ? {
+              translate: 'no' as const,
+              'data-google-translate': 'no',
+            }
+          : {})}
+      >
         <DialogHeader className="hidden">
           <DialogTitle>
             {view === 'login'

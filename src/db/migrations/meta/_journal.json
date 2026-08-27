@@ -57,6 +57,13 @@
       "when": 1787817092636,
       "tag": "0007_light_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1787820000000,
+      "tag": "0008_pet_storage",
+      "breakpoints": true
     }
   ]
 }

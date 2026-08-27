@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
+import { sessionApiMiddleware } from '@/middlewares/session-api-middleware';
 import { adoptPet } from '@/server/pets/adopt-pet';
 import { createPet } from '@/server/pets/create-pet';
 import { listUserPets } from '@/server/pets/list-user-pets';
@@ -109,7 +110,7 @@ const updatePetProfileSchema = z.object({
 
 export const updatePetProfileFn = createServerFn({ method: 'POST' })
   .validator(updatePetProfileSchema)
-  .middleware([authApiMiddleware])
+  .middleware([sessionApiMiddleware])
   .handler(async ({ data, context }) => {
     return updatePetProfile({
       userId: context.userId,
@@ -128,7 +129,7 @@ const setActivePetSchema = z.object({
 
 export const setActivePetFn = createServerFn({ method: 'POST' })
   .validator(setActivePetSchema)
-  .middleware([authApiMiddleware])
+  .middleware([sessionApiMiddleware])
   .handler(async ({ data, context }) => {
     return setActiveUserPet({
       userId: context.userId,
