@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  createPetFn,
   deletePetMakerStagingObjectFn,
   getPetMakerStagingUploadUrlFn,
 } from '@/api/pet-maker-wizard';
@@ -36,8 +37,8 @@ import { authClient } from '@/lib/auth/auth-client';
 import { useLocale, useTranslations } from '@/lib/deskpet-i18n';
 import { uploadFileWithPresignedUrl } from '@/lib/storage/presigned-upload';
 import { isVerifiedSignedInUser } from '@/lib/auth/session-identity';
-import { DEFAULT_LOCALE } from '@/lib/i18n/routing';
 import { Routes } from '@/lib/routes';
+import { getPathWithLocale } from '@/lib/urls';
 import type { CreatorPetRecognitionData } from '@/types/creator-recognition';
 import { userFacingClientErrorMessage } from '@/lib/analytics/user-facing-client-error-message';
 import { cn } from '@/lib/utils';
@@ -51,6 +52,7 @@ import {
 } from '@/utils/compress-square-avatar';
 import { MAX_FILE_SIZE, PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
 import {
+  clearDraft,
   createEmptyDraft,
   ensureDraftId,
   readDraft,
@@ -94,6 +96,7 @@ import {
   PlusIcon,
   Trash2Icon,
 } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -101,7 +104,6 @@ import { toast } from 'sonner';
 const ENABLE_PET_MAKER_AVATAR = false;
 
 type RecognitionStatus = 'idle' | 'loading' | 'success' | 'skipped';
-const PRICING_URL = Routes.Pricing;
 
 type WizardPhotoUploadStatus = 'pending' | 'uploading' | 'ready' | 'error';
 
@@ -186,6 +188,7 @@ function initialStepFromDraft(draft: PetMakerLocalDraft): WizardStep {
 export function CreatePetWizard() {
   const t = useTranslations('CreatePetWizard');
   const locale = useLocale();
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const photoPickerButtonRef = useRef<HTMLButtonElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -644,12 +647,7 @@ export function CreatePetWizard() {
     }
   };
 
-  const pricingHref =
-    locale === DEFAULT_LOCALE ? PRICING_URL : `/${locale}${PRICING_URL}`;
-
-  const navigateToPricing = useCallback(() => {
-    window.location.assign(pricingHref);
-  }, [pricingHref]);
+  const makerCallbackHref = getPathWithLocale(Routes.DesktopPetCreator, locale);
 
   const validateCreateReadiness = useCallback((): boolean => {
     if (uploadingPhotos) {
@@ -684,8 +682,35 @@ export function CreatePetWizard() {
     return true;
   }, [breed, goToStep, petName, readyPhotos, sex, species, t, uploadingPhotos]);
 
-  /** After pet draft is ready: verified users go to pricing; guests open auth first. */
-  const continueAfterPetReady = useCallback(async () => {
+  const submitPetRecord = useCallback(async () => {
+    if (!species) {
+      throw new Error(t('profile.speciesRequired'));
+    }
+
+    const photoKeys = readyPhotos
+      .map((photo) => photo.r2Key)
+      .filter((key): key is string => !!key);
+
+    const result = await wrapNestedServerFn(() =>
+      createPetFn({
+        data: {
+          draftId,
+          petName: petName.trim(),
+          species,
+          breed: speciesUsesBreeds(species) ? breed : PetBreed.Any,
+          sex,
+          avatarKey: null,
+          photoKeys,
+        },
+      })
+    );
+    assertActionSuccess(result, t('profile.createError'));
+    clearDraft();
+    await navigate({ to: Routes.DashboardPets });
+  }, [breed, draftId, navigate, petName, readyPhotos, sex, species, t]);
+
+  /** Verified users create the pet; guests open auth and resume from saved draft. */
+  const createPetAndOpenMyPets = useCallback(async () => {
     if (!isVerifiedSignedInUser(session?.user)) {
       const { data: freshSession } = await authClient.getSession({
         query: { disableCookieCache: true },
@@ -696,8 +721,8 @@ export function CreatePetWizard() {
         return;
       }
     }
-    navigateToPricing();
-  }, [navigateToPricing, session?.user]);
+    await submitPetRecord();
+  }, [session?.user, submitPetRecord]);
 
   const executeCreatePetAndContinue = useCallback(async () => {
     if (!validateCreateReadiness()) return;
@@ -747,7 +772,7 @@ export function CreatePetWizard() {
         }
       }
 
-      await continueAfterPetReady();
+      await createPetAndOpenMyPets();
     } catch (error) {
       console.error('wizard create pet error:', error);
       toast.error(
@@ -757,7 +782,7 @@ export function CreatePetWizard() {
     }
   }, [
     avatarUrl,
-    continueAfterPetReady,
+    createPetAndOpenMyPets,
     pendingAvatarFile,
     photos,
     readyPhotos,
@@ -765,15 +790,23 @@ export function CreatePetWizard() {
     validateCreateReadiness,
   ]);
 
-  const handleAuthAuthenticated = useCallback(() => {
+  const handleAuthAuthenticated = useCallback(async () => {
     setAuthOpen(false);
     if (!validateCreateReadiness()) {
       setCreatingPet(false);
       return;
     }
     setCreatingPet(true);
-    navigateToPricing();
-  }, [navigateToPricing, validateCreateReadiness]);
+    try {
+      await submitPetRecord();
+    } catch (error) {
+      console.error('wizard create pet after auth error:', error);
+      toast.error(
+        userFacingClientErrorMessage(error, t('profile.createError'))
+      );
+      setCreatingPet(false);
+    }
+  }, [submitPetRecord, t, validateCreateReadiness]);
 
   const canContinue =
     step === 'photos'
@@ -1141,7 +1174,7 @@ export function CreatePetWizard() {
       <AuthDialog
         open={authOpen}
         onOpenChange={setAuthOpen}
-        callbackUrl={pricingHref}
+        callbackUrl={makerCallbackHref}
         onAuthenticated={handleAuthAuthenticated}
         preventTranslation
       />
