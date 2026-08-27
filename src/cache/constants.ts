@@ -1,4 +1,4 @@
-export const CACHE_KEY_PREFIX = 'mkfast-template-cache';
+export const CACHE_KEY_PREFIX = 'deskpet-cache';
 export const CACHE_VERSION = 'v1';
 export const MIN_CACHE_TTL_SECONDS = 60;
 
