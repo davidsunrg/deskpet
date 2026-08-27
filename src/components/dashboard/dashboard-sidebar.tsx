@@ -1,6 +1,5 @@
 'use client';
 
-import { PetSwitcher } from '@/components/dashboard/pet-switcher';
 import { DashboardSidebarMain } from '@/components/dashboard/dashboard-sidebar-main';
 import { SidebarUser } from '@/components/layout/sidebar-user';
 import { BrandName } from '@/components/layout/brand-name';
@@ -18,18 +17,12 @@ import { Routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import type { SessionUser } from '@/auth/types';
 import type * as React from 'react';
-import type { SidebarPet } from '@/components/dashboard/pet-switcher';
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
   user: SessionUser;
-  pets?: SidebarPet[];
 };
 
-export function DashboardSidebar({
-  user,
-  pets = [],
-  ...props
-}: DashboardSidebarProps) {
+export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
   const sidebarLinks = getDashboardSidebarLinksForUser(user);
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -51,7 +44,6 @@ export function DashboardSidebar({
           <Logo className="size-8" />
           <BrandName className="text-xl" />
         </LocaleLink>
-        <PetSwitcher pets={pets} />
       </SidebarHeader>
 
       <SidebarContent className="px-[18px] pt-0">

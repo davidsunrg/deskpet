@@ -2,6 +2,7 @@ import { getDb } from '@/db';
 import { userFiles } from '@/db/app.schema';
 import { getBaseUrl } from '@/lib/urls';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
+import { sessionApiMiddleware } from '@/middlewares/session-api-middleware';
 import { deleteFile, uploadFile } from '@/storage';
 import { StorageError, UploadError } from '@/storage/types';
 import { isPublicFolder } from '@/storage/utils';
@@ -93,44 +94,59 @@ export const uploadUserFile = createServerFn({ method: 'POST' })
   .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { userId } = context;
-    try {
-      const buffer = Buffer.from(await data.file.arrayBuffer());
-      const requestOrigin = getBaseUrl();
-      const publicFolder = isPublicFolder(data.folder);
+    return handleUserFileUpload(userId, data);
+  });
 
-      // Public folders (avatars, product logos/og-images) are shared resources:
-      // no userId → stored directly under folder → no userFiles DB record.
-      // Private files get userId scoping and are tracked in userFiles.
-      const result = await uploadFile(buffer, data.file.name, data.file.type, {
-        folder: data.folder,
-        userId: publicFolder ? undefined : (userId ?? undefined),
-        requestOrigin,
+async function handleUserFileUpload(
+  userId: string,
+  data: {
+    file: File;
+    folder?: string;
+    isPublic?: boolean;
+    description?: string;
+  }
+) {
+  try {
+    const buffer = Buffer.from(await data.file.arrayBuffer());
+    const requestOrigin = getBaseUrl();
+    const publicFolder = isPublicFolder(data.folder);
+
+    const result = await uploadFile(buffer, data.file.name, data.file.type, {
+      folder: data.folder,
+      userId: publicFolder ? undefined : (userId ?? undefined),
+      requestOrigin,
+    });
+
+    if (!publicFolder && userId && result.metadata) {
+      const db = getDb();
+      const now = result.metadata.uploadedAt;
+      await db.insert(userFiles).values({
+        id: result.metadata.id,
+        userId,
+        filename: result.metadata.filename,
+        originalName: result.metadata.originalName,
+        contentType: result.metadata.contentType,
+        size: result.metadata.size,
+        r2Key: result.metadata.r2Key,
+        createdAt: now,
+        updatedAt: now,
+        isPublic: data.isPublic ?? null,
+        description: data.description ?? null,
       });
-
-      // Only user-scoped uploads produce metadata; record them in DB
-      if (!publicFolder && userId && result.metadata) {
-        const db = getDb();
-        const now = result.metadata.uploadedAt;
-        await db.insert(userFiles).values({
-          id: result.metadata.id,
-          userId,
-          filename: result.metadata.filename,
-          originalName: result.metadata.originalName,
-          contentType: result.metadata.contentType,
-          size: result.metadata.size,
-          r2Key: result.metadata.r2Key,
-          createdAt: now,
-          updatedAt: now,
-          isPublic: data.isPublic ?? null,
-          description: data.description ?? null,
-        });
-      }
-
-      return result;
-    } catch (error) {
-      if (error instanceof UploadError || error instanceof StorageError) {
-        throw new Error(error.message);
-      }
-      throw new Error('Something went wrong while uploading the file');
     }
+
+    return result;
+  } catch (error) {
+    if (error instanceof UploadError || error instanceof StorageError) {
+      throw new Error(error.message);
+    }
+    throw new Error('Something went wrong while uploading the file');
+  }
+}
+
+export const uploadSessionUserFile = createServerFn({ method: 'POST' })
+  .validator(uploadSchema)
+  .middleware([sessionApiMiddleware])
+  .handler(async ({ data, context }) => {
+    return handleUserFileUpload(context.userId, data);
   });

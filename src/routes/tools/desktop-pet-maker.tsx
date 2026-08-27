@@ -1,4 +1,4 @@
-import { loadDesktopPetMakerPageDataFn } from '@/api/desktop-pet-maker-page';
+import { loadDesktopPetMakerPageDataFn } from '@/api/pet-maker-wizard';
 import { DesktopPetMakerPage } from '@/components/pages/desktop-pet-maker-page';
 import { deskpetPageTitle } from '@/lib/deskpet-seo';
 import { getDeskPetMessage } from '@/lib/deskpet-i18n';

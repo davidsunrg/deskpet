@@ -1,4 +1,4 @@
-import { DashboardActivePetOverview } from '@/components/dashboard/dashboard-active-pet-overview';
+import { DashboardOverviewContent } from '@/components/dashboard/dashboard-overview-content';
 import { DashboardPageShell } from '@/components/dashboard/dashboard-page-shell';
 import { Routes } from '@/lib/routes';
 import { createFileRoute } from '@tanstack/react-router';
@@ -15,7 +15,7 @@ function DashboardOverviewPage() {
         { label: 'Overview', isCurrentPage: true },
       ]}
     >
-      <DashboardActivePetOverview />
+      <DashboardOverviewContent />
     </DashboardPageShell>
   );
 }

@@ -64,6 +64,13 @@
       "when": 1787820000000,
       "tag": "0008_pet_storage",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1787900000000,
+      "tag": "0009_drop_pet_tables",
+      "breakpoints": true
     }
   ]
 }
