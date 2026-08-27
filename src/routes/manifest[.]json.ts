@@ -21,7 +21,7 @@ export const Route = createFileRoute('/manifest.json')({
           display: 'standalone',
           // Keep in sync with <meta name="theme-color"> in src/routes/__root.tsx
           background_color: '#fbfaf7',
-          theme_color: '#fffdf8',
+          theme_color: '#4edfa6',
           icons: [
             { src: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
             {

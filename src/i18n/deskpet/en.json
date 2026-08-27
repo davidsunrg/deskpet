@@ -619,5 +619,600 @@
     "name": "DeskPet.ai",
     "title": "DeskPet.ai",
     "description": "Play free desktop pets in your browser or download them for your desktop. Create your own from your pet's photo, then manage care, reminders, memories, expenses, and more—all in one place."
+  },
+  "AboutPage": {
+    "title": "About",
+    "description": "Create desktop pets from your pet photos with DeskPet.ai.",
+    "authorName": "DeskPet.ai",
+    "authorBio": "Turn your pet into a desktop companion—in your browser or on your desktop.",
+    "introduction": "👋 Hi there! DeskPet.ai helps you create desktop pets from your pet photos. If you have any questions, welcome to contact me.",
+    "talkWithMe": "Talk with me"
+  },
+  "ContactPage": {
+    "title": "Contact",
+    "description": "We'll help you find the right plan for your business",
+    "subtitle": "We'll help you find the right plan for your business",
+    "form": {
+      "title": "Contact Us",
+      "description": "If you have any questions or feedback, please reach out to our team",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "success": "Message sent successfully",
+      "fail": "Failed to send message",
+      "nameMinLength": "Name must be at least 3 characters",
+      "nameMaxLength": "Name must not exceed 30 characters",
+      "emailValidation": "Please enter a valid email address",
+      "messageMinLength": "Message must be at least 10 characters",
+      "messageMaxLength": "Message must not exceed 500 characters"
+    }
+  },
+  "DownloadPage": {
+    "title": "Download Your Desktop Pet",
+    "seoTitle": "Desktop Pet Download Free | DeskPet.ai",
+    "description": "Download DeskPet for Windows or macOS and bring your pet to your desktop.",
+    "intro": "Bring your pet to your desktop on Windows or macOS. Free to download.",
+    "comingSoon": "Coming soon",
+    "cards": {
+      "windows": {
+        "title": "Windows",
+        "tags": ["Windows 10/11"],
+        "cta": "Download for Windows"
+      },
+      "macos": {
+        "title": "macOS",
+        "tags": ["macOS 10.15+"],
+        "cta": "Download for macOS"
+      }
+    },
+    "install": {
+      "windows": {
+        "title": "Windows",
+        "steps": {
+          "1": "Download the DeskPet setup EXE",
+          "2": "Run the installer and follow the prompts",
+          "3": "Launch DeskPet from the Start menu or desktop shortcut",
+          "4": "When Windows shows a security warning: \"More info\" → \"Run anyway\""
+        }
+      },
+      "mac": {
+        "title": "macOS",
+        "steps": {
+          "1": "Download and open the universal DMG",
+          "2": "Drag DeskPet to your Applications folder",
+          "3": "Open DeskPet from Applications",
+          "4": "When blocked: System Settings → Privacy & Security → \"Open Anyway\""
+        }
+      }
+    },
+    "contact": {
+      "prompt": "Need help installing DeskPet?",
+      "cta": "Contact us"
+    }
+  },
+  "HealthPage": {
+    "title": "Pet Health Care Log",
+    "description": "Keep everyday pet care, health notes, routines, reminders, and important records together inside your DeskPet profile.",
+    "hero": {
+      "eyebrow": "Care Log · Built into DeskPet",
+      "title": "Remember the little things that keep them well.",
+      "description": "Add meals, medicine, grooming, symptoms, vet visits, and everyday notes to your pet's DeskPet profile. No separate care app—just one simple place for their companion, memories, and care.",
+      "primaryCta": "Make My Pet",
+      "secondaryCta": "See How Care Log Works",
+      "note": "Care Log is an optional feature inside every personal DeskPet."
+    },
+    "preview": {
+      "badge": "Milo's Care Log",
+      "petName": "Milo",
+      "petMeta": "Desktop companion · Personal pet",
+      "date": "Friday · July 17",
+      "todayLabel": "TODAY'S CARE",
+      "todayStatus": "3 of 4 done",
+      "todayCopy": "Breakfast, medicine, and brushing recorded.",
+      "nextLabel": "NEXT REMINDER",
+      "nextStatus": "8:00 PM",
+      "nextCopy": "Evening eye drops · once daily",
+      "insightTitle": "A gentle pattern",
+      "insight": "Milo has eaten less than usual for two days. Keep an eye on tomorrow's meal.",
+      "items": {
+        "breakfast": {
+          "title": "Breakfast finished",
+          "meta": "Wet food · 8:12 AM",
+          "status": "Done"
+        },
+        "medicine": {
+          "title": "Morning medicine",
+          "meta": "1 tablet · with food",
+          "status": "Done"
+        },
+        "note": {
+          "title": "Small appetite change",
+          "meta": "Note added · monitor tomorrow",
+          "status": "Noted"
+        },
+        "brushing": {
+          "title": "Brushing",
+          "meta": "Coat care · 3 minutes",
+          "status": "Done"
+        }
+      }
+    },
+    "benefits": {
+      "kicker": "Why it belongs in DeskPet",
+      "title": "More than a pet on your screen.",
+      "description": "Your DeskPet can be playful and useful at the same time—helping you remember real-world care without turning the experience into a clinical dashboard.",
+      "capture": {
+        "title": "Capture care as it happens",
+        "description": "Add a quick note when your pet eats less, takes medicine, visits the groomer, or shows a small change worth remembering."
+      },
+      "remind": {
+        "title": "Let your pet remind you",
+        "description": "Your desktop companion can gently remind you about medicine, flea treatment, grooming, checkups, and recurring routines."
+      },
+      "history": {
+        "title": "Build one shared history",
+        "description": "Keep care notes beside photos, memories, expenses, and your pet's profile instead of scattering everything across different apps."
+      }
+    },
+    "timeline": {
+      "kicker": "A living timeline",
+      "title": "See the story behind their care.",
+      "description": "Every note becomes part of your pet's ongoing profile, so small details are easy to remember later.",
+      "checks": {
+        "notes": "Daily notes, symptoms, and observations",
+        "records": "Photos, documents, and visit summaries",
+        "separate": "Separate care history for every pet"
+      }
+    },
+    "reminders": {
+      "kicker": "Gentle reminders",
+      "title": "Care reminders that feel personal.",
+      "description": "Set routines once, then let your companion nudge you at the right moment without making care feel cold.",
+      "checks": {
+        "recurring": "One-time and recurring reminders",
+        "types": "Medicine, grooming, food, and appointments",
+        "complete": "Mark complete directly from the pet interaction"
+      }
+    },
+    "categories": {
+      "kicker": "Made for everyday pet life",
+      "title": "Record what actually matters.",
+      "description": "Start with common care types, then add your own whenever your pet's routine is a little different.",
+      "meals": {
+        "title": "Meals & water",
+        "description": "Appetite, food changes, portions, hydration, and feeding notes."
+      },
+      "medicine": {
+        "title": "Medicine",
+        "description": "Dosage, timing, course length, reactions, and refill reminders."
+      },
+      "vet": {
+        "title": "Vet visits",
+        "description": "Appointments, results, advice, follow-ups, and documents."
+      },
+      "grooming": {
+        "title": "Grooming",
+        "description": "Baths, brushing, trims, dental care, and recurring routines."
+      },
+      "weight": {
+        "title": "Weight & growth",
+        "description": "Track weight changes, growth milestones, and simple trends."
+      },
+      "symptoms": {
+        "title": "Symptoms & notes",
+        "description": "Behavior changes, appetite shifts, sleep, mood, and observations."
+      },
+      "records": {
+        "title": "Records",
+        "description": "Vaccinations, prescriptions, reports, insurance, and certificates."
+      },
+      "custom": {
+        "title": "Custom care",
+        "description": "Create your own entries for anything unique to your pet."
+      }
+    },
+    "cta": {
+      "kicker": "One pet, one story",
+      "title": "Care Log lives beside everything else.",
+      "description": "Create a DeskPet profile, then keep the little routines, records, and reminders close to the companion you already see every day.",
+      "boxTitle": "Start with a personal DeskPet profile.",
+      "button": "Make My Pet"
+    },
+    "faq": {
+      "kicker": "Questions",
+      "title": "Frequently Asked",
+      "optional": {
+        "question": "Is Care Log required?",
+        "answer": "No. Care Log is optional, and you can use DeskPet just as a desktop companion if you prefer."
+      },
+      "multiplePets": {
+        "question": "Can I track more than one pet?",
+        "answer": "Yes. Each personal pet can keep its own notes, reminders, records, and care history."
+      },
+      "medical": {
+        "question": "Is this a medical diagnosis tool?",
+        "answer": "No. Care Log helps organize observations and reminders, but it does not replace advice from a veterinarian."
+      }
+    }
+  },
+  "ExpensePage": {
+    "title": "Pet Expense Tracker",
+    "description": "Track food, vet bills, grooming, supplies, subscriptions, and every little pet expense in one simple place.",
+    "hero": {
+      "eyebrow": "Pet Expense Tracker",
+      "title": "Know what caring for your pet really costs.",
+      "description": "Track food, vet bills, grooming, supplies, subscriptions, and every little pet expense in one simple place. See patterns without spreadsheets or finance jargon.",
+      "primaryCta": "Start tracking",
+      "secondaryCta": "See how it works",
+      "note": "No spreadsheets. No finance jargon. Just a clearer picture of pet care."
+    },
+    "preview": {
+      "badge": "Mochi's July spending",
+      "petName": "Mochi",
+      "petMeta": "Desktop companion · Personal pet",
+      "month": "July 2026",
+      "spentLabel": "Spent this month",
+      "spentAmount": "$286.40",
+      "delta": "↓ 12% less than last month",
+      "budgetLabel": "Monthly budget",
+      "budgetAmount": "$420",
+      "insightTitle": "Small costs add up",
+      "insight": "Food and treats were your biggest category this month.",
+      "items": {
+        "food": {
+          "title": "Wet food delivery",
+          "meta": "Food · July 16",
+          "price": "$48.90"
+        },
+        "vet": {
+          "title": "Annual health check",
+          "meta": "Vet care · July 10",
+          "price": "$128.00"
+        },
+        "toy": {
+          "title": "New scratch toy",
+          "meta": "Toys · July 6",
+          "price": "$22.50"
+        },
+        "grooming": {
+          "title": "Nail trim",
+          "meta": "Grooming · July 2",
+          "price": "$18.00"
+        }
+      }
+    },
+    "benefits": {
+      "kicker": "Why it helps",
+      "title": "A simple habit with useful answers.",
+      "description": "The goal is not to make pet care feel financial. It is to help you understand patterns, prepare for bigger costs, and remember where the money went.",
+      "remember": {
+        "title": "Remember every purchase",
+        "description": "Save one-off vet bills, recurring food orders, and tiny everyday expenses before they disappear into your bank statement."
+      },
+      "patterns": {
+        "title": "See where it goes",
+        "description": "Understand how much goes to food, health, grooming, toys, insurance, and services without building a spreadsheet."
+      },
+      "plan": {
+        "title": "Plan for bigger moments",
+        "description": "Set a monthly budget or prepare for annual checkups, vaccinations, dental work, travel, and other predictable costs."
+      }
+    },
+    "categoriesSummary": {
+      "kicker": "Clear categories",
+      "title": "Understand spending at a glance.",
+      "description": "Monthly category summaries make the big picture easy to scan.",
+      "checks": {
+        "monthly": "Automatic monthly summaries",
+        "separate": "Separate totals for each pet",
+        "custom": "Custom categories for your routine"
+      }
+    },
+    "receipts": {
+      "kicker": "Receipts & records",
+      "title": "Keep the proof with the expense.",
+      "description": "Attach receipts and notes so reimbursements, insurance claims, and vet records are easier to find later.",
+      "checks": {
+        "attachment": "Receipt photo or PDF attachment",
+        "notes": "Notes for reimbursements or insurance",
+        "linked": "Linked to care log entries and vet visits"
+      }
+    },
+    "categories": {
+      "kicker": "Made for real pet life",
+      "title": "Track every kind of pet expense.",
+      "description": "Start with the common categories and add your own whenever your pet's routine is a little different.",
+      "food": {
+        "title": "Food & treats",
+        "description": "Daily meals, subscriptions, supplements, and snacks."
+      },
+      "vet": {
+        "title": "Vet & medicine",
+        "description": "Appointments, tests, prescriptions, and treatments."
+      },
+      "grooming": {
+        "title": "Grooming",
+        "description": "Baths, trims, dental care, and regular services."
+      },
+      "supplies": {
+        "title": "Toys & supplies",
+        "description": "Beds, carriers, litter, leashes, and enrichment."
+      },
+      "insurance": {
+        "title": "Insurance",
+        "description": "Premiums, claims, reimbursements, and deductibles."
+      },
+      "boarding": {
+        "title": "Boarding & daycare",
+        "description": "Pet sitters, walkers, hotels, and daycare visits."
+      },
+      "travel": {
+        "title": "Travel",
+        "description": "Transport, pet fees, certificates, and travel gear."
+      },
+      "custom": {
+        "title": "Custom",
+        "description": "Create your own categories for anything unique."
+      }
+    },
+    "cta": {
+      "kicker": "Part of your pet's story",
+      "title": "Care is emotional. The costs can still be clear.",
+      "description": "Create a DeskPet profile and keep care notes, reminders, memories, and everyday costs in one place.",
+      "boxTitle": "Start with a personal DeskPet profile.",
+      "button": "Create a pet expense log"
+    },
+    "faq": {
+      "kicker": "Questions",
+      "title": "Frequently Asked",
+      "manual": {
+        "question": "Do I need to connect a bank account?",
+        "answer": "No. This first version is designed around simple manual entries, receipts, and categories."
+      },
+      "multiplePets": {
+        "question": "Can each pet have its own budget?",
+        "answer": "Yes. Each pet can keep separate totals and category patterns."
+      },
+      "medical": {
+        "question": "Can expenses connect to health records?",
+        "answer": "The page is static for now, but the intended product direction is to keep related vet bills, receipts, and care notes together."
+      }
+    }
+  },
+  "CreatePetWizard": {
+    "eyebrow": "AI pet creator",
+    "title": "Desktop Pet Maker",
+    "seoTitle": "Desktop Pet Maker | Create AI Desktop Pet",
+    "description": "Upload photos to make your own desktop pet, confirm the details, then continue to the dashboard to unlock custom actions.",
+    "seoDescription": "Create an AI desktop companion from pet photos. Upload clear shots, confirm the profile, then unlock actions in the dashboard and play in your browser or on desktop.",
+    "steps": {
+      "photos": "Photos",
+      "basics": "Basics",
+      "details": "Details"
+    },
+    "seoSteps": {
+      "eyebrow": "How it works",
+      "title": "How the maker works",
+      "description": "The desktop pet maker keeps creation focused: upload photos, confirm the profile, then continue into the dashboard for custom actions when your companion is ready. You do not need animation software or complex file prep—just clear pictures and a few decisions about name, species, and breed. Each step is short on purpose, so you can move from a photo set to a playable desktop companion without learning a new creative suite.",
+      "stepLabel": "Step {number}",
+      "items": {
+        "photos": {
+          "title": "Upload pet photos",
+          "description": "Start with clear front and side shots so the AI pet creator can read shape, markings, and expression. Soft light and a simple background usually work better than busy rooms or heavy filters. A handful of strong images is enough to begin."
+        },
+        "basics": {
+          "title": "Confirm basics",
+          "description": "Choose an avatar crop, add a name, and select sex before you review species and breed. These details stay with the companion after creation and help later care tools stay attached to the right profile."
+        },
+        "details": {
+          "title": "Review species and breed",
+          "description": "Check the recognized details, adjust the dropdowns if needed, and create your pet. You continue in the dashboard to unlock poses and looping motions for your companion."
+        }
+      }
+    },
+    "seoContent": {
+      "tryPresets": {
+        "eyebrow": "Not ready to create yet?",
+        "title": "Try ready-made pets first",
+        "description": "Play with preset companions before you upload photos. Pick a card to preview motion, explore the library, then return to the desktop pet maker when you want a custom build from your own pictures. Trying a free companion first is a low-pressure way to learn how DeskPet feels—walks, naps, cursor chases—before you invest time in a pet from photos."
+      },
+      "whatYouGet": {
+        "eyebrow": "After you create",
+        "title": "What you get after making a pet",
+        "intro": "Finishing the flow does more than save a profile. You leave with a desktop companion you can play, refine, and care for—without bouncing between disconnected tools. Think of creation as the start of a longer relationship with the same pet record, not a one-off export.",
+        "items": {
+          "profile": {
+            "title": "A saved pet profile",
+            "body": "Name, avatar, species, breed, and sex stay attached to the companion so later care notes, gallery items, and actions remain organized in one place. When you come back tomorrow, you are still working with the same custom desktop pet instead of starting over."
+          },
+          "actions": {
+            "title": "Custom actions and poses",
+            "body": "Generate looping motions from your photos, preview clips, and unlock premium actions when you are ready. The AI pet creator is built for short, repeatable clips that feel good on a desktop—walk cycles, idle moments, and playful reactions you can replay without heavy files."
+          },
+          "play": {
+            "title": "Browser and desktop play",
+            "body": "Use the companion in the online playground or download DeskPet for macOS and Windows. A custom desktop pet can follow you from a quick browser session into everyday computer use, sitting beside docs and chats without forcing a separate game mode."
+          },
+          "care": {
+            "title": "Care, gallery, and expenses",
+            "body": "Keep health notes, reminders, media, and spending next to the same companion. Play stays fun while the practical pieces stay easy to find—vet visits, snacks, milestones, and photos living beside the desktop companion you actually open each day."
+          }
+        }
+      },
+      "whoFor": {
+        "eyebrow": "Is this for you?",
+        "title": "Who this is for",
+        "intro": "The flow fits people who want a personal desktop companion without learning animation tools. If any of these sound familiar, you are in the right place—and you can still try presets before committing to uploads.",
+        "items": {
+          "owners": {
+            "title": "Pet owners who want something personal",
+            "body": "Turn clear photos into a pet from photos that feels closer to home than a generic mascot—then keep care notes beside the same profile. It is a simple way to bring a familiar face onto the screen without hiring an illustrator or learning sprite pipelines."
+          },
+          "curious": {
+            "title": "People exploring desktop companions",
+            "body": "Try presets first, then use the desktop pet maker when you are ready for a custom build. You can learn the product without starting from a blank canvas, and you can switch from free companions to a personal one when the timing feels right."
+          },
+          "creators": {
+            "title": "Anyone who wants actions, not files",
+            "body": "Skip spritesheet busywork. Upload, confirm details, generate motion, and move on. The AI pet creator handles the heavy lifting so you can focus on the result—poses, loops, and a companion you can open in the browser or install on your computer."
+          }
+        }
+      }
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "title": "Desktop pet maker FAQ",
+      "items": {
+        "what": {
+          "question": "What does the desktop pet maker do?",
+          "answer": "It turns clear photos of your cat or dog into a custom desktop pet profile with an avatar, details, and a path into poses and looping actions. You can play the result online or on your computer after creation, then keep refining actions and care tools from the same saved companion."
+        },
+        "photos": {
+          "question": "What photos work best?",
+          "answer": "Use sharp JPEG, PNG, or WebP shots with soft light and a simple background. Front and side angles help the most. Avoid heavy filters, extreme crops, or blurry images so the AI pet creator can read markings and shape cleanly. A few good frames beat a large folder of noisy ones."
+        },
+        "presets": {
+          "question": "Can I try preset pets before creating?",
+          "answer": "Yes. Explore ready-made companions on this page or in the pet library, play in the browser, or download DeskPet. When you want something based on your own photos, return to the desktop pet maker and start uploading. Presets are there to help you learn the feel of a desktop companion first."
+        },
+        "after": {
+          "question": "What happens after my pet is created?",
+          "answer": "Your companion is saved with its profile details. From there you can unlock actions, manage care tools, and keep playing in the browser playground or the desktop app—without rebuilding the pet from scratch. The profile becomes the home base for everything that comes next."
+        },
+        "platforms": {
+          "question": "Does it work in the browser and the desktop app?",
+          "answer": "Yes. Create and preview online, then continue with the same desktop companion in DeskPet for macOS or Windows when you want it on your real computer. You do not need two different pets for web and desktop play."
+        },
+        "edit": {
+          "question": "Can I edit details before creating?",
+          "answer": "Yes. After photos upload, you can choose the avatar crop, set the name and sex, and adjust species or breed before you save. That review step keeps the final custom desktop pet accurate and avoids locking in a wrong label you would have to fix later."
+        }
+      }
+    },
+    "photos": {
+      "title": "Upload Pet Photos",
+      "description": "Front and side photos help create better poses. They upload as soon as you select them.",
+      "add": "Add photos",
+      "remove": "Remove photo",
+      "required": "Upload at least one pet photo.",
+      "invalidType": "Please upload JPEG, PNG, or WebP images.",
+      "fileTooLarge": "A photo is too large to upload.",
+      "uploadError": "Failed to upload photo.",
+      "removeError": "Failed to remove photo.",
+      "uploading": "Uploading {progress}%",
+      "uploadFailed": "Upload failed",
+      "retry": "Retry",
+      "waitForUpload": "Wait for photos to finish uploading.",
+      "maxReached": "You can upload up to {count} photos."
+    },
+    "recognition": {
+      "unsupportedTitle": "We need a cat or dog photo",
+      "unsupportedBody": "DeskPet can currently create companions from cat or dog photos. Upload clear cat or dog photos and try again.",
+      "chooseDifferentPhotos": "Choose different photos",
+      "close": "Close"
+    },
+    "basics": {
+      "title": "Pet Basics",
+      "description": "Choose an avatar, name your pet, and select sex.",
+      "waitingForRecognition": "Looking at your photos…"
+    },
+    "details": {
+      "title": "Pet Details",
+      "description": "Review your pet and confirm species and breed. Create Pet saves this companion."
+    },
+    "profile": {
+      "updateAvatar": "Update Avatar",
+      "avatarCropFailed": "Could not crop avatar.",
+      "avatarUploadFailed": "Could not upload avatar.",
+      "creating": "Creating…",
+      "createError": "Failed to create pet.",
+      "createSuccess": "Pet created. You can make another, or open Actions in the dashboard.",
+      "openDashboardActions": "Open Actions",
+      "activateError": "Could not select this pet.",
+      "unnamedPet": "Your pet",
+      "nameLabel": "Pet Name",
+      "namePlaceholder": "Mochi",
+      "nameRequired": "Please enter a pet name.",
+      "sexLabel": "Sex",
+      "sexPlaceholder": "Select sex",
+      "sexRequired": "Please choose a sex.",
+      "species": "Species",
+      "speciesPlaceholder": "Select species",
+      "speciesRequired": "Please choose a species.",
+      "breed": "Breed",
+      "breedPlaceholder": "Select breed",
+      "breedRequired": "Please choose a breed."
+    },
+    "draft": {
+      "loading": "Loading your draft…",
+      "resumed": "Resumed your in-progress pet.",
+      "loadError": "Could not load your draft pet.",
+      "createError": "Could not start your draft pet.",
+      "alreadyExists": "You already have a draft pet in progress.",
+      "usingUploadedSources": "{count, plural, one {Using # uploaded reference photo from your draft.} other {Using # uploaded reference photos from your draft.}}"
+    },
+    "sex": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "nav": {
+      "back": "Back",
+      "continue": "Continue",
+      "createPet": "Create Pet"
+    }
+  },
+  "PetVideoMakerPage": {
+    "seoTitle": "Pet Video Maker | Image to Video",
+    "seoDescription": "Turn a pet photo into a playful AI video. Choose duration, resolution, and mood, then create a shareable clip.",
+    "eyebrow": "AI pet tools",
+    "title": "Pet Video Maker",
+    "description": "Upload a pet photo, describe the motion you want, and preview a playful AI video idea.",
+    "create": {
+      "title": "Image to Video",
+      "uploadTitle": "Drop a pet photo here",
+      "uploadHint": "PNG or JPG up to about 10MB. One clear photo works best.",
+      "uploadSelected": "Selected: {name}",
+      "uploadClear": "Remove photo",
+      "promptLabel": "Prompt",
+      "promptPlaceholder": "Describe the motion, scene, or mood...",
+      "durationLabel": "Duration",
+      "durationOptions": {
+        "5s": "5s",
+        "10s": "10s",
+        "15s": "15s"
+      },
+      "resolutionLabel": "Resolution",
+      "resolutionOptions": {
+        "480p": "480p",
+        "720p": "720p",
+        "1080p": "1080p"
+      },
+      "audioLabel": "Generate audio",
+      "audioHint": "Optional sound and reactions for the clip.",
+      "cta": "Generate ({credits} credits)"
+    },
+    "comingSoon": {
+      "title": "Coming soon",
+      "description": "Video maker will come soon. Hang tight while we finish wiring generation.",
+      "close": "Got it"
+    },
+    "preview": {
+      "title": "Video Preview",
+      "emptyTitle": "Your clip will appear here",
+      "emptyDescription": "Pick a photo and prompt to preview the selected settings.",
+      "statusImageReady": "Photo selected",
+      "statusImageEmpty": "No photo yet",
+      "statusDuration": "{duration}",
+      "statusResolution": "{resolution}"
+    }
+  },
+  "MarketingTools": {
+    "navLabel": "Creation tools",
+    "items": {
+      "desktopPetMaker": "Desktop Pet Maker",
+      "petVideoMaker": "Pet Video Maker"
+    }
   }
 }

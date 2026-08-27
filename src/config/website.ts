@@ -113,6 +113,11 @@ export const websiteConfig: WebsiteConfig = {
     allowedTypes: DEFAULT_ALLOWED_TYPES,
     userFilesFolder: DEFAULT_USER_FILES_FOLDER,
   },
+  desktopDownload: {
+    version: '1.1.8',
+    macKey: 'downloads/DeskPet-1.1.8-universal.dmg',
+    windowsKey: 'downloads/DeskPet-Setup-1.1.8.exe',
+  },
   payment: {
     enable: isPaymentEnabled,
     provider: isPaymentEnabled ? paymentProvider : undefined,

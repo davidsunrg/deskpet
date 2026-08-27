@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { getBaseUrl } from '@/lib/urls';
 import { getSortedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
+import { petDetailRoute } from '@/lib/routes';
 import {
   baseLocale,
   isLocalizedPath,
@@ -9,6 +10,7 @@ import {
   locales,
   localizeHref,
 } from '@/lib/locale';
+import { listPetResources } from '@/utils/pets/pet-resources';
 
 /**
  * Dynamic sitemap.xml
@@ -25,8 +27,16 @@ export const Route = createFileRoute('/sitemap.xml')({
           priority?: string;
         }[] = [
           { path: '/', changefreq: 'daily', priority: '1.0' },
+          { path: '/playground', changefreq: 'weekly' },
+          { path: '/download', changefreq: 'monthly' },
+          { path: '/tools/desktop-pet-maker', changefreq: 'monthly' },
+          { path: '/tools/pet-video-maker', changefreq: 'monthly' },
+          { path: '/pets', changefreq: 'weekly' },
+          { path: '/p', changefreq: 'weekly' },
           { path: '/about', changefreq: 'monthly' },
           { path: '/contact', changefreq: 'monthly' },
+          { path: '/health', changefreq: 'monthly' },
+          { path: '/expense', changefreq: 'monthly' },
           { path: '/terms', changefreq: 'monthly' },
           { path: '/privacy', changefreq: 'monthly' },
           { path: '/cookie', changefreq: 'monthly' },
@@ -81,6 +91,10 @@ export const Route = createFileRoute('/sitemap.xml')({
           )
           .join('\n');
 
+        const petDetailPart = listPetResources({ visibleIn: 'detail' })
+          .map((resource) => urlEntry(petDetailRoute(resource.id)))
+          .join('\n');
+
         let blogPart = '';
         if (websiteConfig.blog?.enable) {
           const posts = getSortedPosts(baseLocale);
@@ -98,6 +112,7 @@ export const Route = createFileRoute('/sitemap.xml')({
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${staticPart}
+${petDetailPart ? `\n${petDetailPart}` : ''}
 ${blogPart ? `\n${blogPart}` : ''}
 </urlset>`;
 

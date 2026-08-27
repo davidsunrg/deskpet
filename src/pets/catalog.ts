@@ -1,5 +1,7 @@
 import { getPublicPetMediaBase } from '@/lib/pet-media';
 import {
+  getPetResourceByIdOrBreed,
+  isPetResourceVisible,
   listPetResources,
   paginatePetResources,
   petResourceToPlaygroundPet,
@@ -9,7 +11,10 @@ import {
 } from '@/utils/pets/pet-resources';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import { PETS_PAGE_SIZE, type ShowcasePet } from '@/utils/showcase-pets';
-import { resolveCatalogPetCopyMap } from '@/pets/resolve-catalog-pet-copy';
+import {
+  resolveCatalogPetCopy,
+  resolveCatalogPetCopyMap,
+} from '@/pets/resolve-catalog-pet-copy';
 
 async function toShowcasePets(
   resources: PetResourceManifest[]
@@ -89,4 +94,39 @@ export async function paginateCatalogPets(
     page: result.page,
     totalPages: result.totalPages,
   };
+}
+
+/** Load one registry-backed public pet by id or breed key. */
+export async function getCatalogPetByBreed(
+  presetKey: string
+): Promise<ShowcasePet | null> {
+  const resource = getPetResourceByIdOrBreed(presetKey);
+  if (!resource || !isPetResourceVisible(resource, 'catalog')) return null;
+
+  const copy = await resolveCatalogPetCopy(resource.breed);
+  const publicStorageBase = getPublicPetMediaBase();
+
+  return petResourceToShowcasePet(resource, {
+    publicStorageBase,
+    breedLabel: copy.breedLabel,
+    description: copy.description,
+  });
+}
+
+/** Related registry pets for a detail page (excludes current id or breed key). */
+export async function listRelatedCatalogPets(
+  presetKey: string,
+  limit = 4
+): Promise<ShowcasePet[]> {
+  const current = getPetResourceByIdOrBreed(presetKey);
+  const resources = listPetResources({ visibleIn: 'catalog' })
+    .filter(
+      (resource) =>
+        resource.id !== current?.id &&
+        resource.id !== presetKey &&
+        resource.breed !== presetKey
+    )
+    .slice(0, Math.max(0, limit));
+
+  return toShowcasePets(resources);
 }

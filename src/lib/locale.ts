@@ -97,6 +97,13 @@ export const LOCALIZED_PATHS = new Set([
   '/pricing',
   '/privacy',
   '/terms',
+  '/download',
+  '/health',
+  '/expense',
+  '/pets',
+  '/p',
+  '/tools/desktop-pet-maker',
+  '/tools/pet-video-maker',
 ]);
 
 /**
@@ -106,5 +113,7 @@ export const LOCALIZED_PATHS = new Set([
  */
 export function isLocalizedPath(path: string): boolean {
   if (LOCALIZED_PATHS.has(path)) return true;
-  return path.startsWith('/blog/');
+  if (path.startsWith('/blog/')) return true;
+  if (path.startsWith('/p/')) return true;
+  return false;
 }

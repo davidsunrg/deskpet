@@ -14,6 +14,14 @@ export interface WebsiteConfig {
   cache?: CacheConfig;
   storage?: StorageConfig;
   payment?: PaymentConfig;
+  desktopDownload?: DesktopDownloadConfig;
+}
+
+/** Public desktop installer object keys (relative to STORAGE_PUBLIC_URL). */
+export interface DesktopDownloadConfig {
+  version?: string;
+  macKey?: string | null;
+  windowsKey?: string | null;
 }
 
 /** UI configuration */

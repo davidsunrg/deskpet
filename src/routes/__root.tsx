@@ -55,7 +55,7 @@ export const Route = createRootRouteWithContext<{
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { title: websiteConfig.metadata?.title },
         { name: 'description', content: websiteConfig.metadata?.description },
-        { name: 'theme-color', content: '#fffdf8' },
+        { name: 'theme-color', content: '#4edfa6' },
         // Default OG / Twitter / canonical — pages with their own head()
         // override these with page-specific values. These ensure 404 / error
         // pages and any future route that forgets to call seo() still get
@@ -132,7 +132,6 @@ function RootComponent() {
   const marketingIdentity = Route.useLoaderData();
   const canonicalPathname = getCanonicalPathname(pathname);
   const matches = useRouterState({ select: (s) => s.matches }) ?? [];
-  const isPlayground = canonicalPathname === Routes.Playground;
   const isAuthPages = canonicalPathname.startsWith(Routes.Auth);
   const isProtectedPages =
     canonicalPathname.startsWith(Routes.Admin) ||
@@ -144,7 +143,7 @@ function RootComponent() {
     canonicalPathname !== '' &&
     matches.length <= 1;
 
-  if (isAuthPages || isProtectedPages || isNotFound || isPlayground) {
+  if (isAuthPages || isProtectedPages || isNotFound) {
     return (
       <div className="flex min-h-screen flex-col">
         <main id="main-content" className="flex-1">

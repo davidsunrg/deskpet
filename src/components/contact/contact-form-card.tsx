@@ -1,10 +1,12 @@
-import { m } from '@/locale/paraglide/messages';
+'use client';
+
 import { sendContactMessage } from '@/api/contact';
 import { FormError } from '@/components/shared/form-error';
 import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -19,45 +21,52 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from '@/lib/deskpet-i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-const schema = z.object({
-  name: z.string().min(3, m.contact_name_min()).max(30, m.contact_name_max()),
-  email: z.email(m.contact_email_invalid()),
-  message: z
-    .string()
-    .min(10, m.contact_message_min())
-    .max(500, m.contact_message_max()),
-});
-type FormValues = z.infer<typeof schema>;
+
 export function ContactFormCard() {
+  const t = useTranslations('ContactPage.form');
   const [error, setError] = useState<string | undefined>();
+
+  const formSchema = z.object({
+    name: z.string().min(3, t('nameMinLength')).max(30, t('nameMaxLength')),
+    email: z.email(t('emailValidation')),
+    message: z
+      .string()
+      .min(10, t('messageMinLength'))
+      .max(500, t('messageMaxLength')),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
+
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(formSchema),
     defaultValues: { name: '', email: '', message: '' },
   });
   const isPending = form.formState.isSubmitting;
+
   async function onSubmit(values: FormValues) {
     setError(undefined);
     try {
       await sendContactMessage({ data: values });
-      toast.success(m.contact_success());
+      toast.success(t('success'));
       form.reset();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : m.contact_error();
+      const msg = err instanceof Error ? err.message : t('fail');
       setError(msg);
       toast.error(msg);
     }
   }
+
   return (
     <Card className="mx-auto max-w-lg overflow-hidden pt-6 pb-0">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          {m.contact_form_title()}
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold">{t('title')}</CardTitle>
+        <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
@@ -67,12 +76,9 @@ export function ContactFormCard() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{m.contact_name()}</FormLabel>
+                  <FormLabel>{t('name')}</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={m.contact_placeholder_name()}
-                      {...field}
-                    />
+                    <Input placeholder={t('name')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,13 +89,9 @@ export function ContactFormCard() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{m.contact_email()}</FormLabel>
+                  <FormLabel>{t('email')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder={m.contact_placeholder_email()}
-                      {...field}
-                    />
+                    <Input type="email" placeholder={t('email')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,13 +102,9 @@ export function ContactFormCard() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{m.contact_message()}</FormLabel>
+                  <FormLabel>{t('message')}</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder={m.contact_placeholder_message()}
-                      rows={3}
-                      {...field}
-                    />
+                    <Textarea placeholder={t('message')} rows={3} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,7 +114,7 @@ export function ContactFormCard() {
           </CardContent>
           <CardFooter className="mt-6 flex items-center justify-between rounded-none border-t bg-muted px-6 py-4">
             <Button type="submit" disabled={isPending}>
-              {isPending ? m.contact_sending() : m.contact_send()}
+              {isPending ? t('submitting') : t('submit')}
             </Button>
           </CardFooter>
         </form>

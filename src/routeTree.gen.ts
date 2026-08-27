@@ -13,6 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DownloadRouteImport } from './routes/download'
+import { Route as ExpenseRouteImport } from './routes/expense'
+import { Route as HealthRouteImport } from './routes/health'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
 import { Route as PetsRouteImport } from './routes/pets'
 import { Route as PlaygroundRouteImport } from './routes/playground'
@@ -41,6 +44,8 @@ import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardActionsRouteImport } from './routes/dashboard/actions'
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
+import { Route as PIndexRouteImport } from './routes/p/index'
+import { Route as PSlugRouteImport } from './routes/p/$slug'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
 import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
@@ -49,6 +54,8 @@ import { Route as SettingsNotificationsRouteImport } from './routes/settings/not
 import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
+import { Route as ToolsDesktopPetMakerRouteImport } from './routes/tools/desktop-pet-maker'
+import { Route as ToolsPetVideoMakerRouteImport } from './routes/tools/pet-video-maker'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
 import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
@@ -74,6 +81,21 @@ const AuthRoute = AuthRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DownloadRoute = DownloadRouteImport.update({
+  id: '/download',
+  path: '/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpenseRoute = ExpenseRouteImport.update({
+  id: '/expense',
+  path: '/expense',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthRoute = HealthRouteImport.update({
+  id: '/health',
+  path: '/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
@@ -216,6 +238,16 @@ const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
   path: '/overview',
   getParentRoute: () => DashboardRoute,
 } as any)
+const PIndexRoute = PIndexRouteImport.update({
+  id: '/p/',
+  path: '/p/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PSlugRoute = PSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -256,6 +288,16 @@ const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
   path: '/security',
   getParentRoute: () => SettingsRoute,
 } as any)
+const ToolsDesktopPetMakerRoute = ToolsDesktopPetMakerRouteImport.update({
+  id: '/tools/desktop-pet-maker',
+  path: '/tools/desktop-pet-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsPetVideoMakerRoute = ToolsPetVideoMakerRouteImport.update({
+  id: '/tools/pet-video-maker',
+  path: '/tools/pet-video-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -292,6 +334,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
+  '/download': typeof DownloadRoute
+  '/expense': typeof ExpenseRoute
+  '/health': typeof HealthRoute
   '/manifest.json': typeof ManifestDotjsonRoute
   '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
@@ -317,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/p/$slug': typeof PSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -324,9 +370,12 @@ export interface FileRoutesByFullPath {
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
+  '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
+  '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/p/': typeof PIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
@@ -338,6 +387,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/download': typeof DownloadRoute
+  '/expense': typeof ExpenseRoute
+  '/health': typeof HealthRoute
   '/manifest.json': typeof ManifestDotjsonRoute
   '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
@@ -362,6 +414,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/p/$slug': typeof PSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -369,9 +422,12 @@ export interface FileRoutesByTo {
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
+  '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
+  '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/p': typeof PIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
@@ -386,6 +442,9 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
+  '/download': typeof DownloadRoute
+  '/expense': typeof ExpenseRoute
+  '/health': typeof HealthRoute
   '/manifest.json': typeof ManifestDotjsonRoute
   '/pets': typeof PetsRoute
   '/playground': typeof PlaygroundRoute
@@ -411,6 +470,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/p/$slug': typeof PSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -418,9 +478,12 @@ export interface FileRoutesById {
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
+  '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
+  '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/p/': typeof PIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
@@ -436,6 +499,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/dashboard'
+    | '/download'
+    | '/expense'
+    | '/health'
     | '/manifest.json'
     | '/pets'
     | '/playground'
@@ -461,6 +527,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/actions'
     | '/dashboard/overview'
+    | '/p/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -468,9 +535,12 @@ export interface FileRouteTypes {
     | '/settings/payment'
     | '/settings/profile'
     | '/settings/security'
+    | '/tools/desktop-pet-maker'
+    | '/tools/pet-video-maker'
     | '/admin/'
     | '/blog/'
     | '/dashboard/'
+    | '/p/'
     | '/settings/'
     | '/api/auth/$'
     | '/api/storage/file'
@@ -482,6 +552,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/download'
+    | '/expense'
+    | '/health'
     | '/manifest.json'
     | '/pets'
     | '/playground'
@@ -506,6 +579,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/actions'
     | '/dashboard/overview'
+    | '/p/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -513,9 +587,12 @@ export interface FileRouteTypes {
     | '/settings/payment'
     | '/settings/profile'
     | '/settings/security'
+    | '/tools/desktop-pet-maker'
+    | '/tools/pet-video-maker'
     | '/admin'
     | '/blog'
     | '/dashboard'
+    | '/p'
     | '/settings'
     | '/api/auth/$'
     | '/api/storage/file'
@@ -529,6 +606,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/dashboard'
+    | '/download'
+    | '/expense'
+    | '/health'
     | '/manifest.json'
     | '/pets'
     | '/playground'
@@ -554,6 +634,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/actions'
     | '/dashboard/overview'
+    | '/p/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -561,9 +642,12 @@ export interface FileRouteTypes {
     | '/settings/payment'
     | '/settings/profile'
     | '/settings/security'
+    | '/tools/desktop-pet-maker'
+    | '/tools/pet-video-maker'
     | '/admin/'
     | '/blog/'
     | '/dashboard/'
+    | '/p/'
     | '/settings/'
     | '/api/auth/$'
     | '/api/storage/file'
@@ -578,6 +662,9 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
+  DownloadRoute: typeof DownloadRoute
+  ExpenseRoute: typeof ExpenseRoute
+  HealthRoute: typeof HealthRoute
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
   PetsRoute: typeof PetsRoute
   PlaygroundRoute: typeof PlaygroundRoute
@@ -594,7 +681,11 @@ export interface RootRouteChildren {
   testsTestErrorRoute: typeof testsTestErrorRoute
   ApiPingRoute: typeof ApiPingRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  PSlugRoute: typeof PSlugRoute
+  ToolsDesktopPetMakerRoute: typeof ToolsDesktopPetMakerRoute
+  ToolsPetVideoMakerRoute: typeof ToolsPetVideoMakerRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  PIndexRoute: typeof PIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiStorageFileRoute: typeof ApiStorageFileRoute
   ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
@@ -631,6 +722,27 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download': {
+      id: '/download'
+      path: '/download'
+      fullPath: '/download'
+      preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expense': {
+      id: '/expense'
+      path: '/expense'
+      fullPath: '/expense'
+      preLoaderRoute: typeof ExpenseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health': {
+      id: '/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/manifest.json': {
@@ -829,6 +941,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardOverviewRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/p/': {
+      id: '/p/'
+      path: '/p'
+      fullPath: '/p/'
+      preLoaderRoute: typeof PIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$slug': {
+      id: '/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/p/$slug'
+      preLoaderRoute: typeof PSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings/': {
       id: '/settings/'
       path: '/'
@@ -884,6 +1010,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/security'
       preLoaderRoute: typeof SettingsSecurityRouteImport
       parentRoute: typeof SettingsRoute
+    }
+    '/tools/desktop-pet-maker': {
+      id: '/tools/desktop-pet-maker'
+      path: '/tools/desktop-pet-maker'
+      fullPath: '/tools/desktop-pet-maker'
+      preLoaderRoute: typeof ToolsDesktopPetMakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/pet-video-maker': {
+      id: '/tools/pet-video-maker'
+      path: '/tools/pet-video-maker'
+      fullPath: '/tools/pet-video-maker'
+      preLoaderRoute: typeof ToolsPetVideoMakerRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -1009,6 +1149,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
+  DownloadRoute: DownloadRoute,
+  ExpenseRoute: ExpenseRoute,
+  HealthRoute: HealthRoute,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
   PetsRoute: PetsRoute,
   PlaygroundRoute: PlaygroundRoute,
@@ -1025,7 +1168,11 @@ const rootRouteChildren: RootRouteChildren = {
   testsTestErrorRoute: testsTestErrorRoute,
   ApiPingRoute: ApiPingRoute,
   BlogSlugRoute: BlogSlugRoute,
+  PSlugRoute: PSlugRoute,
+  ToolsDesktopPetMakerRoute: ToolsDesktopPetMakerRoute,
+  ToolsPetVideoMakerRoute: ToolsPetVideoMakerRoute,
   BlogIndexRoute: BlogIndexRoute,
+  PIndexRoute: PIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiStorageFileRoute: ApiStorageFileRoute,
   ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,

@@ -47,14 +47,14 @@ export function useNavbarLinks(): MenuItemConfig[] {
         {
           title: t('resources.items.health.title'),
           description: t('resources.items.health.description'),
-          href: '/health',
+          href: Routes.Health,
           icon: HeartPulseIcon,
           external: false,
         },
         {
           title: t('resources.items.expense.title'),
           description: t('resources.items.expense.description'),
-          href: '/expense',
+          href: Routes.Expense,
           icon: ReceiptTextIcon,
           external: false,
         },

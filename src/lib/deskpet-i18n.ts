@@ -28,6 +28,7 @@ function interpolate(
 export type DeskPetTranslator = {
   (key: string, values?: Record<string, string | number>): string;
   has: (key: string) => boolean;
+  raw: (key: string) => unknown;
 };
 
 function createTranslator(
@@ -53,6 +54,10 @@ function createTranslator(
     return typeof value === 'string';
   };
 
+  t.raw = (key: string) => {
+    return base ? resolvePath(base as MessageTree, key) : undefined;
+  };
+
   return t;
 }
 
@@ -73,4 +78,14 @@ export async function getTranslations(options: {
 }): Promise<DeskPetTranslator> {
   const locale = options.locale ?? getLocale();
   return createTranslator(options.namespace, locale);
+}
+
+/** Sync dotted-path lookup for route `head()` metadata. */
+export function getDeskPetMessage(
+  path: string,
+  locale: Locale = getLocale()
+): string {
+  const tree = messagesByLocale[locale] ?? messagesByLocale.en;
+  const value = resolvePath(tree, path);
+  return typeof value === 'string' ? value : path;
 }

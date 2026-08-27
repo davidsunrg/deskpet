@@ -1,5 +1,6 @@
 import { HomePage } from '@/components/blocks/homepage';
 import { websiteConfig } from '@/config/website';
+import { getDeskPetMessage } from '@/lib/deskpet-i18n';
 import { seo } from '@/lib/seo';
 import { getCanonicalUrl } from '@/lib/urls';
 import { getLocale, localeConfig } from '@/lib/locale';
@@ -8,8 +9,8 @@ import { createFileRoute } from '@tanstack/react-router';
 export const Route = createFileRoute('/')({
   head: () => {
     const name = websiteConfig.metadata?.name ?? '';
-    const title = websiteConfig.metadata?.title ?? '';
-    const description = websiteConfig.metadata?.description ?? '';
+    const title = `Desktop Pet for Free – Play Online & Download | ${getDeskPetMessage('Metadata.title')}`;
+    const description = getDeskPetMessage('Metadata.description');
     const url = getCanonicalUrl('/');
     const inLanguage = localeConfig[getLocale()].hreflang;
     const webSiteJsonLd = {

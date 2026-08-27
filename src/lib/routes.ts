@@ -13,6 +13,8 @@ export const Routes = {
   Pets: '/pets',
   PetHub: '/p',
   Download: '/download',
+  Health: '/health',
+  Expense: '/expense',
   DesktopPetCreator: '/tools/desktop-pet-maker',
   PetVideoCreator: '/tools/pet-video-maker',
 
