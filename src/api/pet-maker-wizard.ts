@@ -1,8 +1,5 @@
 import { getBaseUrl } from '@/lib/urls';
-import {
-  deleteObject,
-  getPresignedUploadUrl,
-} from '@/lib/storage/r2-s3';
+import { deleteObject, getPresignedUploadUrl } from '@/lib/storage/r2-s3';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
 import { createPetFromDraft } from '@/server/pets/create-pet-from-draft';
 import { listHeroPets } from '@/pets/catalog';
@@ -123,6 +120,8 @@ export const listUserPetsFn = createServerFn({ method: 'GET' })
         name: pet.name,
         species: pet.species,
         breed: pet.breed,
+        sex: pet.sex,
+        avatar: pet.avatar,
         createdAt: pet.createdAt,
       })
       .from(pet)

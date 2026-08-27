@@ -20,8 +20,8 @@ const navbar = en.Marketing.navbar as {
 export function getMarketingAvatarLinks(): MenuItemConfig[] {
   return [
     {
-      title: 'Actions',
-      href: Routes.DashboardActions,
+      title: 'My Pets',
+      href: Routes.DashboardPets,
       icon: IconLayoutDashboard,
     },
     {

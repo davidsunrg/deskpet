@@ -3,6 +3,6 @@ import { Routes } from '@/lib/routes';
 
 export const Route = createFileRoute('/dashboard/')({
   beforeLoad: () => {
-    throw redirect({ to: Routes.DashboardActions });
+    throw redirect({ to: Routes.DashboardPets });
   },
 });

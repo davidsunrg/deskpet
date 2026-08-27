@@ -45,6 +45,7 @@ import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardActionsRouteImport } from './routes/dashboard/actions'
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard/overview'
+import { Route as DashboardPetsRouteImport } from './routes/dashboard/pets'
 import { Route as PIndexRouteImport } from './routes/p/index'
 import { Route as PSlugRouteImport } from './routes/p/$slug'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -246,6 +247,11 @@ const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
   path: '/overview',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPetsRoute = DashboardPetsRouteImport.update({
+  id: '/pets',
+  path: '/pets',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const PIndexRoute = PIndexRouteImport.update({
   id: '/p/',
   path: '/p/',
@@ -382,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/pets': typeof DashboardPetsRoute
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -437,6 +444,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/pets': typeof DashboardPetsRoute
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -496,6 +504,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/actions': typeof DashboardActionsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
+  '/dashboard/pets': typeof DashboardPetsRoute
   '/p/$slug': typeof PSlugRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/notifications': typeof SettingsNotificationsRoute
@@ -556,6 +565,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/actions'
     | '/dashboard/overview'
+    | '/dashboard/pets'
     | '/p/$slug'
     | '/settings/billing'
     | '/settings/notifications'
@@ -611,6 +621,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/actions'
     | '/dashboard/overview'
+    | '/dashboard/pets'
     | '/p/$slug'
     | '/settings/billing'
     | '/settings/notifications'
@@ -669,6 +680,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/actions'
     | '/dashboard/overview'
+    | '/dashboard/pets'
     | '/p/$slug'
     | '/settings/billing'
     | '/settings/notifications'
@@ -989,6 +1001,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardOverviewRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/pets': {
+      id: '/dashboard/pets'
+      path: '/pets'
+      fullPath: '/dashboard/pets'
+      preLoaderRoute: typeof DashboardPetsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/p/': {
       id: '/p/'
       path: '/p'
@@ -1167,12 +1186,14 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 interface DashboardRouteChildren {
   DashboardActionsRoute: typeof DashboardActionsRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
+  DashboardPetsRoute: typeof DashboardPetsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActionsRoute: DashboardActionsRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
+  DashboardPetsRoute: DashboardPetsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
