@@ -6,7 +6,7 @@ dist-ssr
 count.txt
 .env
 .env.local
-.env.production
+.env.prod
 .dev.vars
 .nitro
 .tanstack
