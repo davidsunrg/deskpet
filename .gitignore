@@ -53,8 +53,4 @@ logs/security/
 # Firecrawl research cache
 .firecrawl/
 
-# Playwright
-playwright-report
-test-results
-
 /references/

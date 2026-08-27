@@ -1,6 +1,6 @@
 import { m } from '@/locale/paraglide/messages';
 import { authClient } from '@/auth/client';
-import FaqSection from '@/components/blocks/faqs';
+import FaqSection from '@/components/blocks/faqs/faqs';
 import Container from '@/components/layout/container';
 import { PricingTable } from '@/components/pricing/pricing-table';
 import { websiteConfig } from '@/config/website';

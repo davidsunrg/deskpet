@@ -50,26 +50,6 @@ const pages = defineCollection({
   },
 });
 
-const changelog = defineCollection({
-  name: 'changelog',
-  directory: 'content/changelog',
-  include: '**/*.md',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.string(),
-    version: z.string(),
-    published: z.boolean().default(true),
-    content: z.string(),
-  }),
-  transform: (doc) => {
-    const { locale, slug } = getLocaleSlug(
-      (doc as { _meta: { path: string } })._meta.path
-    );
-    return { ...doc, locale, slug };
-  },
-});
-
 export default defineConfig({
-  collections: [blog, pages, changelog],
+  collections: [blog, pages],
 });

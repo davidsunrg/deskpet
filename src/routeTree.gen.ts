@@ -23,12 +23,8 @@ import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
 import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
 import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
 import { Route as pagesAboutRouteImport } from './routes/(pages)/about'
-import { Route as pagesAiRouteImport } from './routes/(pages)/ai'
-import { Route as pagesChangelogRouteImport } from './routes/(pages)/changelog'
 import { Route as pagesContactRouteImport } from './routes/(pages)/contact'
 import { Route as pagesPricingRouteImport } from './routes/(pages)/pricing'
-import { Route as pagesRoadmapRouteImport } from './routes/(pages)/roadmap'
-import { Route as pagesWaitlistRouteImport } from './routes/(pages)/waitlist'
 import { Route as testsTest404RouteImport } from './routes/(tests)/test-404'
 import { Route as testsTestErrorRouteImport } from './routes/(tests)/test-error'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -54,7 +50,6 @@ import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as ApiE2eUsersRouteImport } from './routes/api/e2e/users'
 import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
 import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
@@ -131,16 +126,6 @@ const pagesAboutRoute = pagesAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const pagesAiRoute = pagesAiRouteImport.update({
-  id: '/(pages)/ai',
-  path: '/ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesChangelogRoute = pagesChangelogRouteImport.update({
-  id: '/(pages)/changelog',
-  path: '/changelog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const pagesContactRoute = pagesContactRouteImport.update({
   id: '/(pages)/contact',
   path: '/contact',
@@ -149,16 +134,6 @@ const pagesContactRoute = pagesContactRouteImport.update({
 const pagesPricingRoute = pagesPricingRouteImport.update({
   id: '/(pages)/pricing',
   path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesRoadmapRoute = pagesRoadmapRouteImport.update({
-  id: '/(pages)/roadmap',
-  path: '/roadmap',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const pagesWaitlistRoute = pagesWaitlistRouteImport.update({
-  id: '/(pages)/waitlist',
-  path: '/waitlist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const testsTest404Route = testsTest404RouteImport.update({
@@ -286,11 +261,6 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiE2eUsersRoute = ApiE2eUsersRouteImport.update({
-  id: '/api/e2e/users',
-  path: '/api/e2e/users',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiStorageFileRoute = ApiStorageFileRouteImport.update({
   id: '/api/storage/file',
   path: '/api/storage/file',
@@ -332,12 +302,8 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
   '/about': typeof pagesAboutRoute
-  '/ai': typeof pagesAiRoute
-  '/changelog': typeof pagesChangelogRoute
   '/contact': typeof pagesContactRoute
   '/pricing': typeof pagesPricingRoute
-  '/roadmap': typeof pagesRoadmapRoute
-  '/waitlist': typeof pagesWaitlistRoute
   '/test-404': typeof testsTest404Route
   '/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
@@ -363,7 +329,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/e2e/users': typeof ApiE2eUsersRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -382,12 +347,8 @@ export interface FileRoutesByTo {
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
   '/about': typeof pagesAboutRoute
-  '/ai': typeof pagesAiRoute
-  '/changelog': typeof pagesChangelogRoute
   '/contact': typeof pagesContactRoute
   '/pricing': typeof pagesPricingRoute
-  '/roadmap': typeof pagesRoadmapRoute
-  '/waitlist': typeof pagesWaitlistRoute
   '/test-404': typeof testsTest404Route
   '/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
@@ -413,7 +374,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/e2e/users': typeof ApiE2eUsersRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -436,12 +396,8 @@ export interface FileRoutesById {
   '/(legals)/privacy': typeof legalsPrivacyRoute
   '/(legals)/terms': typeof legalsTermsRoute
   '/(pages)/about': typeof pagesAboutRoute
-  '/(pages)/ai': typeof pagesAiRoute
-  '/(pages)/changelog': typeof pagesChangelogRoute
   '/(pages)/contact': typeof pagesContactRoute
   '/(pages)/pricing': typeof pagesPricingRoute
-  '/(pages)/roadmap': typeof pagesRoadmapRoute
-  '/(pages)/waitlist': typeof pagesWaitlistRoute
   '/(tests)/test-404': typeof testsTest404Route
   '/(tests)/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
@@ -467,7 +423,6 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/e2e/users': typeof ApiE2eUsersRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -491,12 +446,8 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/about'
-    | '/ai'
-    | '/changelog'
     | '/contact'
     | '/pricing'
-    | '/roadmap'
-    | '/waitlist'
     | '/test-404'
     | '/test-error'
     | '/admin/users'
@@ -522,7 +473,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/settings/'
     | '/api/auth/$'
-    | '/api/e2e/users'
     | '/api/storage/file'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -541,12 +491,8 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/about'
-    | '/ai'
-    | '/changelog'
     | '/contact'
     | '/pricing'
-    | '/roadmap'
-    | '/waitlist'
     | '/test-404'
     | '/test-error'
     | '/admin/users'
@@ -572,7 +518,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/settings'
     | '/api/auth/$'
-    | '/api/e2e/users'
     | '/api/storage/file'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -594,12 +539,8 @@ export interface FileRouteTypes {
     | '/(legals)/privacy'
     | '/(legals)/terms'
     | '/(pages)/about'
-    | '/(pages)/ai'
-    | '/(pages)/changelog'
     | '/(pages)/contact'
     | '/(pages)/pricing'
-    | '/(pages)/roadmap'
-    | '/(pages)/waitlist'
     | '/(tests)/test-404'
     | '/(tests)/test-error'
     | '/admin/users'
@@ -625,7 +566,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/settings/'
     | '/api/auth/$'
-    | '/api/e2e/users'
     | '/api/storage/file'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -648,19 +588,14 @@ export interface RootRouteChildren {
   legalsPrivacyRoute: typeof legalsPrivacyRoute
   legalsTermsRoute: typeof legalsTermsRoute
   pagesAboutRoute: typeof pagesAboutRoute
-  pagesAiRoute: typeof pagesAiRoute
-  pagesChangelogRoute: typeof pagesChangelogRoute
   pagesContactRoute: typeof pagesContactRoute
   pagesPricingRoute: typeof pagesPricingRoute
-  pagesRoadmapRoute: typeof pagesRoadmapRoute
-  pagesWaitlistRoute: typeof pagesWaitlistRoute
   testsTest404Route: typeof testsTest404Route
   testsTestErrorRoute: typeof testsTestErrorRoute
   ApiPingRoute: typeof ApiPingRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiE2eUsersRoute: typeof ApiE2eUsersRoute
   ApiStorageFileRoute: typeof ApiStorageFileRoute
   ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
   ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
@@ -768,20 +703,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof pagesAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(pages)/ai': {
-      id: '/(pages)/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof pagesAiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/changelog': {
-      id: '/(pages)/changelog'
-      path: '/changelog'
-      fullPath: '/changelog'
-      preLoaderRoute: typeof pagesChangelogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(pages)/contact': {
       id: '/(pages)/contact'
       path: '/contact'
@@ -794,20 +715,6 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof pagesPricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/roadmap': {
-      id: '/(pages)/roadmap'
-      path: '/roadmap'
-      fullPath: '/roadmap'
-      preLoaderRoute: typeof pagesRoadmapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(pages)/waitlist': {
-      id: '/(pages)/waitlist'
-      path: '/waitlist'
-      fullPath: '/waitlist'
-      preLoaderRoute: typeof pagesWaitlistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(tests)/test-404': {
@@ -985,13 +892,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/e2e/users': {
-      id: '/api/e2e/users'
-      path: '/api/e2e/users'
-      fullPath: '/api/e2e/users'
-      preLoaderRoute: typeof ApiE2eUsersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/storage/file': {
       id: '/api/storage/file'
       path: '/api/storage/file'
@@ -1119,19 +1019,14 @@ const rootRouteChildren: RootRouteChildren = {
   legalsPrivacyRoute: legalsPrivacyRoute,
   legalsTermsRoute: legalsTermsRoute,
   pagesAboutRoute: pagesAboutRoute,
-  pagesAiRoute: pagesAiRoute,
-  pagesChangelogRoute: pagesChangelogRoute,
   pagesContactRoute: pagesContactRoute,
   pagesPricingRoute: pagesPricingRoute,
-  pagesRoadmapRoute: pagesRoadmapRoute,
-  pagesWaitlistRoute: pagesWaitlistRoute,
   testsTest404Route: testsTest404Route,
   testsTestErrorRoute: testsTestErrorRoute,
   ApiPingRoute: ApiPingRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiE2eUsersRoute: ApiE2eUsersRoute,
   ApiStorageFileRoute: ApiStorageFileRoute,
   ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
   ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,

@@ -18,7 +18,7 @@ export function MarketingLoginButton({
         type="button"
         className={cn(
           buttonVariants({ variant: 'outline', size: 'sm' }),
-          'cursor-pointer font-mono font-black',
+          'cursor-pointer text-[15px] font-bold font-sans',
           className
         )}
       >

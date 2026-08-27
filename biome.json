@@ -19,8 +19,6 @@
       "!node_modules",
       "!dist",
       "!build",
-      "!playwright-report",
-      "!test-results",
       "!.wrangler",
       "!.content-collections",
       "!.firecrawl",

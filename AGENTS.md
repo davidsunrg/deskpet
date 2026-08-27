@@ -12,12 +12,10 @@ This file provides guidance to Code Agents (Codex, Cursor, etc.) when working wi
 pnpm dev                    # Dev server on port 3000
 pnpm build                  # Production build
 pnpm deploy                 # Build + deploy to Cloudflare Workers
-pnpm e2e                    # Run local Playwright E2E tests
-pnpm e2e:ui                 # Run Playwright E2E in UI mode
-pnpm e2e:install            # Install Playwright browser binaries
 
 pnpm lint                   # Biome lint + format with auto-fix
-pnpm check                  # Biome lint (read-only, no auto-fix)
+pnpm check                  # Biome lint + unit tests (read-only biome)
+pnpm test                   # Run Vitest unit tests
 pnpm format                 # Biome format only
 pnpm knip                   # Find unused exports/dependencies
 
@@ -31,20 +29,6 @@ pnpm auth:schema:generate   # Regenerate Better Auth schema → src/db/auth.sche
 pnpm email:dev              # React Email preview on port 3333
 pnpm cf-typegen             # Generate Cloudflare Worker types (also runs on postinstall)
 ```
-
-Playwright E2E is configured under `tests/e2e/`. E2E is local-first: use it for feature completion, release checks, and large refactors; keep CI focused on fast checks unless a dedicated E2E environment is provisioned.
-
-### E2E Workflow
-
-Follow `Spec → Code → Verify → Test → Green` for user-facing changes:
-
-1. **Spec**: update `tests/e2e/TEST-CATALOG.md` with the acceptance journey.
-2. **Code**: implement the feature.
-3. **Verify**: run the app and walk the real UI in a browser.
-4. **Test**: add/update the relevant Playwright spec in `tests/e2e/specs/`.
-5. **Green**: run the related spec locally; run full `pnpm e2e` before releases or large refactors.
-
-The test-only helper route `src/routes/api/e2e/users.ts` is disabled unless Vite runs locally with `import.meta.env.DEV === true`, `MODE=e2e`, and a matching `x-e2e-secret`. Keep E2E test accounts scoped to `e2e-*@example.test`.
 
 ## Architecture
 
@@ -80,8 +64,7 @@ Incoming request → Cloudflare Worker (`src/server.ts`) → TanStack Start hand
 | `src/config/` | Site configuration (website.ts is the main config for features, pricing, metadata) |
 | `src/lib/` | Utilities (routes, SEO, formatters, markdown parsing) |
 | `src/hooks/` | React hooks (auth, payment, files, etc.) |
-| `content/` | Markdown content (blog, pages, changelog) for Content Collections |
-| `docs/` | Module-specific documentation (auth, db, payment, mail, storage, env, design) |
+| `content/` | Markdown content (blog, pages) for Content Collections |
 
 ### Database
 

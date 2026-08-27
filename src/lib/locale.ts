@@ -91,16 +91,12 @@ export const LOCALIZED_PATHS = new Set([
   '/',
   '/playground',
   '/about',
-  '/ai',
   '/blog',
-  '/changelog',
   '/contact',
   '/cookie',
   '/pricing',
   '/privacy',
-  '/roadmap',
   '/terms',
-  '/waitlist',
 ]);
 
 /**

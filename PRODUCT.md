@@ -22,7 +22,7 @@ TanStarter is the complete TanStack Start boilerplate for building profitable Sa
 
 - Buyer workflow: start at the docs site, clone or generate from the template, configure `.env` (build-time `VITE_` client vars; runtime server bindings/secrets), run `pnpm dev` on port 3000, customize `src/config/website.ts`, apply D1 migrations with `pnpm db:migrate:local|remote`, and ship with `pnpm deploy`.
 - Supporting surfaces: website tanstarter.dev, demo demo.tanstarter.dev, docs docs.tanstarter.dev, video tutorials on YouTube (@TanStarter), Discord community (mksaas.link/discord), support at support@tanstarter.dev.
-- Quality workflow: local-first Playwright E2E under `tests/e2e/` with the acceptance checklist in TEST-CATALOG.md; `pnpm verify:upgrade` gates releases. The E2E helper API only works in local Vite DEV with `MODE=e2e` and a matching secret.
+- Quality workflow: `pnpm check` (Biome + Vitest) and `pnpm build` before releases; `pnpm verify:upgrade` runs both.
 - The template is the upstream for the MkFastHQ product family; sibling checkouts (e.g. mkfast-app, mkfast-website) sync from it while preserving their own branding and product behavior.
 
 ## Capabilities and Constraints
@@ -65,7 +65,7 @@ Confirmed constraints:
 - src/config/website.ts — feature flags, providers, pricing, metadata, social links.
 - project.inlang/messages/en.json and zh.json — full site copy in English and Chinese.
 - content/ — blog posts, changelog, and legal pages in en/zh.
-- tests/e2e/TEST-CATALOG.md and specs — the acceptance journeys and E2E coverage.
+- tests/unit/ — Vitest coverage for auth and payment helpers.
 - public/ — logo.png, logo-dark.png, og.png, tanstarter.png, favicon set.
 - LICENSE — the TanStarter License terms.
 
@@ -75,7 +75,7 @@ Absent: no customer testimonials, case studies, revenue figures, or benchmark da
 
 1. **Time-to-revenue is the metric.** Every built-in capability exists to shorten the path from idea to a paid, deployed SaaS.
 2. **One deployable Worker.** The full stack should stay within Cloudflare Workers plus D1/R2/KV; avoid patterns that demand heavier infrastructure.
-3. **Production-ready defaults.** Auth, payments, email, storage, admin, SEO, and i18n work out of the box, with local-first E2E verification before release.
+3. **Production-ready defaults.** Auth, payments, email, storage, admin, SEO, and i18n work out of the box, with `pnpm check` and `pnpm build` before release.
 4. **Owned, not locked in.** Provider abstractions and standard tools (Drizzle, Better Auth, TanStack, shadcn/ui) let buyers swap pieces and keep ownership of their product.
 5. **Developer-grade clarity.** Code, docs, and UX speak precisely to technical users — no fluff, no unnecessary abstraction.
 

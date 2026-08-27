@@ -8,12 +8,12 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --background: #fbfaf7;
+  --foreground: #372733;
+  --card: #fffdf8;
+  --card-foreground: #372733;
+  --popover: #fffdf8;
+  --popover-foreground: #372733;
   --primary: oklch(0.553 0.195 38.402);
   --primary-foreground: oklch(0.98 0.016 73.684);
   --secondary: oklch(0.967 0.001 286.375);
@@ -41,27 +41,39 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* DeskPet brand palette */
-  --deskpet-ink: #3a2b36;
-  --deskpet-muted: #6b5d66;
-  --deskpet-mint: #55d9aa;
-  --deskpet-mint-hover: #3fc995;
-  --deskpet-mint-soft: #def7ed;
-  --deskpet-paper: #fffaf0;
-  --deskpet-cream: #fff2c8;
-  --deskpet-lavender: #eee5ff;
-  --deskpet-sun: #ffd767;
-  --deskpet-pink: #ef8ea3;
-  --deskpet-sky: #e5f3ff;
+  /* DeskPet brand palette (matches deskpet-next marketing chrome) */
+  --deskpet-ink: #372733;
+  --deskpet-muted: #78626f;
+  --deskpet-mint: #4edfa6;
+  --deskpet-mint-hover: #c8ef73;
+  --deskpet-mint-soft: #dff9ef;
+  --deskpet-paper: #fffdf8;
+  --deskpet-cream: #fff2cf;
+  --deskpet-lavender: #eadfff;
+  --deskpet-sun: #ffd45f;
+  --deskpet-pink: #ff8fca;
+  --deskpet-sky: #79dfff;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
+  --deskpet-ink: #f5efe8;
+  --deskpet-muted: #b7aea8;
+  --deskpet-mint: #4edfa6;
+  --deskpet-mint-hover: #c8ef73;
+  --deskpet-mint-soft: #2c3834;
+  --deskpet-paper: #1e1a1c;
+  --deskpet-cream: #3a3428;
+  --deskpet-lavender: #353040;
+  --deskpet-sun: #ffd45f;
+  --deskpet-pink: #ff8fca;
+  --deskpet-sky: #79dfff;
+
+  --background: #141214;
+  --foreground: #f5efe8;
+  --card: #1e1a1c;
+  --card-foreground: #f5efe8;
+  --popover: #1e1a1c;
+  --popover-foreground: #f5efe8;
   --primary: oklch(0.553 0.195 38.402);
   --primary-foreground: oklch(0.98 0.016 73.684);
   --secondary: oklch(0.274 0.006 286.033);
@@ -238,11 +250,28 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased text-foreground;
     font-weight: 400;
   }
   html {
     @apply scroll-smooth font-sans;
     color-scheme: light;
   }
+}
+
+body {
+  @apply overscroll-none bg-background;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--deskpet-ink) 22%, transparent) 0.8px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  background-repeat: repeat;
+}
+
+html.dark body {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--deskpet-ink) 12%, transparent) 0.8px,
+    transparent 1px
+  );
 }

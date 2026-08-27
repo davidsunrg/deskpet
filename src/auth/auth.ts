@@ -124,7 +124,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     // https://discord.com/channels/1300839113142046730/1300839113594769431/1454280549060444393
-    // Keep enabled for E2E helpers; marketing UI uses email OTP instead.
+    // Marketing UI uses email OTP; credential login stays available when enabled.
     enabled:
       (websiteConfig.auth?.enableCredentialLogin ?? false) ||
       (websiteConfig.auth?.enableEmailOtpLogin ?? false),

@@ -16,7 +16,7 @@ import { loadEnv } from 'vite';
  * re-running with the same URL is safe.
  *
  * Requires WAFFO_MERCHANT_ID and WAFFO_PRIVATE_KEY in .env / .env.local /
- * .env.e2e. See docs/waffo/SKILL.md → Configuring Webhook URLs.
+ * .env.e2e. Configure the webhook URL in the Waffo merchant dashboard.
  */
 
 const DEFAULT_EVENTS = [

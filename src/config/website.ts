@@ -77,7 +77,7 @@ export const websiteConfig: WebsiteConfig = {
     enableDeleteUser: true,
   },
   blog: {
-    enable: true,
+    enable: false,
     paginationSize: 6,
   },
   mail: {
@@ -92,7 +92,7 @@ export const websiteConfig: WebsiteConfig = {
     autoSubscribeAfterSignUp: true,
   },
   notification: {
-    enable: import.meta.env.MODE !== 'e2e',
+    enable: true,
     provider: 'discord',
   },
   cache: {
