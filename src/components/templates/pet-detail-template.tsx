@@ -25,7 +25,7 @@ import {
 import type { PetResourceFaq } from '@/utils/pets/pet-resource-types';
 import type { PetDetail } from '@/utils/pets/showcase-pet-to-detail';
 import type { ShowcasePet } from '@/utils/showcase-pets';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { ImageIcon, PlayIcon, SparklesIcon, VideoIcon } from 'lucide-react';
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 

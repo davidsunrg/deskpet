@@ -1,18 +1,16 @@
-'use client';
-
 import Container from '@/components/layout/container';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { petDetailRoute } from '@/lib/routes';
-import {
-  isPetResourceVisible,
-  listPetResources,
-} from '@/utils/pets/pet-resources';
+import type { PetResourceManifest } from '@/utils/pets/pet-resource-types';
+import { isPetResourceVisible } from '@/utils/pets/pet-resources';
 
-export function PetHubPage() {
-  const resources = listPetResources({ visibleIn: 'detail' });
+type PetHubPageProps = {
+  resources: PetResourceManifest[];
+};
 
+export function PetHubPage({ resources }: PetHubPageProps) {
   return (
     <Container className="px-4 py-16 md:py-20">
       <header className="max-w-3xl">
