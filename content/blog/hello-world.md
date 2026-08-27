@@ -2,7 +2,8 @@
 title: Hello World
 description: A simple introduction to the blog and what you can expect.
 date: 2026-02-11
-category: General
+categories:
+  - general
 image: /images/blog-hello-world.webp
 ---
 

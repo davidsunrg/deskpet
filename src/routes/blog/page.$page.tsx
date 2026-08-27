@@ -12,22 +12,29 @@ import { getCanonicalUrlForLocale } from '@/lib/urls';
 import { websiteConfig } from '@/config/website';
 import { seo } from '@/lib/seo';
 
-export const Route = createFileRoute('/blog/')({
-  loader: () => ({
-    ...getPaginatedPosts({ page: 1 }),
-    categoryList: getCategories(),
-  }),
-  head: ({ loaderData }) => {
+export const Route = createFileRoute('/blog/page/$page')({
+  loader: ({ params }) => {
+    const page = Number(params.page);
+    if (!Number.isFinite(page) || page < 2) {
+      throw notFound();
+    }
+    return {
+      ...getPaginatedPosts({ page }),
+      categoryList: getCategories(),
+    };
+  },
+  head: ({ loaderData, params }) => {
     const path = '/blog';
-    const currentPage = loaderData?.currentPage ?? 1;
+    const currentPage = loaderData?.currentPage ?? Number(params.page);
     const totalPages = loaderData?.totalPages ?? 1;
+    const pageSuffix = ` - Page ${currentPage}`;
     const metadata = seo(path, {
-      title: deskpetPageTitle(getDeskPetMessage('BlogPage.title')),
+      title: `${deskpetPageTitle(getDeskPetMessage('BlogPage.title'))}${pageSuffix}`,
       description: getDeskPetMessage('BlogPage.description'),
     });
-    const localizedUrl = (page?: number) => {
+    const localizedUrl = (page: number) => {
       const base = getCanonicalUrlForLocale(path, getLocale());
-      return page && page > 1 ? `${base}/page/${page}` : base;
+      return page > 1 ? `${base}/page/${page}` : base;
     };
     const canonicalHref = localizedUrl(currentPage);
     const paginationLinks: Array<{ rel: string; href: string }> = [
@@ -45,14 +52,6 @@ export const Route = createFileRoute('/blog/')({
         href: localizedUrl(currentPage + 1),
       });
     }
-    const blogJsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'Blog',
-      name: getDeskPetMessage('BlogPage.title'),
-      description: getDeskPetMessage('BlogPage.description'),
-      url: canonicalHref,
-      inLanguage: localeConfig[getLocale()].hreflang,
-    };
     return {
       ...metadata,
       links: [
@@ -62,15 +61,22 @@ export const Route = createFileRoute('/blog/')({
       scripts: [
         {
           type: 'application/ld+json',
-          children: JSON.stringify(blogJsonLd),
+          children: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Blog',
+            name: getDeskPetMessage('BlogPage.title'),
+            description: getDeskPetMessage('BlogPage.description'),
+            url: canonicalHref,
+            inLanguage: localeConfig[getLocale()].hreflang,
+          }),
         },
       ],
     };
   },
-  component: BlogIndexPage,
+  component: BlogPaginatedPage,
 });
 
-function BlogIndexPage() {
+function BlogPaginatedPage() {
   const { posts, totalPages, categoryList } = Route.useLoaderData();
   if (!websiteConfig.blog?.enable) {
     throw notFound();

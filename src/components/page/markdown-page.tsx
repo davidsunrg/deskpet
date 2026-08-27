@@ -1,7 +1,9 @@
 import { Markdown } from '@/components/markdown/markdown';
 import { Card, CardContent } from '@/components/ui/card';
+import { formatDate } from '@/lib/formatter';
 import type { PageDoc } from '@/lib/pages';
 import type { MarkdownResult } from '@/lib/markdown';
+import { CalendarIcon } from 'lucide-react';
 
 export function MarkdownPage({
   page,
@@ -10,7 +12,7 @@ export function MarkdownPage({
   page: PageDoc;
   markdown: MarkdownResult;
 }) {
-  const { title, description } = page;
+  const { title, description, date } = page;
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
@@ -23,6 +25,14 @@ export function MarkdownPage({
             {description}
           </p>
         )}
+        {date ? (
+          <div className="flex items-center justify-center gap-2">
+            <CalendarIcon className="size-4 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              {formatDate(new Date(date))}
+            </p>
+          </div>
+        ) : null}
       </div>
       <Card>
         <CardContent>

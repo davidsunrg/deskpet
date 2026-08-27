@@ -1,15 +1,13 @@
-'use client';
-
 import Container from '@/components/layout/container';
 import { getDesktopDownloadCards } from '@/components/download/download-config';
 import { DownloadPlatforms } from '@/components/download/download-platforms';
 import { CtaButton } from '@/components/ui/cta-button';
 import { websiteConfig } from '@/config/website';
-import { useTranslations } from '@/lib/deskpet-i18n';
+import { getServerTranslations } from '@/lib/deskpet-i18n';
 import { MailIcon } from 'lucide-react';
 
 export function DownloadPage() {
-  const t = useTranslations('DownloadPage');
+  const t = getServerTranslations('DownloadPage');
   const cards = getDesktopDownloadCards();
   const supportEmail = websiteConfig.mail.supportEmail;
 

@@ -1214,5 +1214,19 @@
       "desktopPetMaker": "Desktop Pet Maker",
       "petVideoMaker": "Pet Video Maker"
     }
+  },
+  "PricingPage": {
+    "title": "DeskPet Pricing",
+    "description": "Play with ready-made pets for free, or create a custom companion from your own pet photos."
+  },
+  "BlogPage": {
+    "title": "Blog",
+    "description": "Guides to cat and dog breeds for desktop pets.",
+    "author": "Author",
+    "categories": "Categories",
+    "all": "All",
+    "noPostsFound": "No posts found",
+    "allPosts": "All Posts",
+    "morePosts": "More Posts"
   }
 }

@@ -8,7 +8,7 @@ import { seo } from '@/lib/seo';
 
 export const Route = createFileRoute('/(legals)/privacy')({
   loader: async () => {
-    const page = getPageBySlug('privacy');
+    const page = getPageBySlug('privacy-policy');
     if (!page) throw notFound();
     return { page, markdown: await renderMarkdown(page.content) };
   },

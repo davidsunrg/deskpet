@@ -1,7 +1,5 @@
-'use client';
-
 import { CtaButton } from '@/components/ui/cta-button';
-import { useTranslations } from '@/lib/deskpet-i18n';
+import { getServerTranslations } from '@/lib/deskpet-i18n';
 import { cn } from '@/lib/utils';
 import { AppleIcon, DownloadIcon, MonitorIcon } from 'lucide-react';
 import type { DownloadCard, DownloadCardId } from './download-config';
@@ -16,7 +14,7 @@ const CARD_ICONS: Record<DownloadCardId, typeof MonitorIcon> = {
 };
 
 export function DownloadPlatforms({ cards }: DownloadPlatformsProps) {
-  const t = useTranslations('DownloadPage');
+  const t = getServerTranslations('DownloadPage');
 
   return (
     <div

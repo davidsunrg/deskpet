@@ -8,7 +8,7 @@ import { seo } from '@/lib/seo';
 
 export const Route = createFileRoute('/(legals)/cookie')({
   loader: async () => {
-    const page = getPageBySlug('cookie');
+    const page = getPageBySlug('cookie-policy');
     if (!page) throw notFound();
     return { page, markdown: await renderMarkdown(page.content) };
   },

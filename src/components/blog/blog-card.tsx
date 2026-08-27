@@ -1,52 +1,54 @@
 import type { BlogPost } from '@/lib/blog';
-import { Link } from '@tanstack/react-router';
+import { getCategoriesForPost } from '@/lib/blog';
+import { LocaleLink } from '@/lib/i18n/navigation';
 import { formatDate } from '@/lib/formatter';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { BlogImage } from '@/components/blog/blog-image';
 
 export function BlogCard({ post }: { post: BlogPost }) {
-  const { slug } = post;
+  const publishDate = formatDate(new Date(post.date));
+  const blogCategories = getCategoriesForPost(post);
 
   return (
-    <Link to="/blog/$slug" params={{ slug }} className="h-full">
-      <Card className="h-full border border-border py-0 ring-0 transition-colors hover:border-primary">
-        {post.image && (
-          <div className="aspect-video w-full overflow-hidden rounded-t-xl bg-muted">
-            <img
-              src={post.image}
-              alt={post.title}
-              className="size-full object-cover transition-transform hover:scale-[1.05]"
-              width={1280}
-              height={720}
-              loading="lazy"
-              decoding="async"
-            />
+    <LocaleLink href={`/blog/${post.slug}`} className="block h-full">
+      <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-border transition-all duration-300 ease-in-out hover:border-primary hover:shadow-lg hover:shadow-primary/20">
+        <div className="relative aspect-video w-full overflow-hidden">
+          <BlogImage
+            src={post.image}
+            alt={post.title}
+            title={post.title}
+          />
+          {blogCategories.length > 0 ? (
+            <div className="absolute bottom-2 left-2 z-20">
+              <div className="flex flex-wrap gap-1">
+                {blogCategories.map((category) => (
+                  <span
+                    key={category.slug}
+                    className="rounded-md bg-black/50 px-2 py-1 text-xs font-medium text-white"
+                  >
+                    {category.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex flex-1 flex-col justify-between p-4">
+          <div>
+            <h3 className="line-clamp-2 text-lg font-medium">{post.title}</h3>
+            {post.description ? (
+              <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                {post.description}
+              </p>
+            ) : null}
           </div>
-        )}
-        <CardHeader className="flex flex-row items-center justify-between gap-2 pt-4 pb-0">
-          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground capitalize">
-            {post.category}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {formatDate(new Date(post.date))}
-          </span>
-        </CardHeader>
-        <CardContent className="pb-4">
-          <CardTitle className="line-clamp-2 text-lg font-semibold">
-            <h2>{post.title}</h2>
-          </CardTitle>
-          {post.description && (
-            <CardDescription className="mt-2 line-clamp-2">
-              {post.description}
-            </CardDescription>
-          )}
-        </CardContent>
-      </Card>
-    </Link>
+          <div className="mt-4 flex items-center justify-end border-t pt-4 text-muted-foreground">
+            <time className="truncate text-sm" dateTime={post.date}>
+              {publishDate}
+            </time>
+          </div>
+        </div>
+      </div>
+    </LocaleLink>
   );
 }

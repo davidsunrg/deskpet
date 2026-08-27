@@ -2,7 +2,8 @@
 title: Deploy to Production
 description: How to build and deploy your app to Cloudflare Workers.
 date: 2026-02-13
-category: Guide
+categories:
+  - guide
 image: /images/blog-deployment.webp
 ---
 

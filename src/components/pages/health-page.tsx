@@ -1,6 +1,4 @@
-'use client';
-
-import { useTranslations } from '@/lib/deskpet-i18n';
+import { getServerTranslations } from '@/lib/deskpet-i18n';
 import Container from '@/components/layout/container';
 import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
@@ -168,7 +166,7 @@ function CheckList({ items }: { items: readonly string[] }) {
 }
 
 export function HealthPage() {
-  const t = useTranslations('HealthPage');
+  const t = getServerTranslations('HealthPage');
 
   const timelineChecks = [
     t('timeline.checks.notes'),

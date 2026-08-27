@@ -62,7 +62,10 @@ import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
 import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
 import { Route as ApiWebhooksWaffoRouteImport } from './routes/api/webhooks/waffo'
+import { Route as BlogCategorySlugRouteImport } from './routes/blog/category.$slug'
+import { Route as BlogPagePageRouteImport } from './routes/blog/page.$page'
 import { Route as ApiAuthExtensionGoogleRouteImport } from './routes/api/auth/extension/google'
+import { Route as BlogCategorySlugPagePageRouteImport } from './routes/blog/category.$slug.page.$page'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -329,11 +332,27 @@ const ApiWebhooksWaffoRoute = ApiWebhooksWaffoRouteImport.update({
   path: '/api/webhooks/waffo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogCategorySlugRoute = BlogCategorySlugRouteImport.update({
+  id: '/blog/category/$slug',
+  path: '/blog/category/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogPagePageRoute = BlogPagePageRouteImport.update({
+  id: '/blog/page/$page',
+  path: '/blog/page/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthExtensionGoogleRoute = ApiAuthExtensionGoogleRouteImport.update({
   id: '/api/auth/extension/google',
   path: '/api/auth/extension/google',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogCategorySlugPagePageRoute =
+  BlogCategorySlugPagePageRouteImport.update({
+    id: '/page/$page',
+    path: '/page/$page',
+    getParentRoute: () => BlogCategorySlugRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -389,7 +408,10 @@ export interface FileRoutesByFullPath {
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
   '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
+  '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
+  '/blog/page/$page': typeof BlogPagePageRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
+  '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -442,7 +464,10 @@ export interface FileRoutesByTo {
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
   '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
+  '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
+  '/blog/page/$page': typeof BlogPagePageRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
+  '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -499,7 +524,10 @@ export interface FileRoutesById {
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
   '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
+  '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
+  '/blog/page/$page': typeof BlogPagePageRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
+  '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -557,7 +585,10 @@ export interface FileRouteTypes {
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
     | '/api/webhooks/waffo'
+    | '/blog/category/$slug'
+    | '/blog/page/$page'
     | '/api/auth/extension/google'
+    | '/blog/category/$slug/page/$page'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -610,7 +641,10 @@ export interface FileRouteTypes {
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
     | '/api/webhooks/waffo'
+    | '/blog/category/$slug'
+    | '/blog/page/$page'
     | '/api/auth/extension/google'
+    | '/blog/category/$slug/page/$page'
   id:
     | '__root__'
     | '/'
@@ -666,7 +700,10 @@ export interface FileRouteTypes {
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
     | '/api/webhooks/waffo'
+    | '/blog/category/$slug'
+    | '/blog/page/$page'
     | '/api/auth/extension/google'
+    | '/blog/category/$slug/page/$page'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -704,6 +741,8 @@ export interface RootRouteChildren {
   ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
   ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
   ApiWebhooksWaffoRoute: typeof ApiWebhooksWaffoRoute
+  BlogCategorySlugRoute: typeof BlogCategorySlugRouteWithChildren
+  BlogPagePageRoute: typeof BlogPagePageRoute
   ApiAuthExtensionGoogleRoute: typeof ApiAuthExtensionGoogleRoute
 }
 
@@ -1080,12 +1119,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksWaffoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/category/$slug': {
+      id: '/blog/category/$slug'
+      path: '/blog/category/$slug'
+      fullPath: '/blog/category/$slug'
+      preLoaderRoute: typeof BlogCategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/page/$page': {
+      id: '/blog/page/$page'
+      path: '/blog/page/$page'
+      fullPath: '/blog/page/$page'
+      preLoaderRoute: typeof BlogPagePageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/extension/google': {
       id: '/api/auth/extension/google'
       path: '/api/auth/extension/google'
       fullPath: '/api/auth/extension/google'
       preLoaderRoute: typeof ApiAuthExtensionGoogleRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/category/$slug/page/$page': {
+      id: '/blog/category/$slug/page/$page'
+      path: '/page/$page'
+      fullPath: '/blog/category/$slug/page/$page'
+      preLoaderRoute: typeof BlogCategorySlugPagePageRouteImport
+      parentRoute: typeof BlogCategorySlugRoute
     }
   }
 }
@@ -1164,6 +1224,17 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
 
+interface BlogCategorySlugRouteChildren {
+  BlogCategorySlugPagePageRoute: typeof BlogCategorySlugPagePageRoute
+}
+
+const BlogCategorySlugRouteChildren: BlogCategorySlugRouteChildren = {
+  BlogCategorySlugPagePageRoute: BlogCategorySlugPagePageRoute,
+}
+
+const BlogCategorySlugRouteWithChildren =
+  BlogCategorySlugRoute._addFileChildren(BlogCategorySlugRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -1199,6 +1270,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
   ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
   ApiWebhooksWaffoRoute: ApiWebhooksWaffoRoute,
+  BlogCategorySlugRoute: BlogCategorySlugRouteWithChildren,
+  BlogPagePageRoute: BlogPagePageRoute,
   ApiAuthExtensionGoogleRoute: ApiAuthExtensionGoogleRoute,
 }
 export const routeTree = rootRouteImport

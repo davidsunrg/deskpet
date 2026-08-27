@@ -2,7 +2,8 @@
 title: Getting Started
 description: Quick guide to set up and run the TanStarter template.
 date: 2026-02-12
-category: Guide
+categories:
+  - guide
 image: /images/blog-get-started.webp
 ---
 

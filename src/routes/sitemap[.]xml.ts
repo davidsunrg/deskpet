@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getBaseUrl } from '@/lib/urls';
-import { getSortedPosts } from '@/lib/blog';
+import { getCategories, getSortedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
 import { petDetailRoute } from '@/lib/routes';
 import {
@@ -98,14 +98,41 @@ export const Route = createFileRoute('/sitemap.xml')({
         let blogPart = '';
         if (websiteConfig.blog?.enable) {
           const posts = getSortedPosts(baseLocale);
-          blogPart = posts
-            .map((p) =>
-              urlEntry(`/blog/${p.slug}`, {
-                changefreq: 'weekly',
-                lastmod: new Date(p.date).toISOString().slice(0, 10),
-              })
-            )
-            .join('\n');
+          const pageSize = websiteConfig.blog.paginationSize ?? 6;
+          const totalPages = Math.max(1, Math.ceil(posts.length / pageSize));
+          const categories = getCategories(baseLocale);
+
+          const blogListPages = Array.from({ length: totalPages }, (_, index) =>
+            urlEntry(index === 0 ? '/blog' : `/blog/page/${index + 1}`, {
+              changefreq: 'weekly',
+            })
+          );
+          const categoryPages = categories.flatMap((category) => {
+            const categoryPosts = posts.filter((post) =>
+              post.categories.includes(category.slug)
+            );
+            const categoryTotalPages = Math.max(
+              1,
+              Math.ceil(categoryPosts.length / pageSize)
+            );
+            return Array.from({ length: categoryTotalPages }, (_, index) =>
+              urlEntry(
+                index === 0
+                  ? `/blog/category/${category.slug}`
+                  : `/blog/category/${category.slug}/page/${index + 1}`,
+                { changefreq: 'weekly' }
+              )
+            );
+          });
+          const blogPosts = posts.map((p) =>
+            urlEntry(`/blog/${p.slug}`, {
+              changefreq: 'weekly',
+              lastmod: new Date(p.date).toISOString().slice(0, 10),
+            })
+          );
+          blogPart = [...blogListPages, ...categoryPages, ...blogPosts].join(
+            '\n'
+          );
         }
 
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

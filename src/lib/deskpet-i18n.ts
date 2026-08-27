@@ -61,6 +61,14 @@ function createTranslator(
   return t;
 }
 
+/** Sync namespace translator for server components. */
+export function getServerTranslations(
+  namespace: string,
+  locale: Locale = getLocale()
+): DeskPetTranslator {
+  return createTranslator(namespace, locale);
+}
+
 /** Client hook mirroring next-intl `useTranslations(namespace)`. */
 export function useTranslations(namespace: string): DeskPetTranslator {
   return createTranslator(namespace, getLocale());

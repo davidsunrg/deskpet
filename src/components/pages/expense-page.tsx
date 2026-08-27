@@ -1,6 +1,4 @@
-'use client';
-
-import { useTranslations } from '@/lib/deskpet-i18n';
+import { getServerTranslations } from '@/lib/deskpet-i18n';
 import Container from '@/components/layout/container';
 import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
@@ -115,7 +113,7 @@ function CheckList({ items }: { items: readonly string[] }) {
 }
 
 export function ExpensePage() {
-  const t = useTranslations('ExpensePage');
+  const t = getServerTranslations('ExpensePage');
 
   const categoryChecks = [
     t('categoriesSummary.checks.monthly'),
