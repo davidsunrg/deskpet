@@ -16,7 +16,7 @@ export const clientEnv = createEnv({
     VITE_PAYMENT_PROVIDER: z.enum(['stripe', 'creem', 'waffo', '']).default(''),
 
     // Payment (Stripe)
-    VITE_STRIPE_PRICE_CUSTOM_MY_OWN: z.string().optional(),
+    VITE_STRIPE_PRICE_LIFETIME: z.string().optional(),
 
     // Payment (Creem)
     VITE_CREEM_PRODUCT_CUSTOM_MY_OWN: z.string().optional(),

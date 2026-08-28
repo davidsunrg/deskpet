@@ -15,7 +15,7 @@ const isPaymentEnabled = paymentProvider !== '';
 // Price/product IDs per provider; add a new row when adding a provider
 const providerPriceIds = {
   stripe: {
-    customizeMyOwn: clientEnv.VITE_STRIPE_PRICE_CUSTOM_MY_OWN,
+    customizeMyOwn: clientEnv.VITE_STRIPE_PRICE_LIFETIME,
   },
   creem: {
     customizeMyOwn: clientEnv.VITE_CREEM_PRODUCT_CUSTOM_MY_OWN,

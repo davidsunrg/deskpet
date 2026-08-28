@@ -1186,8 +1186,10 @@
     "final": {
       "title": "Unlock your pet",
       "description": "Choose the custom plan to finish your desktop companion and unlock full creation.",
-      "paidTitle": "Payment complete",
-      "paidDescription": "Your custom pet plan is active. We will continue building your companion from here.",
+      "paidHeaderTitle": "Your pet is in progress",
+      "paidHeaderDescription": "Payment received — we're building your custom desktop companion now.",
+      "paidTitle": "In progress",
+      "paidDescription": "Your order is in the queue. We'll notify you when your pet is ready to download.",
       "pricing": {
         "offerLabel": "LIMITED-TIME OFFER",
         "offerTitleEnded": "Limited-time offer ended",

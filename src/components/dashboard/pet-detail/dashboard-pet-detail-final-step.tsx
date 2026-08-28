@@ -31,8 +31,10 @@ export function DashboardPetDetailFinalStep({
       <DashboardCardHeader
         icon={<CheckCircle2Icon className="size-[18px]" />}
         accent="bg-deskpet-mint-soft"
-        title={t('final.title')}
-        description={t('final.description')}
+        title={t(isPaid ? 'final.paidHeaderTitle' : 'final.title')}
+        description={t(
+          isPaid ? 'final.paidHeaderDescription' : 'final.description'
+        )}
       />
       {isPaid ? (
         <div className="mt-2 rounded-2xl border-2 border-deskpet-mint bg-deskpet-mint-soft/40 p-5">
