@@ -39,12 +39,12 @@
   },
   // Custom domains
   // https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
-  // "routes": [
-  //   {
-  //     "pattern": "alpha.deskpet.ai",
-  //     "custom_domain": true
-  //   }
-  // ],
+  "routes": [
+    {
+      "pattern": "deskpet.ai",
+      "custom_domain": true
+    }
+  ],
   /**
    * Bindings
    * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
