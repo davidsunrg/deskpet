@@ -51,3 +51,21 @@ export function formatDateTime(date: Date): string {
   const second = String(date.getSeconds()).padStart(2, '0');
   return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
 }
+
+/**
+ * Friendly local date-time for customer-facing estimates.
+ * Example: "Aug 29, 2026 · 1:51 PM"
+ */
+export function formatFriendlyDateTime(date: Date): string {
+  const datePart = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(date);
+  const timePart = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).format(date);
+  return `${datePart} · ${timePart}`;
+}

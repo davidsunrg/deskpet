@@ -5,7 +5,7 @@ import {
 import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
 import { CustomPetLimitedOfferBanner } from '@/components/dashboard/custom-pet-limited-offer-banner';
 import { useTranslations } from '@/lib/deskpet-i18n';
-import { formatDateTime } from '@/lib/formatter';
+import { formatFriendlyDateTime } from '@/lib/formatter';
 import { cn } from '@/lib/utils';
 import { CheckCircle2Icon } from 'lucide-react';
 
@@ -67,21 +67,34 @@ export function DashboardPetDetailFinalStep({
             </p>
             <p className="mt-1 m-0 text-base font-black text-deskpet-ink">
               {deliveryAtDate
-                ? t('final.deliveryValue', {
-                    datetime: formatDateTime(deliveryAtDate),
-                  })
+                ? formatFriendlyDateTime(deliveryAtDate)
                 : t('final.deliveryFallback')}
             </p>
           </div>
 
           <div className="space-y-2 text-sm leading-6 text-deskpet-muted">
             <p className="m-0">
-              {userEmail
-                ? t('final.contactEmail', { email: userEmail })
-                : t('final.contactEmailFallback')}
+              {userEmail ? (
+                <>
+                  {t('final.contactEmailPrefix')}
+                  <span className="inline-block rounded-md bg-black/8 px-1.5 py-0.5 font-semibold text-deskpet-ink dark:bg-white/12">
+                    {userEmail}
+                  </span>
+                  {t('final.contactEmailSuffix')}
+                </>
+              ) : (
+                t('final.contactEmailFallback')
+              )}
             </p>
             <p className="m-0">
-              {t('final.supportEmail', { email: SUPPORT_EMAIL })}
+              {t('final.supportEmailPrefix')}
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                className="font-semibold text-deskpet-ink underline underline-offset-2 transition-colors hover:text-[#11685e]"
+              >
+                {SUPPORT_EMAIL}
+              </a>
+              {t('final.supportEmailSuffix')}
             </p>
           </div>
         </div>
