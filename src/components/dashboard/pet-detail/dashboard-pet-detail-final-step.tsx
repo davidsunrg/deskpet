@@ -4,9 +4,12 @@ import {
 } from '@/components/dashboard/dashboard-card';
 import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
 import { CustomPetLimitedOfferBanner } from '@/components/dashboard/custom-pet-limited-offer-banner';
+import { PetMakerExamplesSection } from '@/components/blocks/hero/pet-maker-examples-section';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import { formatFriendlyDateTime } from '@/lib/formatter';
 import { cn } from '@/lib/utils';
+import type { PlaygroundPet } from '@/utils/playground-pet';
+import type { ShowcasePet } from '@/utils/showcase-pets';
 import { CheckCircle2Icon } from 'lucide-react';
 
 const SUPPORT_EMAIL = 'david@deskpet.ai';
@@ -18,6 +21,8 @@ type DashboardPetDetailFinalStepProps = {
   userEmail?: string | null;
   checkoutBusy: boolean;
   onJoinQueue: () => void | Promise<void>;
+  examplePets?: ShowcasePet[];
+  floatingPets?: PlaygroundPet[];
 };
 
 function toDate(value: Date | string | null | undefined): Date | null {
@@ -33,6 +38,8 @@ export function DashboardPetDetailFinalStep({
   userEmail,
   checkoutBusy,
   onJoinQueue,
+  examplePets = [],
+  floatingPets = [],
 }: DashboardPetDetailFinalStepProps) {
   const t = useTranslations('DashboardPetDetail');
   const deliveryAtDate = toDate(deliveryAt ?? null);
@@ -41,7 +48,7 @@ export function DashboardPetDetailFinalStep({
     <section
       className={cn(
         dashboardCardClass,
-        'flex min-h-0 flex-1 flex-col p-5 sm:p-6'
+        'flex min-h-0 flex-1 flex-col overflow-y-auto p-5 sm:p-6'
       )}
     >
       <DashboardCardHeader
@@ -101,8 +108,8 @@ export function DashboardPetDetailFinalStep({
           </div>
         </div>
       ) : (
-        <div className="flex min-h-0 flex-1 items-center justify-center">
-          <div className="flex w-full max-w-sm flex-col gap-2.5">
+        <div className="mt-2 flex min-h-0 flex-1 flex-col gap-8">
+          <div className="mx-auto flex w-full max-w-sm flex-col gap-2.5">
             <CustomPetLimitedOfferBanner />
             <CustomPetFinalPricingCard
               busy={checkoutBusy}
@@ -110,6 +117,14 @@ export function DashboardPetDetailFinalStep({
               onJoinQueue={onJoinQueue}
             />
           </div>
+
+          {examplePets.length > 0 ? (
+            <PetMakerExamplesSection
+              pets={examplePets}
+              floatingPets={floatingPets}
+              className="pb-4"
+            />
+          ) : null}
         </div>
       )}
     </section>

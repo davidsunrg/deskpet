@@ -16,6 +16,8 @@ import {
   DEFAULT_DASHBOARD_PET_DETAIL_STEP,
   type DashboardPetDetailStep,
 } from '@/utils/pets/dashboard-pet-detail-steps';
+import type { PlaygroundPet } from '@/utils/playground-pet';
+import type { ShowcasePet } from '@/utils/showcase-pets';
 import { useCallback, useEffect, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { toast } from 'sonner';
@@ -39,6 +41,8 @@ type DashboardPetDetailProps = {
   pet: UserPetDetail;
   userEmail?: string | null;
   initialStep?: DashboardPetDetailStep;
+  examplePets?: ShowcasePet[];
+  floatingPets?: PlaygroundPet[];
 };
 
 function getSexLabel(sex: string | null): string | null {
@@ -51,6 +55,8 @@ export function DashboardPetDetail({
   pet,
   userEmail = null,
   initialStep = DEFAULT_DASHBOARD_PET_DETAIL_STEP,
+  examplePets = [],
+  floatingPets = [],
 }: DashboardPetDetailProps) {
   const [step, setStep] = useState<DashboardPetDetailStep>(initialStep);
   const [checkoutBusy, setCheckoutBusy] = useState(false);
@@ -147,6 +153,8 @@ export function DashboardPetDetail({
             userEmail={userEmail}
             checkoutBusy={checkoutBusy}
             onJoinQueue={handleJoinQueue}
+            examplePets={examplePets}
+            floatingPets={floatingPets}
           />
         ) : null}
       </div>

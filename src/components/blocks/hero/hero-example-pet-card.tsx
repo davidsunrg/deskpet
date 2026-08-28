@@ -9,6 +9,7 @@ type HeroExamplePet = ShowcasePet & {
     photoUrl: string;
     petName: string;
     uploadedBy: string;
+    uploadedAt: string;
   };
 };
 
@@ -53,7 +54,10 @@ export function HeroExamplePetCard({ pet }: HeroExamplePetCardProps) {
             ·
           </span>
           <span>
-            {t('examplesUploadedBy', { name: pet.makerExample.uploadedBy })}
+            {t('examplesUploadedBy', {
+              name: pet.makerExample.uploadedBy,
+              date: pet.makerExample.uploadedAt,
+            })}
           </span>
         </figcaption>
       </figure>

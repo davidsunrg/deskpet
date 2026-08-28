@@ -58,6 +58,8 @@ export type PetResourceMakerExample = {
   petName: string;
   /** Display name of who uploaded the photo. */
   uploadedBy: string;
+  /** Display date shown after the uploader (e.g. Aug 12, 2026). */
+  uploadedAt: string;
 };
 
 export type PetResourceDetail = {

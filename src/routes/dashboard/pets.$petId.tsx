@@ -1,12 +1,14 @@
 import { getUserPetFn } from '@/api/dashboard-pets';
 import { DashboardPetDetail } from '@/components/dashboard/pet-detail/dashboard-pet-detail';
 import { DashboardPageShell } from '@/components/dashboard/dashboard-page-shell';
+import { listHeroPets, listPlaygroundPresetPets } from '@/pets/catalog';
 import { Routes } from '@/lib/routes';
 import {
   DEFAULT_DASHBOARD_PET_DETAIL_STEP,
   isDashboardPetDetailStep,
   type DashboardPetDetailStep,
 } from '@/utils/pets/dashboard-pet-detail-steps';
+import { HERO_PET_PREVIEW_COUNT } from '@/utils/showcase-pets';
 import { createFileRoute, notFound } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/dashboard/pets/$petId')({
@@ -16,19 +18,23 @@ export const Route = createFileRoute('/dashboard/pets/$petId')({
     step: isDashboardPetDetailStep(search.step) ? search.step : undefined,
   }),
   loader: async ({ params }) => {
-    const { pet, userEmail } = await getUserPetFn({
-      data: { petId: params.petId },
-    });
+    const [{ pet, userEmail }, examplePets, floatingPets] = await Promise.all([
+      getUserPetFn({
+        data: { petId: params.petId },
+      }),
+      listHeroPets(HERO_PET_PREVIEW_COUNT),
+      listPlaygroundPresetPets({ visibleIn: 'home' }),
+    ]);
     if (!pet) {
       throw notFound();
     }
-    return { pet, userEmail };
+    return { pet, userEmail, examplePets, floatingPets };
   },
   component: DashboardPetDetailPage,
 });
 
 function DashboardPetDetailPage() {
-  const { pet, userEmail } = Route.useLoaderData();
+  const { pet, userEmail, examplePets, floatingPets } = Route.useLoaderData();
   const { step } = Route.useSearch();
 
   return (
@@ -43,6 +49,8 @@ function DashboardPetDetailPage() {
         pet={pet}
         userEmail={userEmail}
         initialStep={step ?? DEFAULT_DASHBOARD_PET_DETAIL_STEP}
+        examplePets={examplePets}
+        floatingPets={floatingPets}
       />
     </DashboardPageShell>
   );

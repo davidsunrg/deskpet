@@ -15,6 +15,7 @@ export const orangeCatResources = {
     photoR2Key: 'pets/cat/orange-cat/photo.webp',
     petName: 'Darcy',
     uploadedBy: 'Jordan Lee',
+    uploadedAt: 'Jul 28, 2026',
   },
   actions: [
     {

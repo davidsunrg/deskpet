@@ -15,6 +15,7 @@ type HeroExamplePet = ShowcasePet & {
     photoUrl: string;
     petName: string;
     uploadedBy: string;
+    uploadedAt: string;
   };
 };
 
@@ -22,7 +23,8 @@ function hasMakerExample(pet: ShowcasePet): pet is HeroExamplePet {
   return Boolean(
     pet.makerExample?.photoUrl &&
       pet.makerExample.petName &&
-      pet.makerExample.uploadedBy
+      pet.makerExample.uploadedBy &&
+      pet.makerExample.uploadedAt
   );
 }
 

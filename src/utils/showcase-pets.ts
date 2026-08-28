@@ -58,6 +58,7 @@ export type ShowcasePet = {
     photoUrl: string;
     petName: string;
     uploadedBy: string;
+    uploadedAt: string;
   };
 };
 

@@ -186,6 +186,7 @@ export function petResourceToShowcasePet(
             ),
             petName: resource.makerExample.petName,
             uploadedBy: resource.makerExample.uploadedBy,
+            uploadedAt: resource.makerExample.uploadedAt,
           },
         }
       : {}),
