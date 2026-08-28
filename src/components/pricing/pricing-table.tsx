@@ -19,6 +19,7 @@ import { m } from '@/locale/paraglide/messages';
 import type { PricePlan } from '@/payment/types';
 import { IconLoader2 } from '@tabler/icons-react';
 import { CheckIcon } from 'lucide-react';
+import { usePostHog } from 'posthog-js/react';
 import { type ReactNode, useEffect, useState } from 'react';
 
 export type ActionPricingPlanId = 'free' | 'customizeMyOwn';
@@ -103,11 +104,19 @@ export function PricingTable({
 }: PricingTableProps) {
   const { data: session } = authClient.useSession();
   const currentPath = useLocalePathname();
+  const posthog = usePostHog();
   const [mounted, setMounted] = useState(false);
   const currentUser = session?.user;
   const plans = ACTION_PRICING_PLANS.filter((plan) =>
     planIds.includes(plan.id)
   );
+  const capturePlanCta = (plan: (typeof ACTION_PRICING_PLANS)[number]) => {
+    posthog?.capture('pricing_plan_cta_clicked', {
+      section: 'pricing',
+      plan_id: plan.id,
+      price_id: 'priceId' in plan ? plan.priceId : undefined,
+    });
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -171,7 +180,12 @@ export function PricingTable({
             if (plan.id === 'free') {
               button = (
                 <Button asChild className={buttonClass}>
-                  <LocaleLink href={plan.href}>{ctaLabel}</LocaleLink>
+                  <LocaleLink
+                    href={plan.href}
+                    onClick={() => capturePlanCta(plan)}
+                  >
+                    {ctaLabel}
+                  </LocaleLink>
                 </Button>
               );
             } else if (onPaidPlanAction && 'priceId' in plan) {
@@ -181,6 +195,7 @@ export function PricingTable({
                   className={buttonClass}
                   disabled={paidActionBusy}
                   onClick={() => {
+                    capturePlanCta(plan);
                     void onPaidPlanAction({
                       planId: plan.id,
                       checkoutPlanId: plan.checkoutPlanId,
@@ -207,12 +222,18 @@ export function PricingTable({
                     priceId={plan.priceId}
                     metadata={metadata}
                     className={buttonClass}
+                    onClick={() => capturePlanCta(plan)}
                   >
                     {ctaLabel}
                   </CheckoutButton>
                 ) : (
                   <LoginWrapper mode="modal" asChild callbackUrl={currentPath}>
-                    <Button className={buttonClass}>{ctaLabel}</Button>
+                    <Button
+                      className={buttonClass}
+                      onClick={() => capturePlanCta(plan)}
+                    >
+                      {ctaLabel}
+                    </Button>
                   </LoginWrapper>
                 );
             } else {

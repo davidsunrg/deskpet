@@ -99,6 +99,7 @@
     "motion": "^13.1.1",
     "nanoid": "^5.1.6",
     "nuqs": "^2.8.8",
+    "posthog-js": "^1.422.1",
     "radix-ui": "^1.6.7",
     "react": "^19.2.8",
     "react-day-picker": "^10.0.1",

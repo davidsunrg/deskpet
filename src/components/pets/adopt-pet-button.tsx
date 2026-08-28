@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import type { VariantProps } from 'class-variance-authority';
 import { PawPrintIcon } from 'lucide-react';
+import { usePostHog } from 'posthog-js/react';
 
 type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 
@@ -36,6 +37,7 @@ export function AdoptPetButton({
   tooltip,
 }: AdoptPetButtonProps) {
   const t = useTranslations('PetsPage.adopt');
+  const posthog = usePostHog();
 
   const button = (
     <Button
@@ -44,7 +46,14 @@ export function AdoptPetButton({
       className={cn('w-full', className)}
       asChild
     >
-      <LocaleLink href={Routes.DesktopPetCreator}>
+      <LocaleLink
+        href={Routes.DesktopPetCreator}
+        onClick={() => {
+          posthog?.capture('make_my_own_cta_clicked', {
+            section: 'make_my_own',
+          });
+        }}
+      >
         {showIcon ? <PawPrintIcon className="size-4" /> : null}
         {label ?? t('button')}
       </LocaleLink>

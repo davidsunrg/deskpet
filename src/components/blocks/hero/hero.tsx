@@ -15,6 +15,7 @@ import { Routes } from '@/lib/routes';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 import { lazy, Suspense, useRef } from 'react';
+import { usePostHog } from 'posthog-js/react';
 
 const HeroFloatingPetLazy = lazy(() =>
   import('./hero-floating-pet').then((mod) => ({
@@ -54,6 +55,7 @@ export default function HeroSection({
 }: HeroSectionProps) {
   const t = useTranslations('HomePage.hero');
   const heroRef = useRef<HTMLElement | null>(null);
+  const posthog = usePostHog();
 
   return (
     <section id="hero" ref={heroRef} className="relative overflow-hidden">
@@ -123,7 +125,14 @@ export default function HeroSection({
                       className="h-11 px-6"
                       data-testid="hero-cta-make-pet"
                     >
-                      <LocaleLink href={Routes.DesktopPetCreator}>
+                      <LocaleLink
+                        href={Routes.DesktopPetCreator}
+                        onClick={() => {
+                          posthog?.capture('hero_make_pet_clicked', {
+                            section: 'hero',
+                          });
+                        }}
+                      >
                         <span className="text-nowrap">{t('secondary')}</span>
                       </LocaleLink>
                     </CtaButton>

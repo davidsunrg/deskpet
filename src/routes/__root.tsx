@@ -18,6 +18,7 @@ import { websiteConfig } from '@/config/website';
 import { m } from '@/locale/paraglide/messages';
 import appCss from '../styles.css?url';
 import { DefaultCatchBoundary } from '@/components/layout/default-catch-boundary';
+import { PostHogProvider } from '@/lib/analytics/posthog-analytics';
 import { Routes } from '@/lib/routes';
 import { getCanonicalUrl, getOgImage, getBaseUrl } from '@/lib/urls';
 import {
@@ -184,12 +185,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         >
           {m.common_skip_to_content()}
         </a>
-        <ThemeProvider>
-          <TooltipProvider>
-            {children}
-            <Toaster richColors position="top-right" offset={64} />
-          </TooltipProvider>
-        </ThemeProvider>
+        <PostHogProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster richColors position="top-right" offset={64} />
+            </TooltipProvider>
+          </ThemeProvider>
+        </PostHogProvider>
         <Analytics />
         <CrispChat />
         <Scripts />

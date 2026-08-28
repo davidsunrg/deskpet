@@ -24,6 +24,8 @@ export const clientEnv = createEnv({
     VITE_PLAUSIBLE_SCRIPT: z.string().optional(),
     VITE_UMAMI_WEBSITE_ID: z.string().optional(),
     VITE_UMAMI_SCRIPT: z.string().optional(),
+    VITE_POSTHOG_KEY: z.string().optional(),
+    VITE_POSTHOG_HOST: z.string().optional(),
 
     // Chatbot (Crisp Chat)
     VITE_CRISP_WEBSITE_ID: z.string().optional(),

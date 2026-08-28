@@ -17,6 +17,7 @@ import {
   type DashboardPetDetailStep,
 } from '@/utils/pets/dashboard-pet-detail-steps';
 import { useCallback, useEffect, useState } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import { toast } from 'sonner';
 
 export type UserPetDetail = {
@@ -53,6 +54,7 @@ export function DashboardPetDetail({
 }: DashboardPetDetailProps) {
   const [step, setStep] = useState<DashboardPetDetailStep>(initialStep);
   const [checkoutBusy, setCheckoutBusy] = useState(false);
+  const posthog = usePostHog();
 
   useEffect(() => {
     setStep(initialStep);
@@ -74,6 +76,12 @@ export function DashboardPetDetail({
 
     try {
       setCheckoutBusy(true);
+      posthog?.capture('checkout_started', {
+        section: 'pet_final_step',
+        plan_id: checkoutPlanId,
+        price_id: priceId,
+        pet_id: pet.id,
+      });
       await markPetCheckoutStartedFn({ data: { petId: pet.id } });
       const finalReturnPath = `${dashboardPetDetailRoute(pet.id)}?step=final`;
       const successUrl = getCanonicalUrl(
@@ -101,7 +109,7 @@ export function DashboardPetDetail({
     } finally {
       setCheckoutBusy(false);
     }
-  }, [checkoutPlanId, pet.id, priceId]);
+  }, [checkoutPlanId, pet.id, posthog, priceId]);
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">

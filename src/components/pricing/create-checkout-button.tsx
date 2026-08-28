@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useResolvedTheme } from '@/components/theme/theme-provider';
 import { cn } from '@/lib/utils';
 import { IconLoader2 } from '@tabler/icons-react';
+import { usePostHog } from 'posthog-js/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 interface CheckoutButtonProps {
@@ -21,6 +22,7 @@ interface CheckoutButtonProps {
   size?: 'default' | 'sm' | 'lg' | 'icon' | null;
   className?: string;
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 export function CheckoutButton({
   planId,
@@ -30,11 +32,19 @@ export function CheckoutButton({
   size = 'default',
   className,
   children,
+  onClick,
 }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const resolvedTheme = useResolvedTheme();
+  const posthog = usePostHog();
   const handleClick = async () => {
     try {
+      onClick?.();
+      posthog?.capture('checkout_started', {
+        section: 'checkout',
+        plan_id: planId,
+        price_id: priceId,
+      });
       setIsLoading(true);
       // merge metadata with existing metadata
       const mergedMetadata = metadata ? { ...metadata } : {};

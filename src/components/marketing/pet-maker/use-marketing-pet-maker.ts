@@ -58,6 +58,7 @@ import { preparePetActionReferenceImage } from '@/utils/pets/prepare-pet-action-
 import { uploadPetAvatar } from '@/utils/pets/upload-pet-avatar';
 import { wrapNestedServerFn } from '@/utils/wrap-server-fn';
 import { useNavigate } from '@tanstack/react-router';
+import { usePostHog } from 'posthog-js/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -167,6 +168,7 @@ export function useMarketingPetMaker(options?: {
   const photoPickerButtonRef = useRef<HTMLButtonElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { data: session, isPending: sessionPending } = authClient.useSession();
+  const posthog = usePostHog();
   const resumeCreateStartedRef = useRef(false);
 
   const initialLocalDraft = readDraft() ?? createEmptyDraft();
@@ -691,6 +693,9 @@ export function useMarketingPetMaker(options?: {
       })
     );
     assertActionSuccess(result, t('profile.createError'));
+    posthog?.capture('wizard_pet_created', {
+      section: 'creator_wizard',
+    });
     const petId = result.data.data.petId;
     clearDraft();
     await navigate({
@@ -698,7 +703,17 @@ export function useMarketingPetMaker(options?: {
       params: { petId },
       search: { step: 'final' },
     });
-  }, [breed, draftId, navigate, petName, readyPhotos, sex, species, t]);
+  }, [
+    breed,
+    draftId,
+    navigate,
+    petName,
+    posthog,
+    readyPhotos,
+    sex,
+    species,
+    t,
+  ]);
 
   /** Verified users create the pet; guests open auth and resume from saved draft. */
   const createPetAndOpenMyPets = useCallback(async () => {
