@@ -1190,6 +1190,12 @@
       "paidHeaderDescription": "Payment received — we're building your custom desktop companion now.",
       "paidTitle": "In progress",
       "paidDescription": "Your order is in the queue. We'll notify you when your pet is ready to download.",
+      "deliveryLabel": "ESTIMATED DELIVERY",
+      "deliveryValue": "Ready around {datetime}",
+      "deliveryFallback": "Ready within 24 hours",
+      "contactEmail": "We'll contact you through email at {email}.",
+      "contactEmailFallback": "We'll contact you through the email on your account.",
+      "supportEmail": "You can also send any email to {email} for any questions.",
       "pricing": {
         "offerLabel": "LIMITED-TIME OFFER",
         "offerTitleEnded": "Limited-time offer ended",

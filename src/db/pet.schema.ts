@@ -30,6 +30,8 @@ export const pet = sqliteTable(
       .notNull()
       .default(DEFAULT_PET_CREATION_STATUS)
       .$type<PetCreationStatus>(),
+    /** Set when checkout marks the pet paid; used for delivery estimates. */
+    paidAt: integer('paid_at', { mode: 'timestamp_ms' }),
     createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
     updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
   },

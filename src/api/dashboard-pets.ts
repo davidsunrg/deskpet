@@ -39,9 +39,15 @@ export const getUserPetFn = createServerFn({ method: 'GET' })
   .middleware([authApiMiddleware])
   .handler(async ({ data, context }) => {
     const { getDb } = await import('@/db');
+    const { user } = await import('@/db/auth.schema');
     const { pet } = await import('@/db/pet.schema');
     const { and, eq } = await import('drizzle-orm');
     const db = getDb();
+    const [userRow] = await db
+      .select({ email: user.email })
+      .from(user)
+      .where(eq(user.id, context.userId))
+      .limit(1);
     const rows = await db
       .select({
         id: pet.id,
@@ -52,13 +58,17 @@ export const getUserPetFn = createServerFn({ method: 'GET' })
         avatar: pet.avatar,
         photoKeys: pet.photoKeys,
         status: pet.status,
+        paidAt: pet.paidAt,
         createdAt: pet.createdAt,
         updatedAt: pet.updatedAt,
       })
       .from(pet)
       .where(and(eq(pet.id, data.petId), eq(pet.userId, context.userId)))
       .limit(1);
-    return { pet: rows[0] ?? null };
+    return {
+      pet: rows[0] ?? null,
+      userEmail: userRow?.email ?? null,
+    };
   });
 
 const markPetCheckoutStartedSchema = z.object({

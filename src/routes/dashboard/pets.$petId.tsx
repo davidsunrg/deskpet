@@ -16,17 +16,19 @@ export const Route = createFileRoute('/dashboard/pets/$petId')({
     step: isDashboardPetDetailStep(search.step) ? search.step : undefined,
   }),
   loader: async ({ params }) => {
-    const { pet } = await getUserPetFn({ data: { petId: params.petId } });
+    const { pet, userEmail } = await getUserPetFn({
+      data: { petId: params.petId },
+    });
     if (!pet) {
       throw notFound();
     }
-    return { pet };
+    return { pet, userEmail };
   },
   component: DashboardPetDetailPage,
 });
 
 function DashboardPetDetailPage() {
-  const { pet } = Route.useLoaderData();
+  const { pet, userEmail } = Route.useLoaderData();
   const { step } = Route.useSearch();
 
   return (
@@ -39,6 +41,7 @@ function DashboardPetDetailPage() {
     >
       <DashboardPetDetail
         pet={pet}
+        userEmail={userEmail}
         initialStep={step ?? DEFAULT_DASHBOARD_PET_DETAIL_STEP}
       />
     </DashboardPageShell>

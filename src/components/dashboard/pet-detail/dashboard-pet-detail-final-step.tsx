@@ -5,21 +5,40 @@ import {
 import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
 import { CustomPetLimitedOfferBanner } from '@/components/dashboard/custom-pet-limited-offer-banner';
 import { useTranslations } from '@/lib/deskpet-i18n';
+import { formatDateTime } from '@/lib/formatter';
 import { cn } from '@/lib/utils';
 import { CheckCircle2Icon } from 'lucide-react';
 
+const SUPPORT_EMAIL = 'david@deskpet.ai';
+const DELIVERY_HOURS = 24;
+const MS_PER_HOUR = 60 * 60 * 1000;
+
 type DashboardPetDetailFinalStepProps = {
   isPaid: boolean;
+  paidAt?: Date | string | null;
+  userEmail?: string | null;
   checkoutBusy: boolean;
   onJoinQueue: () => void | Promise<void>;
 };
 
+function toDate(value: Date | string | null | undefined): Date | null {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
 export function DashboardPetDetailFinalStep({
   isPaid,
+  paidAt,
+  userEmail,
   checkoutBusy,
   onJoinQueue,
 }: DashboardPetDetailFinalStepProps) {
   const t = useTranslations('DashboardPetDetail');
+  const paidAtDate = toDate(paidAt ?? null);
+  const deliveryAt = paidAtDate
+    ? new Date(paidAtDate.getTime() + DELIVERY_HOURS * MS_PER_HOUR)
+    : null;
 
   return (
     <section
@@ -37,13 +56,39 @@ export function DashboardPetDetailFinalStep({
         )}
       />
       {isPaid ? (
-        <div className="mt-2 rounded-2xl border-2 border-deskpet-mint bg-deskpet-mint-soft/40 p-5">
-          <p className="m-0 text-lg font-black text-deskpet-ink">
-            {t('final.paidTitle')}
-          </p>
-          <p className="mt-2 m-0 text-sm leading-6 text-deskpet-muted">
-            {t('final.paidDescription')}
-          </p>
+        <div className="mt-2 space-y-4 rounded-2xl border-2 border-deskpet-mint bg-deskpet-mint-soft/40 p-5">
+          <div>
+            <p className="m-0 text-lg font-black text-deskpet-ink">
+              {t('final.paidTitle')}
+            </p>
+            <p className="mt-2 m-0 text-sm leading-6 text-deskpet-muted">
+              {t('final.paidDescription')}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-deskpet-ink/10 bg-white/70 px-4 py-3 dark:bg-card/60">
+            <p className="m-0 text-xs font-black tracking-[0.08em] text-[#11685e]">
+              {t('final.deliveryLabel')}
+            </p>
+            <p className="mt-1 m-0 text-base font-black text-deskpet-ink">
+              {deliveryAt
+                ? t('final.deliveryValue', {
+                    datetime: formatDateTime(deliveryAt),
+                  })
+                : t('final.deliveryFallback')}
+            </p>
+          </div>
+
+          <div className="space-y-2 text-sm leading-6 text-deskpet-muted">
+            <p className="m-0">
+              {userEmail
+                ? t('final.contactEmail', { email: userEmail })
+                : t('final.contactEmailFallback')}
+            </p>
+            <p className="m-0">
+              {t('final.supportEmail', { email: SUPPORT_EMAIL })}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="flex min-h-0 flex-1 items-center justify-center">

@@ -28,12 +28,14 @@ export type UserPetDetail = {
   avatar: string | null;
   photoKeys: string[];
   status: string;
+  paidAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
 
 type DashboardPetDetailProps = {
   pet: UserPetDetail;
+  userEmail?: string | null;
   initialStep?: DashboardPetDetailStep;
 };
 
@@ -45,6 +47,7 @@ function getSexLabel(sex: string | null): string | null {
 
 export function DashboardPetDetail({
   pet,
+  userEmail = null,
   initialStep = DEFAULT_DASHBOARD_PET_DETAIL_STEP,
 }: DashboardPetDetailProps) {
   const [step, setStep] = useState<DashboardPetDetailStep>(initialStep);
@@ -130,6 +133,8 @@ export function DashboardPetDetail({
         {step === 'final' ? (
           <DashboardPetDetailFinalStep
             isPaid={isPaid}
+            paidAt={pet.paidAt}
+            userEmail={userEmail}
             checkoutBusy={checkoutBusy}
             onJoinQueue={handleJoinQueue}
           />

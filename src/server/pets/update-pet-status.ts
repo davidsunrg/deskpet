@@ -5,7 +5,7 @@ import {
   PetCreationStatus,
   type PetCreationStatus as PetCreationStatusType,
 } from '@/utils/pets/pet-creation-status';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 export async function updatePetStatusForUser(
   petId: string,
@@ -13,11 +13,18 @@ export async function updatePetStatusForUser(
   status: PetCreationStatus
 ): Promise<boolean> {
   const db = getDb();
+  const now = new Date();
   const rows = await db
     .update(pet)
     .set({
       status,
-      updatedAt: new Date(),
+      updatedAt: now,
+      ...(status === PetCreationStatus.Paid
+        ? {
+            // Keep the original paid timestamp across webhook / poll retries.
+            paidAt: sql`COALESCE(${pet.paidAt}, ${now.getTime()})`,
+          }
+        : {}),
     })
     .where(and(eq(pet.id, petId), eq(pet.userId, userId)))
     .returning({ id: pet.id });

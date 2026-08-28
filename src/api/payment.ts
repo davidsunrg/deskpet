@@ -12,7 +12,7 @@ import {
   getPaymentProvider,
   getPaymentProviderName,
 } from '@/payment';
-import { StripeProvider } from '@/payment/provider/stripe';
+import type { StripeProvider } from '@/payment/provider/stripe';
 import type {
   PaymentStatus,
   PlanInterval,
@@ -239,7 +239,11 @@ export const checkPaymentCompletion = createServerFn({ method: 'GET' })
         )
       )
       .limit(1);
-    if (record?.paid && record.sessionId && getPaymentProviderName() === 'stripe') {
+    if (
+      record?.paid &&
+      record.sessionId &&
+      getPaymentProviderName() === 'stripe'
+    ) {
       try {
         await (
           getPaymentProvider() as StripeProvider

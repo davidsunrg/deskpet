@@ -735,7 +735,9 @@ export class StripeProvider implements PaymentProvider {
     }
   }
 
-  public async syncPetPaidFromCheckoutSession(sessionId: string): Promise<void> {
+  public async syncPetPaidFromCheckoutSession(
+    sessionId: string
+  ): Promise<void> {
     const session = await this.stripe.checkout.sessions.retrieve(sessionId);
     await markPetPaidFromCheckoutMetadata(
       session.metadata as Record<string, string | undefined>
