@@ -1,8 +1,10 @@
 import { listHeroPets } from '@/pets/catalog';
 import { createPetFromDraft } from '@/server/pets/create-pet-from-draft';
+import { recognizePetMakerPhotos } from '@/server/pets/recognize-pet-maker-photos';
 import { deleteObject, getPresignedUploadUrl } from '@/lib/storage/r2-s3';
 import { getBaseUrl } from '@/lib/urls';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
+import type { CreatorRecognitionCache } from '@/types/creator-recognition';
 import { PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
 import {
   buildPetMakerStagingKey,
@@ -18,6 +20,8 @@ const ALLOWED_CONTENT_TYPES = [
   'image/png',
   'image/webp',
 ] as const;
+
+const MAX_CREATOR_PHOTOS = 8;
 
 function extensionForContentType(contentType: string): string {
   switch (contentType) {
@@ -72,6 +76,40 @@ export const deletePetMakerStagingObjectFn = createServerFn({ method: 'POST' })
     await deleteObject(data.r2Key);
   });
 
+const creatorRecognitionCacheSchema = z.object({
+  mediaIds: z.array(z.string()).min(1).max(MAX_CREATOR_PHOTOS),
+  result: z.object({
+    species: z.enum(['cat', 'dog', 'character', 'unknown']),
+    breed: z.string().min(1).max(120),
+    confidence: z.number(),
+    colors: z.array(z.string()),
+    markings: z.array(z.string()),
+    visiblePose: z.string(),
+    notes: z.string(),
+    likelyBreed: z.string().optional(),
+  }),
+  model: z.string().min(1),
+  modelLabel: z.string().min(1),
+  llmLogId: z.string().nullable(),
+  recognizedAt: z.string().min(1),
+});
+
+const recognizePhotosSchema = z.object({
+  draftId: z.string().refine(isUuid, 'Invalid draft id'),
+  photoKeys: z.array(z.string().min(1)).min(1).max(MAX_CREATOR_PHOTOS),
+  model: z.string().min(1).optional(),
+});
+
+export const recognizePetMakerPhotosFn = createServerFn({ method: 'POST' })
+  .validator(recognizePhotosSchema)
+  .handler(async ({ data }) => {
+    return recognizePetMakerPhotos({
+      draftId: data.draftId,
+      photoKeys: data.photoKeys,
+      model: data.model,
+    });
+  });
+
 const createPetSchema = z.object({
   draftId: z.string().refine(isUuid, 'Invalid draft id'),
   petName: z.string().trim().min(1).max(120),
@@ -79,7 +117,8 @@ const createPetSchema = z.object({
   breed: z.string().trim().min(1).max(120),
   sex: z.string().trim().max(32).nullable(),
   avatarKey: z.string().nullable(),
-  photoKeys: z.array(z.string()).min(1).max(8),
+  photoKeys: z.array(z.string()).min(1).max(MAX_CREATOR_PHOTOS),
+  creatorRecognition: creatorRecognitionCacheSchema.nullable().optional(),
 });
 
 export const createPetFn = createServerFn({ method: 'POST' })
@@ -95,6 +134,11 @@ export const createPetFn = createServerFn({ method: 'POST' })
       sex: data.sex,
       avatarKey: data.avatarKey,
       photoKeys: data.photoKeys,
+      creatorRecognition:
+        (data.creatorRecognition as
+          | CreatorRecognitionCache
+          | null
+          | undefined) ?? null,
     });
     return { petId: result.petId };
   });

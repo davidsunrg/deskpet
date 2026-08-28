@@ -4,6 +4,7 @@
 
 import { relations } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import type { CreatorRecognitionCache } from '@/types/creator-recognition';
 import {
   DEFAULT_PET_CREATION_STATUS,
   type PetCreationStatus,
@@ -27,6 +28,10 @@ export const pet = sqliteTable(
     photoKeys: text('photo_keys', { mode: 'json' })
       .$type<string[]>()
       .notNull(),
+    /** Cached Ark recognition result from the pet maker photos step. */
+    creatorRecognition: text('creator_recognition', { mode: 'json' }).$type<
+      CreatorRecognitionCache | null
+    >(),
     status: text('status')
       .notNull()
       .default(DEFAULT_PET_CREATION_STATUS)

@@ -1,6 +1,7 @@
 import { getDb } from '@/db';
 import { pet } from '@/db/pet.schema';
 import { copyObject, deleteObject } from '@/lib/storage/r2-s3';
+import type { CreatorRecognitionCache } from '@/types/creator-recognition';
 import {
   buildPetMakerFinalKey,
   extensionFromKey,
@@ -19,6 +20,7 @@ export type CreatePetFromDraftInput = {
   sex: string | null;
   avatarKey: string | null;
   photoKeys: string[];
+  creatorRecognition?: CreatorRecognitionCache | null;
 };
 
 export type CreatePetFromDraftResult = {
@@ -87,6 +89,7 @@ export async function createPetFromDraft(
     sex: input.sex,
     avatar: finalAvatarKey,
     photoKeys: finalPhotoKeys,
+    creatorRecognition: input.creatorRecognition ?? null,
     status: PetCreationStatus.ProfileCreated,
     createdAt: now,
     updatedAt: now,

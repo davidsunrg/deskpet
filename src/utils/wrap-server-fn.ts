@@ -46,14 +46,12 @@ export async function wrapFlatServerFn<T extends Record<string, unknown>>(
   }
 }
 
-export async function wrapRecognitionServerFn(
-  run: () => Promise<{
-    success: boolean;
-    error?: string;
-    data?: unknown;
-  }>
+export async function wrapRecognitionServerFn<
+  T extends { success: boolean; error?: string },
+>(
+  run: () => Promise<T>
 ): Promise<{
-  data?: { success: true; data: unknown } | ActionFailure;
+  data?: (T & { success: true }) | ActionFailure;
   serverError?: unknown;
 }> {
   try {
@@ -66,7 +64,7 @@ export async function wrapRecognitionServerFn(
         },
       };
     }
-    return { data: { success: true as const, data: result.data } };
+    return { data: result as T & { success: true } };
   } catch (error) {
     console.error('recognition server fn error:', error);
     return { serverError: error };

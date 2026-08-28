@@ -4,6 +4,7 @@ import {
   createPetFn,
   deletePetMakerStagingObjectFn,
   getPetMakerStagingUploadUrlFn,
+  recognizePetMakerPhotosFn,
 } from '@/api/marketing-pet-maker';
 import { authClient } from '@/lib/auth/auth-client';
 import { userFacingClientErrorMessage } from '@/lib/analytics/user-facing-client-error-message';
@@ -12,7 +13,10 @@ import { useLocale, useTranslations } from '@/lib/deskpet-i18n';
 import { Routes } from '@/lib/routes';
 import { uploadFileWithPresignedUrl } from '@/lib/storage/presigned-upload';
 import { getPathWithLocale } from '@/lib/urls';
-import type { CreatorPetRecognitionData } from '@/types/creator-recognition';
+import type {
+  CreatorPetRecognitionData,
+  CreatorRecognitionCache,
+} from '@/types/creator-recognition';
 import { assertActionSuccess } from '@/utils/assert-action-success';
 import {
   compressSquareAvatar,
@@ -51,12 +55,19 @@ import {
 } from '@/utils/pets/marketing-pet-maker-steps';
 import { ACTION_POSE_REFERENCE_MIME_TYPE } from '@/utils/pets/action-pose';
 import {
+  fingerprintMediaIds,
+  mediaIdsMatch,
+} from '@/utils/pets/creator-recognition';
+import {
   isUnsupportedCreatorRecognitionSpecies,
   mapPetRecognitionToPrefill,
 } from '@/utils/pets/map-pet-recognition-to-prefill';
 import { preparePetActionReferenceImage } from '@/utils/pets/prepare-pet-action-reference-image';
 import { uploadPetAvatar } from '@/utils/pets/upload-pet-avatar';
-import { wrapNestedServerFn } from '@/utils/wrap-server-fn';
+import {
+  wrapNestedServerFn,
+  wrapRecognitionServerFn,
+} from '@/utils/wrap-server-fn';
 import { useNavigate } from '@tanstack/react-router';
 import { usePostHog } from 'posthog-js/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -172,6 +183,18 @@ export function useMarketingPetMaker(options?: {
   const resumeCreateStartedRef = useRef(false);
 
   const initialLocalDraft = readDraft() ?? createEmptyDraft();
+  const initialPhotos = wizardPhotosFromLocalDraft();
+  const initialPhotoKeys = initialPhotos
+    .filter((photo) => photo.status === 'ready' && photo.r2Key)
+    .map((photo) => photo.r2Key!);
+  const initialRecognition =
+    initialLocalDraft.creatorRecognition &&
+    mediaIdsMatch(
+      initialLocalDraft.creatorRecognition.mediaIds,
+      initialPhotoKeys
+    )
+      ? initialLocalDraft.creatorRecognition
+      : null;
   const shouldResumeCreateOnMount =
     options?.initialResumeCreate === true ||
     readPendingPetMakerCreateAfterAuth();
@@ -181,9 +204,7 @@ export function useMarketingPetMaker(options?: {
       ? 'details'
       : initialStepFromDraft(initialLocalDraft)
   );
-  const [photos, setPhotos] = useState<WizardPhoto[]>(() =>
-    wizardPhotosFromLocalDraft()
-  );
+  const [photos, setPhotos] = useState<WizardPhoto[]>(() => initialPhotos);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
   const [cropOpen, setCropOpen] = useState(false);
@@ -199,15 +220,22 @@ export function useMarketingPetMaker(options?: {
   const [sex, setSex] = useState<PetSex | ''>(() => initialLocalDraft.sex);
   // URL flag (SSR) or sessionStorage pending — same Creating button as logged-in create.
   const [creatingPet, setCreatingPet] = useState(shouldResumeCreateOnMount);
-  const [recognitionStatus, setRecognitionStatus] =
-    useState<RecognitionStatus>('idle');
+  const [recognitionStatus, setRecognitionStatus] = useState<RecognitionStatus>(
+    () => (initialRecognition ? 'success' : 'idle')
+  );
   const [recognitionData, setRecognitionData] =
-    useState<CreatorPetRecognitionData | null>(null);
+    useState<CreatorPetRecognitionData | null>(
+      () => initialRecognition?.result ?? null
+    );
+  const [recognitionCache, setRecognitionCache] =
+    useState<CreatorRecognitionCache | null>(() => initialRecognition);
   const [waitingForRecognition, setWaitingForRecognition] = useState(false);
   const [unsupportedRecognitionOpen, setUnsupportedRecognitionOpen] =
     useState(false);
   const recognitionGenerationRef = useRef(0);
-  const lastRecognizedMediaFingerprintRef = useRef<string | null>(null);
+  const lastRecognizedMediaFingerprintRef = useRef<string | null>(
+    initialRecognition ? fingerprintMediaIds(initialRecognition.mediaIds) : null
+  );
   const [authOpen, setAuthOpen] = useState(false);
   const photosRef = useRef(photos);
   photosRef.current = photos;
@@ -248,9 +276,10 @@ export function useMarketingPetMaker(options?: {
               photo.previewUrl ??
               `${window.location.origin}/api/storage/file?key=${encodeURIComponent(photo.r2Key!)}`,
           })),
+        creatorRecognition: recognitionCache,
       })
     );
-  }, [breed, draftId, petName, photos, sex, species, step]);
+  }, [breed, draftId, petName, photos, recognitionCache, sex, species, step]);
 
   const currentIndex = marketingPetMakerStepIndex(step);
   const readyPhotos = photos.filter((photo) => photo.status === 'ready');
@@ -367,6 +396,7 @@ export function useMarketingPetMaker(options?: {
     lastRecognizedMediaFingerprintRef.current = null;
     setRecognitionStatus('idle');
     setRecognitionData(null);
+    setRecognitionCache(null);
     setWaitingForRecognition(false);
   }, []);
 
@@ -689,6 +719,7 @@ export function useMarketingPetMaker(options?: {
           sex,
           avatarKey: null,
           photoKeys,
+          creatorRecognition: recognitionCache,
         },
       })
     );
@@ -710,6 +741,7 @@ export function useMarketingPetMaker(options?: {
     petName,
     posthog,
     readyPhotos,
+    recognitionCache,
     sex,
     species,
     t,
@@ -866,10 +898,69 @@ export function useMarketingPetMaker(options?: {
           ? isDetailsComplete
           : false;
 
-  const startBackgroundRecognition = (_photoList: WizardPhoto[]) => {
-    setRecognitionStatus('skipped');
-    setRecognitionData(null);
-  };
+  const startBackgroundRecognition = useCallback(
+    (photoList: WizardPhoto[]) => {
+      const readyKeys = photoList
+        .filter((photo) => photo.status === 'ready' && photo.r2Key)
+        .map((photo) => photo.r2Key!)
+        .slice(0, MAX_CREATOR_PHOTOS);
+
+      if (readyKeys.length === 0) {
+        setRecognitionStatus('skipped');
+        setRecognitionData(null);
+        setRecognitionCache(null);
+        return;
+      }
+
+      const fingerprint = fingerprintMediaIds(readyKeys);
+      if (
+        lastRecognizedMediaFingerprintRef.current === fingerprint &&
+        recognitionCache &&
+        mediaIdsMatch(recognitionCache.mediaIds, readyKeys)
+      ) {
+        setRecognitionStatus('success');
+        setRecognitionData(recognitionCache.result);
+        return;
+      }
+
+      const generation = recognitionGenerationRef.current + 1;
+      recognitionGenerationRef.current = generation;
+      setRecognitionStatus('loading');
+      setRecognitionData(null);
+
+      void (async () => {
+        const result = await wrapRecognitionServerFn(() =>
+          recognizePetMakerPhotosFn({
+            data: {
+              draftId,
+              photoKeys: readyKeys,
+            },
+          })
+        );
+
+        if (!isMountedRef.current) return;
+        if (recognitionGenerationRef.current !== generation) return;
+
+        if (result.serverError || !result.data?.success) {
+          console.error(
+            'wizard recognition failed:',
+            result.serverError ?? result.data
+          );
+          setRecognitionStatus('skipped');
+          setRecognitionData(null);
+          setRecognitionCache(null);
+          return;
+        }
+
+        const payload = result.data;
+        lastRecognizedMediaFingerprintRef.current = fingerprint;
+        setRecognitionCache(payload.cache);
+        setRecognitionData(payload.data);
+        setRecognitionStatus('success');
+      })();
+    },
+    [draftId, recognitionCache]
+  );
 
   const handleContinue = () => {
     if (waitingForRecognition) return;

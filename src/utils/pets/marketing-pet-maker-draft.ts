@@ -1,8 +1,10 @@
+import type { CreatorRecognitionCache } from '@/types/creator-recognition';
 import type { PetBreed, PetSex, PetSpecies } from '@/utils/pet-catalog';
 import {
   isMarketingPetMakerStep,
   type MarketingPetMakerStep,
 } from '@/utils/pets/marketing-pet-maker-steps';
+import { asCreatorRecognitionCache } from '@/utils/pets/creator-recognition';
 
 export const PET_MAKER_DRAFT_STORAGE_KEY = 'deskpet:pet-maker-draft';
 
@@ -50,6 +52,8 @@ export type PetMakerLocalDraft = {
   sex: PetSex | '';
   avatarKey: string | null;
   photos: PetMakerLocalDraftPhoto[];
+  /** Latest successful recognition for the current photo set. */
+  creatorRecognition?: CreatorRecognitionCache | null;
 };
 
 function newDraftId(): string {
@@ -65,6 +69,7 @@ export function createEmptyDraft(): PetMakerLocalDraft {
     sex: '',
     avatarKey: null,
     photos: [],
+    creatorRecognition: null,
   };
 }
 
@@ -90,6 +95,7 @@ export function readDraft(): PetMakerLocalDraft | null {
           typeof photo.r2Key === 'string' &&
           typeof photo.previewUrl === 'string'
       ),
+      creatorRecognition: asCreatorRecognitionCache(parsed.creatorRecognition),
     };
   } catch {
     return null;
