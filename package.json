@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
+    "stripe:dev": "stripe listen --forward-to localhost:3000/api/webhooks/stripe",
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
