@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getBaseUrl } from '@/lib/urls';
 import { getCategories, getSortedPosts } from '@/lib/blog';
-import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import { websiteConfig } from '@/config/website';
 import { petDetailRoute } from '@/lib/routes';
 import {
@@ -16,6 +15,10 @@ import { listPetResources } from '@/utils/pets/pet-resources';
 /**
  * Dynamic sitemap.xml
  * https://tanstack.dev/start/latest/docs/framework/react/guide/seo#dynamic-sitemap
+ *
+ * Static routes mirror navbar-discoverable product pages (+ home, + /pricing
+ * for SEO even when marketing nav pricing is off). Footer-only pages
+ * (about/contact/legal/health/expense) are intentionally omitted.
  */
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
@@ -34,20 +37,11 @@ export const Route = createFileRoute('/sitemap.xml')({
           { path: '/tools/pet-video-maker', changefreq: 'monthly' },
           { path: '/pets', changefreq: 'weekly' },
           { path: '/p', changefreq: 'weekly' },
-          { path: '/about', changefreq: 'monthly' },
-          { path: '/contact', changefreq: 'monthly' },
-          { path: '/health', changefreq: 'monthly' },
-          { path: '/expense', changefreq: 'monthly' },
-          { path: '/terms', changefreq: 'monthly' },
-          { path: '/privacy', changefreq: 'monthly' },
-          { path: '/cookie', changefreq: 'monthly' },
+          { path: '/pricing', changefreq: 'weekly' },
         ];
 
         if (websiteConfig.blog?.enable) {
           staticUrls.push({ path: '/blog', changefreq: 'weekly' });
-        }
-        if (isMarketingPricingEnabled()) {
-          staticUrls.push({ path: '/pricing', changefreq: 'weekly' });
         }
 
         const alternates = (path: string) => {

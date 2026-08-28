@@ -123,7 +123,7 @@ export interface StorageConfig {
 /** Payment configuration */
 export interface PaymentConfig {
   enable?: boolean;                             // Whether to enable payment; when false, no checkout/billing
-  /** Homepage pricing block, /pricing page, and marketing nav/footer links. */
+  /** Homepage pricing block and marketing nav/footer links (not the /pricing URL itself). */
   showMarketingPricing?: boolean;
   provider?: 'stripe' | ''; // The payment provider, empty means disabled
   price?: PriceConfig;                          // The price plans configuration
