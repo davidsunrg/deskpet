@@ -1,9 +1,10 @@
 'use client';
 
 import { authClient } from '@/auth/client';
+import { LoginWrapper } from '@/components/auth/login-wrapper';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { LocaleLink } from '@/lib/i18n/navigation';
-import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
+import { DEFAULT_LOGIN_REDIRECT } from '@/lib/routes';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
 import { m } from '@/locale/paraglide/messages';
@@ -44,13 +45,11 @@ export function MarketingLoginButton({
     );
   }
 
-  const loginHref = callbackUrl
-    ? `${Routes.Login}?callbackUrl=${encodeURIComponent(callbackUrl)}`
-    : Routes.Login;
-
   return (
-    <LocaleLink href={loginHref} className={loginButtonClass}>
-      {loginLabel}
-    </LocaleLink>
+    <LoginWrapper mode="modal" asChild callbackUrl={callbackUrl}>
+      <button type="button" className={loginButtonClass}>
+        {loginLabel}
+      </button>
+    </LoginWrapper>
   );
 }

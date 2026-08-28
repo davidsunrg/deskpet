@@ -193,15 +193,10 @@
         },
         "item-5": {
           "question": "Can I use my own pet?",
-          "answer": "Not yet—custom pets are coming soon. For now you can play with companions like Hua and Gucci in the playground and desktop app."
-        },
-        "item-6": {
-          "question": "What can I use AI credits for?",
-          "answer": "AI credits power pet image generation, pet video generation, custom interactions, medical record summaries, invoice parsing, receipt OCR, and more. Since your pet's photos, health records, expenses, and memories are already organized in DeskPet, AI can provide more personalized results without requiring you to upload or explain everything again."
-        },
-        "item-7": {
-          "question": "What happens if I run out of AI credits?",
-          "answer": "You can buy more AI credits whenever you need them. Your free DeskPet features will keep working even if your credits run out."
+          "answer": "Yes. Create a custom companion from your pet's photos in the DeskPet Maker.",
+          "answerBeforeLink": "Yes. Create a custom companion from your pet's photos in the ",
+          "answerLinkLabel": "DeskPet Maker",
+          "answerAfterLink": "."
         }
       }
     },

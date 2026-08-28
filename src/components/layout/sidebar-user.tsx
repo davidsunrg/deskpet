@@ -26,24 +26,29 @@ import {
   type Locale,
 } from '@/lib/locale';
 import { useLocaleSwitcher } from '@/components/layout/locale-switcher';
+import { Routes } from '@/lib/routes';
 import {
+  IconCreditCard,
   IconDeviceDesktop,
   IconLanguage,
   IconLogout,
   IconMoon,
   IconSelector,
+  IconSettings2,
   IconSun,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTheme } from '@/components/theme/theme-provider';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { authClient } from '@/auth/client';
-import { useRouter } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
+
 interface SidebarUserProps {
   user: SessionUser;
   className?: string;
 }
+
 export function SidebarUser({ user }: SidebarUserProps) {
   const router = useRouter();
   const { setTheme, theme } = useTheme();
@@ -54,12 +59,14 @@ export function SidebarUser({ user }: SidebarUserProps) {
   });
   const showModeSwitch = websiteConfig.ui?.mode?.enableSwitch ?? false;
   const showLocaleSwitch = localeSwitchEnabled && locales.length > 1;
+  const showBilling = websiteConfig.payment?.enable === true;
   const ThemeIcon =
     theme === 'system'
       ? IconDeviceDesktop
       : theme === 'dark'
         ? IconMoon
         : IconSun;
+
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -73,6 +80,7 @@ export function SidebarUser({ user }: SidebarUserProps) {
       },
     });
   };
+
   return (
     <SidebarMenu className="border-t pt-4">
       <SidebarMenuItem>
@@ -120,6 +128,30 @@ export function SidebarUser({ user }: SidebarUserProps) {
                   </div>
                 </div>
               </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+              {showBilling ? (
+                <Link
+                  to={Routes.SettingsBilling}
+                  className="block"
+                  onClick={() => setOpen(false)}
+                >
+                  <DropdownMenuItem>
+                    <IconCreditCard className="mr-2 size-4" />
+                    {m.dashboard_avatar_billing()}
+                  </DropdownMenuItem>
+                </Link>
+              ) : null}
+              <Link
+                to={Routes.SettingsProfile}
+                className="block"
+                onClick={() => setOpen(false)}
+              >
+                <DropdownMenuItem>
+                  <IconSettings2 className="mr-2 size-4" />
+                  {m.dashboard_avatar_settings()}
+                </DropdownMenuItem>
+              </Link>
 
               {showModeSwitch && (
                 <>

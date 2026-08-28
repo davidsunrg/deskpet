@@ -8,13 +8,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { cn } from '@/utils/cn';
 import { useTranslations } from '@/lib/deskpet-i18n';
+import { LocaleLink } from '@/lib/i18n/navigation';
+import { Routes } from '@/lib/routes';
+import { cn } from '@/utils/cn';
+import type { ReactNode } from 'react';
 
 type FAQItem = {
   id: string;
   question: string;
-  answer: string;
+  answer: ReactNode;
 };
 
 export default function FaqSection() {
@@ -44,17 +47,18 @@ export default function FaqSection() {
     {
       id: 'item-5',
       question: t('items.item-5.question'),
-      answer: t('items.item-5.answer'),
-    },
-    {
-      id: 'item-6',
-      question: t('items.item-6.question'),
-      answer: t('items.item-6.answer'),
-    },
-    {
-      id: 'item-7',
-      question: t('items.item-7.question'),
-      answer: t('items.item-7.answer'),
+      answer: (
+        <>
+          {t('items.item-5.answerBeforeLink')}
+          <LocaleLink
+            href={Routes.DesktopPetCreator}
+            className="font-semibold text-deskpet-ink underline underline-offset-2 hover:text-[#155b43] dark:text-foreground"
+          >
+            {t('items.item-5.answerLinkLabel')}
+          </LocaleLink>
+          {t('items.item-5.answerAfterLink')}
+        </>
+      ),
     },
   ];
 
