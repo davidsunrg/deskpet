@@ -6,10 +6,6 @@ import { MarketingPetMakerDetailsStep } from '@/components/marketing/pet-maker/m
 import { MarketingPetMakerPhotosStep } from '@/components/marketing/pet-maker/marketing-pet-maker-photos-step';
 import { MarketingPetMakerStepNav } from '@/components/marketing/pet-maker/marketing-pet-maker-step-nav';
 import { useMarketingPetMaker } from '@/components/marketing/pet-maker/use-marketing-pet-maker';
-import {
-  dashboardCardClass,
-  DashboardCardHeader,
-} from '@/components/dashboard/dashboard-card';
 import { PetAvatarCropDialog } from '@/components/pets/pet-avatar-crop-dialog';
 import {
   AlertDialog,
@@ -24,59 +20,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
 import { useTranslations } from '@/lib/deskpet-i18n';
-import { cn } from '@/lib/utils';
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  LoaderIcon,
-  PawPrintIcon,
-} from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, LoaderIcon } from 'lucide-react';
 
-export function MarketingPetMakerWizard() {
+export function MarketingPetMakerWizard({
+  initialResumeCreate = false,
+}: {
+  initialResumeCreate?: boolean;
+}) {
   const t = useTranslations('MarketingPetMaker');
-  const maker = useMarketingPetMaker();
-
-  if (maker.resumingCreateAfterAuth) {
-    return (
-      <div
-        translate="no"
-        data-google-translate="no"
-        className="notranslate mx-auto flex max-w-7xl flex-col gap-6 pb-12"
-      >
-        <header className="text-center">
-          <p className="mb-3 text-sm font-black uppercase tracking-[0.18em] text-deskpet-muted">
-            {t('eyebrow')}
-          </p>
-          <h1 className="font-sans text-[clamp(2rem,5vw,4rem)] font-black tracking-tight text-deskpet-ink">
-            {t('title')}
-          </h1>
-        </header>
-
-        <section
-          className={cn(
-            dashboardCardClass,
-            'mx-auto flex w-full max-w-lg flex-col items-center gap-4 p-8 text-center'
-          )}
-        >
-          <DashboardCardHeader
-            icon={<PawPrintIcon className="size-[18px]" />}
-            accent="bg-deskpet-mint-soft"
-            title={t('profile.resumeCreatingTitle')}
-            description={t('profile.resumeCreatingDescription')}
-          />
-          <LoaderIcon className="size-8 animate-spin text-deskpet-ink" />
-        </section>
-
-        <AuthDialog
-          open={maker.authOpen}
-          onOpenChange={maker.setAuthOpen}
-          callbackUrl={maker.makerCallbackHref}
-          onAuthenticated={maker.handleAuthAuthenticated}
-          preventTranslation
-        />
-      </div>
-    );
-  }
+  const maker = useMarketingPetMaker({ initialResumeCreate });
 
   return (
     <div
@@ -159,7 +111,7 @@ export function MarketingPetMakerWizard() {
           <Button
             type="button"
             variant="outline"
-            disabled={maker.currentIndex === 0}
+            disabled={maker.currentIndex === 0 || maker.creatingPet}
             onClick={maker.handleBack}
           >
             <ArrowLeftIcon className="size-4" />

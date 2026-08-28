@@ -37,6 +37,7 @@ import {
   ensureDraftId,
   readDraft,
   readPendingPetMakerCreateAfterAuth,
+  withPetMakerResumeCreateParam,
   writeDraft,
   writePendingPetMakerCreateAfterAuth,
   type PetMakerLocalDraft,
@@ -155,19 +156,28 @@ function initialStepFromDraft(
   );
 }
 
-export function useMarketingPetMaker() {
+export function useMarketingPetMaker(options?: {
+  /** OAuth callback `?resumeCreate=1` — show Creating on first paint. */
+  initialResumeCreate?: boolean;
+}) {
   const t = useTranslations('MarketingPetMaker');
   const locale = useLocale();
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const photoPickerButtonRef = useRef<HTMLButtonElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending: sessionPending } = authClient.useSession();
+  const resumeCreateStartedRef = useRef(false);
 
   const initialLocalDraft = readDraft() ?? createEmptyDraft();
+  const shouldResumeCreateOnMount =
+    options?.initialResumeCreate === true ||
+    readPendingPetMakerCreateAfterAuth();
   const [draftId] = useState(() => ensureDraftId(initialLocalDraft).draftId);
   const [step, setStep] = useState<MarketingPetMakerStep>(() =>
-    initialStepFromDraft(initialLocalDraft)
+    shouldResumeCreateOnMount
+      ? 'details'
+      : initialStepFromDraft(initialLocalDraft)
   );
   const [photos, setPhotos] = useState<WizardPhoto[]>(() =>
     wizardPhotosFromLocalDraft()
@@ -185,12 +195,8 @@ export function useMarketingPetMaker() {
     () => initialLocalDraft.breed
   );
   const [sex, setSex] = useState<PetSex | ''>(() => initialLocalDraft.sex);
-  const [creatingPet, setCreatingPet] = useState(false);
-  // True on OAuth return when create was pending, so the wizard can hide the
-  // form before session/create finishes and avoid a flash of editable UI.
-  const [resumingCreateAfterAuth, setResumingCreateAfterAuth] = useState(() =>
-    readPendingPetMakerCreateAfterAuth()
-  );
+  // URL flag (SSR) or sessionStorage pending — same Creating button as logged-in create.
+  const [creatingPet, setCreatingPet] = useState(shouldResumeCreateOnMount);
   const [recognitionStatus, setRecognitionStatus] =
     useState<RecognitionStatus>('idle');
   const [recognitionData, setRecognitionData] =
@@ -625,7 +631,9 @@ export function useMarketingPetMaker() {
     }
   };
 
-  const makerCallbackHref = getPathWithLocale(Routes.DesktopPetCreator, locale);
+  const makerCallbackHref = withPetMakerResumeCreateParam(
+    getPathWithLocale(Routes.DesktopPetCreator, locale)
+  );
 
   const validateCreateReadiness = useCallback((): boolean => {
     if (uploadingPhotos) {
@@ -779,10 +787,8 @@ export function useMarketingPetMaker() {
     setAuthOpen(false);
     if (!validateCreateReadiness()) {
       setCreatingPet(false);
-      setResumingCreateAfterAuth(false);
       return;
     }
-    setResumingCreateAfterAuth(true);
     setCreatingPet(true);
     try {
       await submitPetRecord();
@@ -792,24 +798,30 @@ export function useMarketingPetMaker() {
         userFacingClientErrorMessage(error, t('profile.createError'))
       );
       setCreatingPet(false);
-      setResumingCreateAfterAuth(false);
     }
   }, [submitPetRecord, t, validateCreateReadiness]);
 
   useEffect(() => {
-    if (!readPendingPetMakerCreateAfterAuth()) return;
-    if (!isVerifiedSignedInUser(session?.user)) return;
-    if (creatingPet || authOpen) return;
+    const shouldResume =
+      options?.initialResumeCreate === true ||
+      readPendingPetMakerCreateAfterAuth();
+    if (!shouldResume || authOpen || resumeCreateStartedRef.current) return;
+    if (sessionPending) return;
+    if (!isVerifiedSignedInUser(session?.user)) {
+      clearPendingPetMakerCreateAfterAuth();
+      setCreatingPet(false);
+      return;
+    }
 
+    resumeCreateStartedRef.current = true;
     clearPendingPetMakerCreateAfterAuth();
-    setResumingCreateAfterAuth(true);
+    setStep('details');
+    setCreatingPet(true);
     void (async () => {
       if (!validateCreateReadiness()) {
         setCreatingPet(false);
-        setResumingCreateAfterAuth(false);
         return;
       }
-      setCreatingPet(true);
       try {
         await submitPetRecord();
       } catch (error) {
@@ -818,13 +830,13 @@ export function useMarketingPetMaker() {
           userFacingClientErrorMessage(error, t('profile.createError'))
         );
         setCreatingPet(false);
-        setResumingCreateAfterAuth(false);
       }
     })();
   }, [
     authOpen,
-    creatingPet,
+    options?.initialResumeCreate,
     session?.user,
+    sessionPending,
     submitPetRecord,
     t,
     validateCreateReadiness,
@@ -939,7 +951,6 @@ export function useMarketingPetMaker() {
     handleSpeciesChange,
     canContinue,
     creatingPet,
-    resumingCreateAfterAuth,
     waitingForRecognition,
     uploadingPhotos,
     handleContinue,

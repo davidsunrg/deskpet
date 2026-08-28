@@ -1128,8 +1128,6 @@
       "avatarCropFailed": "Could not crop avatar.",
       "avatarUploadFailed": "Could not upload avatar.",
       "creating": "Creating…",
-      "resumeCreatingTitle": "Creating your pet…",
-      "resumeCreatingDescription": "Hang tight while we save your companion and take you to the next step.",
       "createError": "Failed to create pet.",
       "createSuccess": "Pet created. You can make another, or open Actions in the dashboard.",
       "openDashboardActions": "Open Actions",

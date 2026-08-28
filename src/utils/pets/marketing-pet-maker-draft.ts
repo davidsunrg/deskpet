@@ -9,6 +9,28 @@ export const PET_MAKER_DRAFT_STORAGE_KEY = 'deskpet:pet-maker-draft';
 const PENDING_PET_MAKER_CREATE_AFTER_AUTH_KEY =
   'deskpet:pet-maker-create-after-auth';
 
+/** Query flag on the maker callback URL so SSR can show Creating without waiting for sessionStorage. */
+export const PET_MAKER_RESUME_CREATE_PARAM = 'resumeCreate';
+
+export function withPetMakerResumeCreateParam(pathname: string): string {
+  const [path, existingQuery = ''] = pathname.split('?');
+  const params = new URLSearchParams(existingQuery);
+  params.set(PET_MAKER_RESUME_CREATE_PARAM, '1');
+  const query = params.toString();
+  return query ? `${path}?${query}` : path;
+}
+
+export function hasPetMakerResumeCreateParam(
+  search: Record<string, unknown> | URLSearchParams | null | undefined
+): boolean {
+  if (!search) return false;
+  if (search instanceof URLSearchParams) {
+    return search.get(PET_MAKER_RESUME_CREATE_PARAM) === '1';
+  }
+  const value = search[PET_MAKER_RESUME_CREATE_PARAM];
+  return value === '1' || value === 1 || value === true;
+}
+
 export type PetMakerLocalDraftPhoto = {
   localId: string;
   name: string;

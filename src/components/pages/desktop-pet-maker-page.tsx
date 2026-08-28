@@ -18,16 +18,21 @@ const STEP_IDS = ['photos', 'basics', 'details'] as const;
 
 type DesktopPetMakerPageProps = {
   heroPets: ShowcasePet[];
+  /** OAuth callback `?resumeCreate=1` — Creating button on first paint. */
+  initialResumeCreate?: boolean;
 };
 
-export function DesktopPetMakerPage({ heroPets }: DesktopPetMakerPageProps) {
+export function DesktopPetMakerPage({
+  heroPets,
+  initialResumeCreate = false,
+}: DesktopPetMakerPageProps) {
   const tSteps = useTranslations('MarketingPetMaker.seoSteps');
   const tContent = useTranslations('MarketingPetMaker.seoContent');
   const tFaq = useTranslations('MarketingPetMaker.faq');
 
   return (
     <MarketingToolsShell>
-      <MarketingPetMakerWizard />
+      <MarketingPetMakerWizard initialResumeCreate={initialResumeCreate} />
 
       <section
         className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10"
