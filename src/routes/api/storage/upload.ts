@@ -3,11 +3,7 @@ import { env } from 'cloudflare:workers';
 import { isProxyUploadKey } from '@/lib/storage/proxy-upload-keys';
 import { ConfigurationError, StorageError } from '@/storage/types';
 
-const SAFE_INLINE_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-] as const;
+const SAFE_INLINE_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 
 /**
  * Same-origin PUT proxy for local dev when R2 S3 API credentials are absent.
@@ -29,7 +25,8 @@ export const Route = createFileRoute('/api/storage/upload')({
         }
 
         const contentType =
-          request.headers.get('Content-Type')?.trim() || 'application/octet-stream';
+          request.headers.get('Content-Type')?.trim() ||
+          'application/octet-stream';
         if (
           !SAFE_INLINE_TYPES.includes(
             contentType as (typeof SAFE_INLINE_TYPES)[number]

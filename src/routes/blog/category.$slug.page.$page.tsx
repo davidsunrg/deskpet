@@ -39,7 +39,8 @@ export const Route = createFileRoute('/blog/category/$slug/page/$page')({
     const totalPages = loaderData?.totalPages ?? 1;
     const metadata = seo(path, {
       title: `${deskpetPageTitle(`${category.name} | ${getDeskPetMessage('BlogPage.title')}`)} - Page ${currentPage}`,
-      description: category.description || getDeskPetMessage('BlogPage.description'),
+      description:
+        category.description || getDeskPetMessage('BlogPage.description'),
     });
     const localizedUrl = (page: number) => {
       const base = getCanonicalUrlForLocale(path, getLocale());

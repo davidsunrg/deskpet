@@ -12,11 +12,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
     <LocaleLink href={`/blog/${post.slug}`} className="block h-full">
       <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-border transition-all duration-300 ease-in-out hover:border-primary hover:shadow-lg hover:shadow-primary/20">
         <div className="relative aspect-video w-full overflow-hidden">
-          <BlogImage
-            src={post.image}
-            alt={post.title}
-            title={post.title}
-          />
+          <BlogImage src={post.image} alt={post.title} title={post.title} />
           {blogCategories.length > 0 ? (
             <div className="absolute bottom-2 left-2 z-20">
               <div className="flex flex-wrap gap-1">

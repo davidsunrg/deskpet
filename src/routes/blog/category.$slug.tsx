@@ -32,13 +32,19 @@ export const Route = createFileRoute('/blog/category/$slug')({
     }
     const path = `/blog/category/${params.slug}`;
     const metadata = seo(path, {
-      title: deskpetPageTitle(`${category.name} | ${getDeskPetMessage('BlogPage.title')}`),
-      description: category.description || getDeskPetMessage('BlogPage.description'),
+      title: deskpetPageTitle(
+        `${category.name} | ${getDeskPetMessage('BlogPage.title')}`
+      ),
+      description:
+        category.description || getDeskPetMessage('BlogPage.description'),
     });
     const canonicalHref = getCanonicalUrlForLocale(path, getLocale());
     return {
       ...metadata,
-      links: [{ rel: 'canonical', href: canonicalHref }, ...metadata.links.filter((link) => link.rel !== 'canonical')],
+      links: [
+        { rel: 'canonical', href: canonicalHref },
+        ...metadata.links.filter((link) => link.rel !== 'canonical'),
+      ],
     };
   },
   component: BlogCategoryPage,

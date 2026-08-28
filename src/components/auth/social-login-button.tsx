@@ -61,12 +61,7 @@ export function SocialLoginButton({
         {isLoading === 'google' ? (
           <IconLoader2 className="mr-2 size-4 animate-spin" />
         ) : (
-          <img
-            src="/google.svg"
-            alt=""
-            aria-hidden
-            className="mr-2 size-4"
-          />
+          <img src="/google.svg" alt="" aria-hidden className="mr-2 size-4" />
         )}
         <span>{googleLabel ?? m.auth_social_sign_in_with_google()}</span>
       </Button>

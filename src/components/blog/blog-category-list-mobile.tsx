@@ -45,9 +45,7 @@ export function BlogCategoryListMobile({
             <LayoutListIcon className="size-5" />
             <span className="text-sm">{t('categories')}</span>
           </div>
-          <span className="text-sm">
-            {selectedCategory?.name ?? t('all')}
-          </span>
+          <span className="text-sm">{selectedCategory?.name ?? t('all')}</span>
         </div>
       </DrawerTrigger>
       <DrawerPortal>

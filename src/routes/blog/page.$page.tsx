@@ -1,10 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { BlogGridWithPagination } from '@/components/blog/blog-grid-with-pagination';
 import { BlogListLayout } from '@/components/blog/blog-list-layout';
-import {
-  getCategories,
-  getPaginatedPosts,
-} from '@/lib/blog';
+import { getCategories, getPaginatedPosts } from '@/lib/blog';
 import { deskpetPageTitle } from '@/lib/deskpet-seo';
 import { getDeskPetMessage } from '@/lib/deskpet-i18n';
 import { getLocale, localeConfig } from '@/lib/locale';

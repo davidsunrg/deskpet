@@ -139,7 +139,11 @@ export function ResetPasswordForm() {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className={authSubmitClass}>
+          <Button
+            disabled={isPending}
+            type="submit"
+            className={authSubmitClass}
+          >
             {isPending && <IconLoader2 className="mr-2 size-4 animate-spin" />}
             <span>{m.auth_reset_password_reset()}</span>
           </Button>

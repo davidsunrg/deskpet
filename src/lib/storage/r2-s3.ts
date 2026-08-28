@@ -121,7 +121,9 @@ export async function getPresignedDownloadUrl(
   params: GetPresignedDownloadUrlParams
 ): Promise<string> {
   if (!isR2S3Configured()) {
-    throw new ConfigurationError('R2 S3 API is required for presigned downloads');
+    throw new ConfigurationError(
+      'R2 S3 API is required for presigned downloads'
+    );
   }
 
   const client = getAwsClient();
@@ -234,7 +236,9 @@ export async function putObject(input: {
     headers: { 'Content-Type': input.contentType },
   });
   if (!response.ok) {
-    throw new StorageError(`PUT object failed (${response.status}): ${input.key}`);
+    throw new StorageError(
+      `PUT object failed (${response.status}): ${input.key}`
+    );
   }
 }
 

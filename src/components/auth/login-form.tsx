@@ -112,7 +112,9 @@ export function LoginForm({
         >
           <div className="flex flex-col items-center gap-3">
             <IconLoader2 className="size-8 animate-spin" />
-            <p className="text-muted-foreground">{m.auth_login_redirecting()}</p>
+            <p className="text-muted-foreground">
+              {m.auth_login_redirecting()}
+            </p>
           </div>
         </div>
       ) : null}

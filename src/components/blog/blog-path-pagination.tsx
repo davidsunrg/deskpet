@@ -89,16 +89,11 @@ export function BlogPathPagination({
         {allPages.map((page, index) => (
           <li key={`${page}-${index}`}>
             {page === '...' ? (
-              <span className="flex size-9 items-center justify-center">
-                …
-              </span>
+              <span className="flex size-9 items-center justify-center">…</span>
             ) : (
               <LocaleLink
                 href={pageHref(routePrefix, Number(page))}
-                className={cn(
-                  linkClass,
-                  currentPage === page && activeClass
-                )}
+                className={cn(linkClass, currentPage === page && activeClass)}
                 aria-current={currentPage === page ? 'page' : undefined}
               >
                 {page}

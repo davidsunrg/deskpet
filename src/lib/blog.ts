@@ -78,11 +78,9 @@ export function getRelatedPosts(
     .slice(0, relatedPostsSize);
 }
 
-export function getPaginatedPosts(options: {
-  page?: number;
-  categorySlug?: string;
-  locale?: Locale;
-} = {}): {
+export function getPaginatedPosts(
+  options: { page?: number; categorySlug?: string; locale?: Locale } = {}
+): {
   posts: BlogPost[];
   totalPages: number;
   currentPage: number;

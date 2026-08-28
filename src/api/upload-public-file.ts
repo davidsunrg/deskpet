@@ -2,7 +2,10 @@ import { getBaseUrl } from '@/lib/urls';
 import { getPresignedUploadUrl } from '@/lib/storage/r2-s3';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
 import { websiteConfig } from '@/config/website';
-import { DEFAULT_AVATARS_FOLDER, DEFAULT_MAX_FILE_SIZE } from '@/storage/constants';
+import {
+  DEFAULT_AVATARS_FOLDER,
+  DEFAULT_MAX_FILE_SIZE,
+} from '@/storage/constants';
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
 
