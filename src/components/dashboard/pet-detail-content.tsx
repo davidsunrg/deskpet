@@ -4,13 +4,11 @@ import {
   dashboardCardClass,
   DashboardCardHeader,
 } from '@/components/dashboard/dashboard-card';
+import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
 import { PetAvatar } from '@/components/pets/pet-avatar';
-import {
-  PricingTable,
-  type PaidActionPlanSelection,
-} from '@/components/pricing/pricing-table';
 import { markPetCheckoutStartedFn } from '@/api/pet-maker-wizard';
 import { createCheckoutSession } from '@/api/payment';
+import { websiteConfig } from '@/config/website';
 import { formatDate, formatDateTime } from '@/lib/formatter';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import { dashboardPetDetailRoute, Routes } from '@/lib/routes';
@@ -55,6 +53,11 @@ function getSexLabel(sex: string | null): string | null {
   return null;
 }
 
+const dashboardTabPanelClass = cn(
+  dashboardCardClass,
+  'flex min-h-0 flex-1 flex-col p-5 sm:p-6'
+);
+
 export function PetDetailContent({
   pet,
   initialStep = DEFAULT_PET_DETAIL_STEP,
@@ -72,49 +75,55 @@ export function PetDetailContent({
   const photoUrls = pet.photoKeys.map((key) => getFileAccessUrl(key));
   const isPaid = pet.status === PetCreationStatus.Paid;
 
-  const handlePaidPlanAction = useCallback(
-    async (selection: PaidActionPlanSelection) => {
-      try {
-        setCheckoutBusy(true);
-        await markPetCheckoutStartedFn({ data: { petId: pet.id } });
+  const customizePlan = websiteConfig.payment?.price?.plans.customizeMyOwn;
+  const checkoutPlanId = customizePlan?.id ?? 'customizeMyOwn';
+  const priceId = customizePlan?.prices[0]?.priceId ?? '';
 
-        const finalReturnPath = `${dashboardPetDetailRoute(pet.id)}?step=final`;
-        const successUrl = getCanonicalUrl(
-          `${Routes.Payment}?session_id={CHECKOUT_SESSION_ID}&callback=${encodeURIComponent(finalReturnPath)}`
-        );
-        const cancelUrl = getCanonicalUrl(finalReturnPath);
+  const handleJoinQueue = useCallback(async () => {
+    if (!priceId) {
+      toast.error('Checkout is unavailable. Please try again later.');
+      return;
+    }
 
-        const result = await createCheckoutSession({
-          data: {
-            planId: selection.checkoutPlanId,
-            priceId: selection.priceId,
-            successUrl,
-            cancelUrl,
-            metadata: {
-              petId: pet.id,
-              source: 'pet_final_step',
-            },
+    try {
+      setCheckoutBusy(true);
+      await markPetCheckoutStartedFn({ data: { petId: pet.id } });
+
+      const finalReturnPath = `${dashboardPetDetailRoute(pet.id)}?step=final`;
+      const successUrl = getCanonicalUrl(
+        `${Routes.Payment}?session_id={CHECKOUT_SESSION_ID}&callback=${encodeURIComponent(finalReturnPath)}`
+      );
+      const cancelUrl = getCanonicalUrl(finalReturnPath);
+
+      const result = await createCheckoutSession({
+        data: {
+          planId: checkoutPlanId,
+          priceId,
+          successUrl,
+          cancelUrl,
+          metadata: {
+            petId: pet.id,
+            source: 'pet_final_step',
           },
-        });
+        },
+      });
 
-        if (result?.url) {
-          window.location.href = result.url;
-          return;
-        }
-
-        toast.error('Checkout failed. Please try again.');
-      } catch (error) {
-        console.error('Pet checkout error:', error);
-        toast.error('Checkout failed. Please try again.');
-      } finally {
-        setCheckoutBusy(false);
+      if (result?.url) {
+        window.location.href = result.url;
+        return;
       }
-    },
-    [pet.id]
-  );
+
+      toast.error('Checkout failed. Please try again.');
+    } catch (error) {
+      console.error('Pet checkout error:', error);
+      toast.error('Checkout failed. Please try again.');
+    } finally {
+      setCheckoutBusy(false);
+    }
+  }, [checkoutPlanId, pet.id, priceId]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
+    <div className="flex h-full min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
       <nav aria-label="Pet detail steps" className="shrink-0 lg:w-52">
         <ol className="m-0 flex list-none flex-col gap-1.5 p-0">
           {WIZARD_STEPS.map((item, index) => {
@@ -143,9 +152,9 @@ export function PetDetailContent({
         </ol>
       </nav>
 
-      <div className="min-w-0 flex-1">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {step === 'photos' ? (
-          <section className={cn(dashboardCardClass, 'p-5 sm:p-6')}>
+          <section className={dashboardTabPanelClass}>
             <DashboardCardHeader
               icon={<ImageIcon className="size-[18px]" />}
               accent="bg-deskpet-mint-soft"
@@ -176,7 +185,7 @@ export function PetDetailContent({
         ) : null}
 
         {step === 'basics' ? (
-          <section className={cn(dashboardCardClass, 'p-5 sm:p-6')}>
+          <section className={dashboardTabPanelClass}>
             <DashboardCardHeader
               icon={<PawPrintIcon className="size-[18px]" />}
               accent="bg-[#fff2c8]"
@@ -230,7 +239,7 @@ export function PetDetailContent({
         ) : null}
 
         {step === 'details' ? (
-          <section className={cn(dashboardCardClass, 'p-5 sm:p-6')}>
+          <section className={dashboardTabPanelClass}>
             <DashboardCardHeader
               icon={<PawPrintIcon className="size-[18px]" />}
               accent="bg-[#fff2c8]"
@@ -274,7 +283,7 @@ export function PetDetailContent({
         ) : null}
 
         {step === 'final' ? (
-          <section className={cn(dashboardCardClass, 'p-5 sm:p-6')}>
+          <section className={dashboardTabPanelClass}>
             <DashboardCardHeader
               icon={<CheckCircle2Icon className="size-[18px]" />}
               accent="bg-deskpet-mint-soft"
@@ -291,14 +300,13 @@ export function PetDetailContent({
                 </p>
               </div>
             ) : (
-              <PricingTable
-                pageChrome={false}
-                planIds={['customizeMyOwn']}
-                metadata={{ petId: pet.id, source: 'pet_final_step' }}
-                onPaidPlanAction={handlePaidPlanAction}
-                paidActionBusy={checkoutBusy}
-                className="mt-2"
-              />
+              <div className="flex min-h-0 flex-1 items-center justify-center">
+                <CustomPetFinalPricingCard
+                  className="w-full max-w-md"
+                  busy={checkoutBusy}
+                  onJoinQueue={handleJoinQueue}
+                />
+              </div>
             )}
           </section>
         ) : null}

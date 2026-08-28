@@ -1127,7 +1127,30 @@
       "title": "Unlock your pet",
       "description": "Choose the custom plan to finish your desktop companion and unlock full creation.",
       "paidTitle": "Payment complete",
-      "paidDescription": "Your custom pet plan is active. We will continue building your companion from here."
+      "paidDescription": "Your custom pet plan is active. We will continue building your companion from here.",
+      "pricing": {
+        "offerLabel": "LIMITED-TIME OFFER",
+        "offerTitle": "Save $50 if you join today",
+        "offerTitleEnded": "Limited-time offer ended",
+        "countdownCaption": "Offer ends when the timer hits zero",
+        "countdownCaptionEnded": "Check back for future offers",
+        "brand": "Custom Pet",
+        "oneTimeBadge": "Handcrafted",
+        "heroTitle": "Orders Open",
+        "heroDescription": "We're still accepting custom orders.\nLimited slots available!",
+        "queueLabel": "PEOPLE IN LINE",
+        "queueDescription": "pets ahead of you",
+        "availabilityLabel": "CURRENT AVAILABILITY",
+        "availabilityValue": "LIMITED",
+        "availabilityDescription": "custom orders still open",
+        "deliveryLabel": "ESTIMATED DELIVERY",
+        "deliveryHours": "hours",
+        "deliveryDescription": "We'll notify you as soon as it's ready.",
+        "priceCaption": "One-time purchase",
+        "savePill": "SAVE $50",
+        "cta": "Order Now",
+        "belowCta": "{count} custom pets currently ahead of you"
+      }
     },
     "profile": {
       "updateAvatar": "Update Avatar",
