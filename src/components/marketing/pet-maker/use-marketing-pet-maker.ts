@@ -1019,6 +1019,17 @@ export function useMarketingPetMaker(options?: {
     [draftId, recognitionCache]
   );
 
+  // Start recognition as soon as uploads settle (first ready photo, or after
+  // add/remove). Basics Continue only waits / judges the result.
+  useEffect(() => {
+    if (uploadingPhotos) return;
+    const hasReady = photos.some(
+      (photo) => photo.status === 'ready' && photo.r2Key
+    );
+    if (!hasReady) return;
+    startBackgroundRecognition(photos);
+  }, [photos, startBackgroundRecognition, uploadingPhotos]);
+
   const handleContinue = () => {
     if (waitingForRecognition) return;
     if (uploadingPhotos) {
@@ -1031,7 +1042,6 @@ export function useMarketingPetMaker(options?: {
         toast.error(t('photos.required'));
         return;
       }
-      startBackgroundRecognition(photos);
       goToStep('basics');
       return;
     }
@@ -1046,7 +1056,10 @@ export function useMarketingPetMaker(options?: {
         return;
       }
 
-      if (recognitionStatus === 'loading') {
+      if (recognitionStatus === 'loading' || recognitionStatus === 'idle') {
+        if (recognitionStatus === 'idle') {
+          startBackgroundRecognition(photos);
+        }
         setWaitingForRecognition(true);
         return;
       }
