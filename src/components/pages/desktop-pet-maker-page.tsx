@@ -1,4 +1,4 @@
-import { CreatePetWizard } from '@/components/tools/create-pet-wizard';
+import { MarketingPetMakerWizard } from '@/components/marketing/pet-maker/marketing-pet-maker-wizard';
 import { DesktopPetMakerPetShowcase } from '@/components/tools/desktop-pet-maker-pet-showcase';
 import { MarketingToolsShell } from '@/components/tools/marketing-tools-shell';
 import { useTranslations } from '@/lib/deskpet-i18n';
@@ -21,13 +21,13 @@ type DesktopPetMakerPageProps = {
 };
 
 export function DesktopPetMakerPage({ heroPets }: DesktopPetMakerPageProps) {
-  const tSteps = useTranslations('CreatePetWizard.seoSteps');
-  const tContent = useTranslations('CreatePetWizard.seoContent');
-  const tFaq = useTranslations('CreatePetWizard.faq');
+  const tSteps = useTranslations('MarketingPetMaker.seoSteps');
+  const tContent = useTranslations('MarketingPetMaker.seoContent');
+  const tFaq = useTranslations('MarketingPetMaker.faq');
 
   return (
     <MarketingToolsShell>
-      <CreatePetWizard />
+      <MarketingPetMakerWizard />
 
       <section
         className="mx-auto mt-14 max-w-7xl border-t-2 border-deskpet-ink/10 pt-10"

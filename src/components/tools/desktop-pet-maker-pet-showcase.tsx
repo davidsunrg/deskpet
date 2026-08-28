@@ -14,7 +14,7 @@ type DesktopPetMakerPetShowcaseProps = {
 export function DesktopPetMakerPetShowcase({
   pets,
 }: DesktopPetMakerPetShowcaseProps) {
-  const t = useTranslations('CreatePetWizard.seoContent.tryPresets');
+  const t = useTranslations('MarketingPetMaker.seoContent.tryPresets');
   const tHero = useTranslations('HomePage.hero');
 
   return (

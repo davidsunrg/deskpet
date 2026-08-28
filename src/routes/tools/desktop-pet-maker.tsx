@@ -1,4 +1,4 @@
-import { loadDesktopPetMakerPageDataFn } from '@/api/pet-maker-wizard';
+import { loadDesktopPetMakerPageDataFn } from '@/api/marketing-pet-maker';
 import { DesktopPetMakerPage } from '@/components/pages/desktop-pet-maker-page';
 import { deskpetPageTitle } from '@/lib/deskpet-seo';
 import { getDeskPetMessage } from '@/lib/deskpet-i18n';
@@ -9,8 +9,8 @@ export const Route = createFileRoute('/tools/desktop-pet-maker')({
   loader: () => loadDesktopPetMakerPageDataFn(),
   head: () =>
     seo('/tools/desktop-pet-maker', {
-      title: deskpetPageTitle(getDeskPetMessage('CreatePetWizard.seoTitle')),
-      description: getDeskPetMessage('CreatePetWizard.seoDescription'),
+      title: deskpetPageTitle(getDeskPetMessage('MarketingPetMaker.seoTitle')),
+      description: getDeskPetMessage('MarketingPetMaker.seoDescription'),
     }),
   component: DesktopPetMakerRoutePage,
 });

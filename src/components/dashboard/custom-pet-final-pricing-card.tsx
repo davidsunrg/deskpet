@@ -31,7 +31,7 @@ export function CustomPetFinalPricingCard({
   busy = false,
   onJoinQueue,
 }: CustomPetFinalPricingCardProps) {
-  const t = useTranslations('CreatePetWizard');
+  const t = useTranslations('DashboardPetDetail');
   const tp = (key: string, values?: Record<string, string | number>) =>
     t(`final.pricing.${key}`, values);
 

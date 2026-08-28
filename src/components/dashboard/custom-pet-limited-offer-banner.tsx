@@ -73,7 +73,7 @@ type CustomPetLimitedOfferBannerProps = {
 export function CustomPetLimitedOfferBanner({
   className,
 }: CustomPetLimitedOfferBannerProps) {
-  const t = useTranslations('CreatePetWizard');
+  const t = useTranslations('DashboardPetDetail');
   const { hours, minutes, seconds, expired, mounted } = useOfferCountdown();
   const values = mounted ? [hours, minutes, seconds] : ['02', '00', '00'];
 

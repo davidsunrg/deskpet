@@ -981,7 +981,7 @@
       }
     }
   },
-  "CreatePetWizard": {
+  "MarketingPetMaker": {
     "eyebrow": "AI pet creator",
     "title": "Desktop Pet Maker",
     "seoTitle": "Desktop Pet Maker | Create AI Desktop Pet",
@@ -1123,32 +1123,6 @@
       "title": "Pet Details",
       "description": "Review your pet and confirm species and breed before the final step."
     },
-    "final": {
-      "title": "Unlock your pet",
-      "description": "Choose the custom plan to finish your desktop companion and unlock full creation.",
-      "paidTitle": "Payment complete",
-      "paidDescription": "Your custom pet plan is active. We will continue building your companion from here.",
-      "pricing": {
-        "offerLabel": "LIMITED-TIME OFFER",
-        "offerTitleEnded": "Limited-time offer ended",
-        "brand": "Custom Pet",
-        "oneTimeBadge": "Handcrafted",
-        "heroTitle": "Orders Open",
-        "heroDescription": "We're still accepting custom orders.\nLimited slots available!",
-        "queueLabel": "PEOPLE IN LINE",
-        "queueDescription": "pets ahead of you",
-        "availabilityLabel": "CURRENT AVAILABILITY",
-        "availabilityValue": "LIMITED",
-        "availabilityDescription": "custom orders still open",
-        "deliveryLabel": "ESTIMATED DELIVERY",
-        "deliveryHours": "hours",
-        "deliveryDescription": "We'll notify you as soon as it's ready.",
-        "priceCaption": "One-time purchase",
-        "savePill": "SAVE $50",
-        "cta": "Order Now",
-        "belowCta": "{count} custom pets currently ahead of you"
-      }
-    },
     "profile": {
       "updateAvatar": "Update Avatar",
       "avatarCropFailed": "Could not crop avatar.",
@@ -1188,6 +1162,58 @@
       "back": "Back",
       "continue": "Continue",
       "createPet": "Create Pet"
+    }
+  },
+  "DashboardPetDetail": {
+    "steps": {
+      "photos": "Photos",
+      "basics": "Basics",
+      "details": "Details",
+      "final": "Final"
+    },
+    "photos": {
+      "title": "Upload Pet Photos",
+      "description": "Front and side photos help create better poses. They upload as soon as you select them."
+    },
+    "basics": {
+      "title": "Pet Basics",
+      "description": "Choose an avatar, name your pet, and select sex."
+    },
+    "details": {
+      "title": "Pet Details",
+      "description": "Review your pet and confirm species and breed before the final step."
+    },
+    "final": {
+      "title": "Unlock your pet",
+      "description": "Choose the custom plan to finish your desktop companion and unlock full creation.",
+      "paidTitle": "Payment complete",
+      "paidDescription": "Your custom pet plan is active. We will continue building your companion from here.",
+      "pricing": {
+        "offerLabel": "LIMITED-TIME OFFER",
+        "offerTitleEnded": "Limited-time offer ended",
+        "brand": "Custom Pet",
+        "oneTimeBadge": "Handcrafted",
+        "heroTitle": "Orders Open",
+        "heroDescription": "We're still accepting custom orders.\nLimited slots available!",
+        "queueLabel": "PEOPLE IN LINE",
+        "queueDescription": "pets ahead of you",
+        "availabilityLabel": "CURRENT AVAILABILITY",
+        "availabilityValue": "LIMITED",
+        "availabilityDescription": "custom orders still open",
+        "deliveryLabel": "ESTIMATED DELIVERY",
+        "deliveryHours": "hours",
+        "deliveryDescription": "We'll notify you as soon as it's ready.",
+        "priceCaption": "One-time purchase",
+        "savePill": "SAVE $50",
+        "cta": "Order Now",
+        "belowCta": "{count} custom pets currently ahead of you"
+      }
+    },
+    "profile": {
+      "nameLabel": "Pet Name",
+      "sexLabel": "Sex",
+      "species": "Species",
+      "breed": "Breed"
     }
   },
   "PetVideoMakerPage": {

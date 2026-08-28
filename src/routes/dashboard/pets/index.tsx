@@ -1,4 +1,4 @@
-import { listUserPetsFn } from '@/api/pet-maker-wizard';
+import { listUserPetsFn } from '@/api/dashboard-pets';
 import { MyPetsContent } from '@/components/dashboard/my-pets-content';
 import { DashboardPageShell } from '@/components/dashboard/dashboard-page-shell';
 import { Routes } from '@/lib/routes';
