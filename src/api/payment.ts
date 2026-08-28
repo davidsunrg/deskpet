@@ -10,7 +10,9 @@ import {
   createCheckout,
   createCustomerPortal,
   getPaymentProvider,
+  getPaymentProviderName,
 } from '@/payment';
+import { StripeProvider } from '@/payment/provider/stripe';
 import type {
   PaymentStatus,
   PlanInterval,
@@ -237,5 +239,17 @@ export const checkPaymentCompletion = createServerFn({ method: 'GET' })
         )
       )
       .limit(1);
+    if (record?.paid && record.sessionId && getPaymentProviderName() === 'stripe') {
+      try {
+        await (
+          getPaymentProvider() as StripeProvider
+        ).syncPetPaidFromCheckoutSession(record.sessionId);
+      } catch (error) {
+        console.error(
+          'Failed to sync pet paid status from checkout session:',
+          error
+        );
+      }
+    }
     return { isPaid: !!record?.paid };
   });

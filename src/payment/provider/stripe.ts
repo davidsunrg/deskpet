@@ -735,6 +735,13 @@ export class StripeProvider implements PaymentProvider {
     }
   }
 
+  public async syncPetPaidFromCheckoutSession(sessionId: string): Promise<void> {
+    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    await markPetPaidFromCheckoutMetadata(
+      session.metadata as Record<string, string | undefined>
+    );
+  }
+
   /**
    * Process lifetime plan purchase
    * @param invoice Stripe invoice
@@ -748,7 +755,10 @@ export class StripeProvider implements PaymentProvider {
   ): Promise<void> {
     console.log('>> Process lifetime plan purchase');
 
-    // Send notification
+    await markPetPaidFromCheckoutMetadata(
+      session.metadata as Record<string, string | undefined>
+    );
+
     const amount = invoice.amount_paid ? invoice.amount_paid / 100 : 0;
     await sendPaymentNotification({
       sessionId: paymentRecord.sessionId!,
@@ -756,10 +766,6 @@ export class StripeProvider implements PaymentProvider {
       userName: (session.metadata?.userName as string) ?? 'Customer',
       amount,
     });
-
-    await markPetPaidFromCheckoutMetadata(
-      session.metadata as Record<string, string | undefined>
-    );
 
     console.log('<< Process lifetime plan purchase success');
   }

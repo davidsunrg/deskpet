@@ -11,7 +11,7 @@ import {
   PAYMENT_POLL_INTERVAL,
 } from '@/payment/constants';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import {
   IconAlertCircle,
   IconCircleCheck,
@@ -93,6 +93,25 @@ type PaymentCardProps = {
   hostedPostCheckout?: boolean;
   callback?: string;
 };
+
+function parsePaymentCallback(callback: string): {
+  to: string;
+  search?: Record<string, string>;
+} {
+  try {
+    const url = new URL(callback, 'http://localhost');
+    const search: Record<string, string> = {};
+    url.searchParams.forEach((value, key) => {
+      search[key] = value;
+    });
+    return {
+      to: url.pathname,
+      search: Object.keys(search).length > 0 ? search : undefined,
+    };
+  } catch {
+    return { to: callback };
+  }
+}
 /**
  * Payment result card: polls for completion, shows status, invalidates plan cache and redirects on success.
  */
@@ -102,6 +121,7 @@ export function PaymentCard({
   callback = '/settings/billing',
 }: PaymentCardProps) {
   const navigate = useNavigate();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<PaymentStatus>(() =>
     sessionId || hostedPostCheckout ? 'processing' : 'failed'
@@ -153,10 +173,16 @@ export function PaymentCard({
     const run = async () => {
       await queryClient.invalidateQueries({ queryKey: ['currentPlan'] });
       await queryClient.refetchQueries({ queryKey: ['currentPlan'] });
-      navigate({ to: callback });
+      await router.invalidate();
+      const target = parsePaymentCallback(callback);
+      navigate(
+        target.search
+          ? { to: target.to, search: target.search }
+          : { to: target.to }
+      );
     };
     run();
-  }, [status, callback, queryClient, navigate]);
+  }, [status, callback, queryClient, navigate, router]);
   const { title, description } = getStatusContent(status);
   return (
     <div className="flex min-h-[60vh] items-center justify-center">

@@ -42,6 +42,10 @@ export async function sendPaymentNotification(
   params: SendPaymentNotificationParams
 ): Promise<void> {
   if (!websiteConfig.notification?.enable) return;
-  const provider = getNotificationProvider();
-  await provider.sendPaymentNotification(params);
+  try {
+    const provider = getNotificationProvider();
+    await provider.sendPaymentNotification(params);
+  } catch (error) {
+    console.error('Payment notification failed (non-fatal):', error);
+  }
 }

@@ -802,7 +802,11 @@ export class CreemProvider implements PaymentProvider {
         updatedAt: currentDate,
       });
 
-      // Send notification for lifetime purchase
+      // Fulfill the order before optional side effects (notifications).
+      await markPetPaidFromCheckoutMetadata(
+        object.metadata as Record<string, string | undefined>
+      );
+
       const amount = object.product.price ? object.product.price / 100 : 0;
       await sendPaymentNotification({
         sessionId: event.id,
@@ -813,10 +817,6 @@ export class CreemProvider implements PaymentProvider {
           'Customer',
         amount,
       });
-
-      await markPetPaidFromCheckoutMetadata(
-        object.metadata as Record<string, string | undefined>
-      );
 
       console.log('<< Created Creem one-time payment record success');
     } catch (error) {

@@ -296,13 +296,13 @@ export class WaffoProvider implements PaymentProvider {
           createdAt: now,
           updatedAt: now,
         });
+      await markPetPaidFromCheckoutMetadata(data.orderMetadata);
       await sendPaymentNotification({
         sessionId: data.orderId,
         customerId: data.merchantProvidedBuyerIdentity ?? userId,
         userName: data.orderMetadata?.userName ?? data.buyerEmail,
         amount: Number(data.amount),
       });
-      await markPetPaidFromCheckoutMetadata(data.orderMetadata);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         console.log('Waffo one-time payment already exists, skipping');
