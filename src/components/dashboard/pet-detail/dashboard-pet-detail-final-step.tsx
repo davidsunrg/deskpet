@@ -13,6 +13,7 @@ const SUPPORT_EMAIL = 'david@deskpet.ai';
 
 type DashboardPetDetailFinalStepProps = {
   isPaid: boolean;
+  species?: string | null;
   deliveryAt?: Date | string | null;
   userEmail?: string | null;
   checkoutBusy: boolean;
@@ -27,6 +28,7 @@ function toDate(value: Date | string | null | undefined): Date | null {
 
 export function DashboardPetDetailFinalStep({
   isPaid,
+  species,
   deliveryAt,
   userEmail,
   checkoutBusy,
@@ -104,6 +106,7 @@ export function DashboardPetDetailFinalStep({
             <CustomPetLimitedOfferBanner />
             <CustomPetFinalPricingCard
               busy={checkoutBusy}
+              species={species}
               onJoinQueue={onJoinQueue}
             />
           </div>

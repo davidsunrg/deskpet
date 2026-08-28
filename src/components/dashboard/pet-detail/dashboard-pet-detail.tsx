@@ -142,6 +142,7 @@ export function DashboardPetDetail({
         {step === 'final' ? (
           <DashboardPetDetailFinalStep
             isPaid={isPaid}
+            species={pet.species}
             deliveryAt={pet.deliveryAt}
             userEmail={userEmail}
             checkoutBusy={checkoutBusy}

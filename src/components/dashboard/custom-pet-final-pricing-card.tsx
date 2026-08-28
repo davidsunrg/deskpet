@@ -23,12 +23,14 @@ function DashedDivider() {
 type CustomPetFinalPricingCardProps = {
   className?: string;
   busy?: boolean;
+  species?: string | null;
   onJoinQueue: () => void | Promise<void>;
 };
 
 export function CustomPetFinalPricingCard({
   className,
   busy = false,
+  species,
   onJoinQueue,
 }: CustomPetFinalPricingCardProps) {
   const t = useTranslations('DashboardPetDetail');
@@ -62,7 +64,7 @@ export function CustomPetFinalPricingCard({
             {tp('heroDescription')}
           </p>
           <div className="absolute right-0 top-0 hidden size-[4.5rem] sm:block">
-            <CustomPetHeroDogIcon className="size-full" />
+            <CustomPetHeroDogIcon className="size-full" species={species} />
           </div>
         </section>
 
