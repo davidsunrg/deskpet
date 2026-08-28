@@ -30,10 +30,9 @@ function PaymentPage() {
     >
       <PaymentCard
         sessionId={search.session_id}
-        // Providers with a hosted post-checkout page (Creem, Waffo) return
-        // with a callback but no checkout session id; treat that as hosted
-        // post-checkout mode so the card polls the current plan instead of
-        // failing.
+        // Hosted post-checkout providers return with a callback but no
+        // checkout session id; treat that as hosted mode so the card polls
+        // the current plan instead of failing.
         hostedPostCheckout={
           search.session_id === undefined && search.callback !== undefined
         }

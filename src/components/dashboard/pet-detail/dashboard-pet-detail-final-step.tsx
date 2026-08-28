@@ -10,12 +10,10 @@ import { cn } from '@/lib/utils';
 import { CheckCircle2Icon } from 'lucide-react';
 
 const SUPPORT_EMAIL = 'david@deskpet.ai';
-const DELIVERY_HOURS = 24;
-const MS_PER_HOUR = 60 * 60 * 1000;
 
 type DashboardPetDetailFinalStepProps = {
   isPaid: boolean;
-  paidAt?: Date | string | null;
+  deliveryAt?: Date | string | null;
   userEmail?: string | null;
   checkoutBusy: boolean;
   onJoinQueue: () => void | Promise<void>;
@@ -29,16 +27,13 @@ function toDate(value: Date | string | null | undefined): Date | null {
 
 export function DashboardPetDetailFinalStep({
   isPaid,
-  paidAt,
+  deliveryAt,
   userEmail,
   checkoutBusy,
   onJoinQueue,
 }: DashboardPetDetailFinalStepProps) {
   const t = useTranslations('DashboardPetDetail');
-  const paidAtDate = toDate(paidAt ?? null);
-  const deliveryAt = paidAtDate
-    ? new Date(paidAtDate.getTime() + DELIVERY_HOURS * MS_PER_HOUR)
-    : null;
+  const deliveryAtDate = toDate(deliveryAt ?? null);
 
   return (
     <section
@@ -71,9 +66,9 @@ export function DashboardPetDetailFinalStep({
               {t('final.deliveryLabel')}
             </p>
             <p className="mt-1 m-0 text-base font-black text-deskpet-ink">
-              {deliveryAt
+              {deliveryAtDate
                 ? t('final.deliveryValue', {
-                    datetime: formatDateTime(deliveryAt),
+                    datetime: formatDateTime(deliveryAtDate),
                   })
                 : t('final.deliveryFallback')}
             </p>

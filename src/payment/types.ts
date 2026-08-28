@@ -125,9 +125,8 @@ export interface CreateCheckoutParams {
   locale?: string;
   /**
    * Optional UI theme hint for hosted checkout pages. Providers that host
-   * their own checkout page (Waffo via `darkMode`, Creem via a `?theme=`
-   * URL override) honor this to match the caller's site theme; Stripe's
-   * hosted checkout ignores it.
+   * their own checkout page may honor this to match the caller's site theme;
+   * Stripe's hosted checkout ignores it.
    */
   theme?: 'dark' | 'light';
 }
@@ -177,8 +176,8 @@ export interface PaymentProvider {
    *
    * Stripe replaces `{CHECKOUT_SESSION_ID}` in the return URL, so we route
    * the buyer through an in-app confirmation page that polls by sessionId.
-   * Providers that host their own confirmation page (Creem, Waffo) do not
-   * replace placeholders and should redirect straight to Billing instead.
+   * Providers that host their own confirmation page do not replace
+   * placeholders and should redirect straight to Billing instead.
    * Defaults to false when omitted (behaves like Stripe).
    */
   readonly hostsPostCheckoutPage?: boolean;

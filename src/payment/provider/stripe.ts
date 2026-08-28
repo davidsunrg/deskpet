@@ -739,8 +739,16 @@ export class StripeProvider implements PaymentProvider {
     sessionId: string
   ): Promise<void> {
     const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    const db = getDb();
+    const [paymentRecord] = await db
+      .select({ id: payment.id })
+      .from(payment)
+      .where(eq(payment.sessionId, sessionId))
+      .limit(1);
+
     await markPetPaidFromCheckoutMetadata(
-      session.metadata as Record<string, string | undefined>
+      session.metadata as Record<string, string | undefined>,
+      paymentRecord ? { paymentId: paymentRecord.id } : {}
     );
   }
 
@@ -758,7 +766,8 @@ export class StripeProvider implements PaymentProvider {
     console.log('>> Process lifetime plan purchase');
 
     await markPetPaidFromCheckoutMetadata(
-      session.metadata as Record<string, string | undefined>
+      session.metadata as Record<string, string | undefined>,
+      { paymentId: paymentRecord.id }
     );
 
     const amount = invoice.amount_paid ? invoice.amount_paid / 100 : 0;

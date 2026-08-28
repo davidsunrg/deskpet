@@ -59,9 +59,7 @@ import { Route as ToolsPetVideoMakerRouteImport } from './routes/tools/pet-video
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
 import { Route as ApiStorageUploadRouteImport } from './routes/api/storage/upload'
-import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
-import { Route as ApiWebhooksWaffoRouteImport } from './routes/api/webhooks/waffo'
 import { Route as BlogCategorySlugRouteImport } from './routes/blog/category.$slug'
 import { Route as BlogPagePageRouteImport } from './routes/blog/page.$page'
 import { Route as DashboardPetsIndexRouteImport } from './routes/dashboard/pets/index'
@@ -319,19 +317,9 @@ const ApiStorageUploadRoute = ApiStorageUploadRouteImport.update({
   path: '/api/storage/upload',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiWebhooksCreemRoute = ApiWebhooksCreemRouteImport.update({
-  id: '/api/webhooks/creem',
-  path: '/api/webhooks/creem',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
   id: '/api/webhooks/stripe',
   path: '/api/webhooks/stripe',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiWebhooksWaffoRoute = ApiWebhooksWaffoRouteImport.update({
-  id: '/api/webhooks/waffo',
-  path: '/api/webhooks/waffo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogCategorySlugRoute = BlogCategorySlugRouteImport.update({
@@ -417,9 +405,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/storage/upload': typeof ApiStorageUploadRoute
-  '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
-  '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
   '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
@@ -474,9 +460,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/storage/upload': typeof ApiStorageUploadRoute
-  '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
-  '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
   '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
@@ -536,9 +520,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/storage/upload': typeof ApiStorageUploadRoute
-  '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
-  '/api/webhooks/waffo': typeof ApiWebhooksWaffoRoute
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
   '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
@@ -599,9 +581,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/storage/file'
     | '/api/storage/upload'
-    | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
-    | '/api/webhooks/waffo'
     | '/blog/category/$slug'
     | '/blog/page/$page'
     | '/dashboard/pets/$petId'
@@ -656,9 +636,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/storage/file'
     | '/api/storage/upload'
-    | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
-    | '/api/webhooks/waffo'
     | '/blog/category/$slug'
     | '/blog/page/$page'
     | '/dashboard/pets/$petId'
@@ -717,9 +695,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/storage/file'
     | '/api/storage/upload'
-    | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
-    | '/api/webhooks/waffo'
     | '/blog/category/$slug'
     | '/blog/page/$page'
     | '/dashboard/pets/$petId'
@@ -761,9 +737,7 @@ export interface RootRouteChildren {
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiStorageFileRoute: typeof ApiStorageFileRoute
   ApiStorageUploadRoute: typeof ApiStorageUploadRoute
-  ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
   ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
-  ApiWebhooksWaffoRoute: typeof ApiWebhooksWaffoRoute
   BlogCategorySlugRoute: typeof BlogCategorySlugRouteWithChildren
   BlogPagePageRoute: typeof BlogPagePageRoute
   ApiAuthExtensionGoogleRoute: typeof ApiAuthExtensionGoogleRoute
@@ -1121,25 +1095,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStorageUploadRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/webhooks/creem': {
-      id: '/api/webhooks/creem'
-      path: '/api/webhooks/creem'
-      fullPath: '/api/webhooks/creem'
-      preLoaderRoute: typeof ApiWebhooksCreemRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/webhooks/stripe': {
       id: '/api/webhooks/stripe'
       path: '/api/webhooks/stripe'
       fullPath: '/api/webhooks/stripe'
       preLoaderRoute: typeof ApiWebhooksStripeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/webhooks/waffo': {
-      id: '/api/webhooks/waffo'
-      path: '/api/webhooks/waffo'
-      fullPath: '/api/webhooks/waffo'
-      preLoaderRoute: typeof ApiWebhooksWaffoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/category/$slug': {
@@ -1317,9 +1277,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiStorageFileRoute: ApiStorageFileRoute,
   ApiStorageUploadRoute: ApiStorageUploadRoute,
-  ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
   ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
-  ApiWebhooksWaffoRoute: ApiWebhooksWaffoRoute,
   BlogCategorySlugRoute: BlogCategorySlugRouteWithChildren,
   BlogPagePageRoute: BlogPagePageRoute,
   ApiAuthExtensionGoogleRoute: ApiAuthExtensionGoogleRoute,

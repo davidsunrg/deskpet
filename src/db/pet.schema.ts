@@ -8,6 +8,7 @@ import {
   DEFAULT_PET_CREATION_STATUS,
   type PetCreationStatus,
 } from '@/utils/pets/pet-creation-status';
+import { payment } from './payment.schema';
 import { user } from './auth.schema';
 
 /** User-created desktop pet from the pet maker. */
@@ -30,17 +31,24 @@ export const pet = sqliteTable(
       .notNull()
       .default(DEFAULT_PET_CREATION_STATUS)
       .$type<PetCreationStatus>(),
-    /** Set when checkout marks the pet paid; used for delivery estimates. */
-    paidAt: integer('paid_at', { mode: 'timestamp_ms' }),
+    /** Expected delivery deadline (set to paid time + 24h when marked paid). */
+    deliveryAt: integer('delivery_at', { mode: 'timestamp_ms' }),
+    /** Local payment row that fulfilled this custom pet order. */
+    paymentId: text('payment_id').references(() => payment.id),
     createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
     updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
   },
   (table) => [
     index('pet_user_id_idx').on(table.userId),
     index('pet_user_status_idx').on(table.userId, table.status),
+    index('pet_payment_id_idx').on(table.paymentId),
   ]
 );
 
 export const petRelations = relations(pet, ({ one }) => ({
   user: one(user, { fields: [pet.userId], references: [user.id] }),
+  payment: one(payment, {
+    fields: [pet.paymentId],
+    references: [payment.id],
+  }),
 }));

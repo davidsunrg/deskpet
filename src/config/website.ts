@@ -9,29 +9,14 @@ import {
   DEFAULT_USER_FILES_FOLDER,
 } from '@/storage/constants';
 
-// Payment provider controlled by env var: 'stripe' | 'creem' | 'waffo' | '' (empty means disabled)
+// Payment provider controlled by env var: 'stripe' | '' (empty means disabled)
 const paymentProvider = clientEnv.VITE_PAYMENT_PROVIDER;
 const isPaymentEnabled = paymentProvider !== '';
-// Price/product IDs per provider; add a new row when adding a provider
-const providerPriceIds = {
-  stripe: {
-    customizeMyOwn: clientEnv.VITE_STRIPE_PRICE_LIFETIME,
-  },
-  creem: {
-    customizeMyOwn: clientEnv.VITE_CREEM_PRODUCT_CUSTOM_MY_OWN,
-  },
-  waffo: {
-    customizeMyOwn: clientEnv.VITE_WAFFO_PRODUCT_CUSTOM_MY_OWN,
-  },
-} satisfies Record<
-  Exclude<typeof paymentProvider, ''>,
-  Record<'customizeMyOwn', string | undefined>
->;
-const activePriceIds = isPaymentEnabled
-  ? providerPriceIds[paymentProvider]
-  : undefined;
 const priceIds = {
-  customizeMyOwn: activePriceIds?.customizeMyOwn ?? '',
+  customizeMyOwn:
+    paymentProvider === 'stripe'
+      ? (clientEnv.VITE_STRIPE_PRICE_LIFETIME ?? '')
+      : '',
 };
 
 /**

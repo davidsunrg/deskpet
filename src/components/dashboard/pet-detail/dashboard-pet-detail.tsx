@@ -28,7 +28,8 @@ export type UserPetDetail = {
   avatar: string | null;
   photoKeys: string[];
   status: string;
-  paidAt: Date | null;
+  deliveryAt: Date | null;
+  paymentId: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -133,7 +134,7 @@ export function DashboardPetDetail({
         {step === 'final' ? (
           <DashboardPetDetailFinalStep
             isPaid={isPaid}
-            paidAt={pet.paidAt}
+            deliveryAt={pet.deliveryAt}
             userEmail={userEmail}
             checkoutBusy={checkoutBusy}
             onJoinQueue={handleJoinQueue}

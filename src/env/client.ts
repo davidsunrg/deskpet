@@ -12,17 +12,11 @@ export const clientEnv = createEnv({
     // Public R2/CDN base for registry pet media (avatars, action clips)
     VITE_STORAGE_PUBLIC_URL: z.string().url().optional(),
 
-    // Payment provider: 'stripe' | 'creem' | 'waffo' | '' (empty = disabled)
-    VITE_PAYMENT_PROVIDER: z.enum(['stripe', 'creem', 'waffo', '']).default(''),
+    // Payment provider: 'stripe' | '' (empty = disabled)
+    VITE_PAYMENT_PROVIDER: z.enum(['stripe', '']).default(''),
 
     // Payment (Stripe)
     VITE_STRIPE_PRICE_LIFETIME: z.string().optional(),
-
-    // Payment (Creem)
-    VITE_CREEM_PRODUCT_CUSTOM_MY_OWN: z.string().optional(),
-
-    // Payment (Waffo Pancake)
-    VITE_WAFFO_PRODUCT_CUSTOM_MY_OWN: z.string().optional(),
 
     // Analytics
     VITE_GOOGLE_ANALYTICS_ID: z.string().optional(),

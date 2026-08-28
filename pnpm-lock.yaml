@@ -161,9 +161,6 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.2
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@waffo/pancake-ts':
-        specifier: 0.16.1
-        version: 0.16.1
       aws4fetch:
         specifier: ^1.0.20
         version: 1.0.20
@@ -182,9 +179,6 @@ importers:
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      creem:
-        specifier: ^1.4.4
-        version: 1.4.4
       crisp-sdk-web:
         specifier: ^1.0.27
         version: 1.0.27
@@ -4119,10 +4113,6 @@ packages:
   '@vitest/utils@4.1.10':
     resolution: {integrity: sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA==}
 
-  '@waffo/pancake-ts@0.16.1':
-    resolution: {integrity: sha512-Y02vPqjPHKQqivHrrCFY00/bO8A2faz/pJb4PBv3TfhXUvysZJPZHcz4GVN8Ok7+ql274iwllz/JPHJBtg8DEQ==}
-    engines: {node: '>=20.0.0'}
-
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
@@ -4536,10 +4526,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-
-  creem@1.4.4:
-    resolution: {integrity: sha512-hfnHOIqNERf783FMJOOpbmD701y4t6HuVKR8kIm16X3l5OK6yMM0ifd2zY8CbRqSLeqK/iQV1D8FLgZEVs7Alg==}
-    hasBin: true
 
   crisp-sdk-web@1.0.27:
     resolution: {integrity: sha512-aNWR3te65YiaVFu/iwdqOo3cyUBZHUheE4d6EtgQu/T18jh/9SpoYXjXF/OzUD3Cqy0pGryoqtuy5gxD8tqX9Q==}
@@ -8908,28 +8894,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@modelcontextprotocol/sdk@1.26.0(zod@4.3.6)':
-    dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.9)
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
-      content-type: 1.0.5
-      cors: 2.8.6
-      cross-spawn: 7.0.6
-      eventsource: 3.0.7
-      eventsource-parser: 3.0.6
-      express: 5.2.1
-      express-rate-limit: 8.2.1(express@5.2.1)
-      hono: 4.11.9
-      jose: 6.1.3
-      json-schema-typed: 8.0.2
-      pkce-challenge: 5.0.1
-      raw-body: 3.0.2
-      zod: 4.3.6
-      zod-to-json-schema: 3.25.1(zod@4.3.6)
-    transitivePeerDependencies:
-      - supports-color
-
   '@mrleebo/prisma-ast@0.13.1':
     dependencies:
       chevrotain: 10.5.0
@@ -10949,8 +10913,6 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.0
 
-  '@waffo/pancake-ts@0.16.1': {}
-
   accepts@1.3.8:
     dependencies:
       mime-types: 2.1.35
@@ -11393,14 +11355,6 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
-
-  creem@1.4.4:
-    dependencies:
-      '@modelcontextprotocol/sdk': 1.26.0(zod@4.3.6)
-      zod: 4.3.6
-    transitivePeerDependencies:
-      - '@cfworker/json-schema'
-      - supports-color
 
   crisp-sdk-web@1.0.27: {}
 
@@ -14671,10 +14625,6 @@ snapshots:
   zod-to-json-schema@3.25.1(zod@3.25.76):
     dependencies:
       zod: 3.25.76
-
-  zod-to-json-schema@3.25.1(zod@4.3.6):
-    dependencies:
-      zod: 4.3.6
 
   zod@3.25.76: {}
 

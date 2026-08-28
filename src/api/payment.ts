@@ -54,13 +54,12 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
 
     // For Stripe: {CHECKOUT_SESSION_ID} is replaced by Stripe on redirect,
     // then the Payment page polls by sessionId until the webhook writes the DB record.
-    // For providers that host their own post-checkout page (Creem, Waffo):
-    // neither replaces URL placeholders and both have their own payment
-    // confirmation page, so the payment page polls the current plan instead.
-    // Routing the return through that page keeps Billing from rendering a
-    // stale plan while the webhook is still in flight. The payment page
-    // treats "callback without session_id" as hosted mode, so only
-    // `callback` is passed here.
+    // For providers that host their own post-checkout page: neither replaces
+    // URL placeholders and they have their own payment confirmation page, so
+    // the payment page polls the current plan instead. Routing the return
+    // through that page keeps Billing from rendering a stale plan while the
+    // webhook is still in flight. The payment page treats "callback without
+    // session_id" as hosted mode, so only `callback` is passed here.
     const success = hostsPostCheckoutPage
       ? (successUrl ??
         getCanonicalUrl(

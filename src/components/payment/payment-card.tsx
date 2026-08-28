@@ -129,8 +129,8 @@ export function PaymentCard({
   const pollEndRef = useRef(false);
   const startRef = useRef<number>(0);
   // Poll for payment completion: Stripe polls the payment record by
-  // sessionId, providers with a hosted post-checkout page (Creem, Waffo)
-  // poll the current plan because their webhooks carry no checkout session id.
+  // sessionId; hosted post-checkout providers poll the current plan because
+  // their webhooks carry no checkout session id.
   useEffect(() => {
     if (status !== 'processing') return;
     pollEndRef.current = false;

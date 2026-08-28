@@ -58,7 +58,8 @@ export const getUserPetFn = createServerFn({ method: 'GET' })
         avatar: pet.avatar,
         photoKeys: pet.photoKeys,
         status: pet.status,
-        paidAt: pet.paidAt,
+        deliveryAt: pet.deliveryAt,
+        paymentId: pet.paymentId,
         createdAt: pet.createdAt,
         updatedAt: pet.updatedAt,
       })
