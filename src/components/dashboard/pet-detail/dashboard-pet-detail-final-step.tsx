@@ -45,7 +45,7 @@ export function DashboardPetDetailFinalStep({
         </div>
       ) : (
         <div className="flex min-h-0 flex-1 items-center justify-center">
-          <div className="flex w-full max-w-md flex-col gap-3">
+          <div className="flex w-full max-w-sm flex-col gap-2.5">
             <CustomPetLimitedOfferBanner />
             <CustomPetFinalPricingCard
               busy={checkoutBusy}
