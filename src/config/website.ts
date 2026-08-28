@@ -124,6 +124,7 @@ export const websiteConfig: WebsiteConfig = {
   },
   payment: {
     enable: isPaymentEnabled,
+    showMarketingPricing: false,
     provider: isPaymentEnabled ? paymentProvider : undefined,
     price: {
       plans: {

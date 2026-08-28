@@ -121,24 +121,6 @@ export default function HeroSection({
                     <CtaButton
                       asChild
                       type="button"
-                      variant="brutalOutline"
-                      className="h-11 px-6"
-                      data-testid="hero-cta-playground"
-                    >
-                      <LocaleLink href={Routes.Playground}>
-                        <span className="text-nowrap">{t('playground')}</span>
-                      </LocaleLink>
-                    </CtaButton>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t('ctaPlaygroundTooltip')}</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <CtaButton
-                      asChild
-                      type="button"
                       className="h-11 px-6"
                       data-testid="hero-cta-make-pet"
                     >

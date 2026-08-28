@@ -9,6 +9,7 @@ import {
   ReceiptTextIcon,
   TagIcon,
 } from 'lucide-react';
+import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import type { MenuItemConfig } from '../types';
 import { websiteConfig } from './website';
 
@@ -58,7 +59,7 @@ export function useNavbarLinks(): MenuItemConfig[] {
           href: Routes.Expense,
           external: false,
         },
-        ...(websiteConfig.payment?.enable
+        ...(isMarketingPricingEnabled()
           ? [
               {
                 title: t('resources.items.pricing.title'),

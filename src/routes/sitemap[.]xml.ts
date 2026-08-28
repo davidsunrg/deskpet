@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getBaseUrl } from '@/lib/urls';
 import { getCategories, getSortedPosts } from '@/lib/blog';
+import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import { websiteConfig } from '@/config/website';
 import { petDetailRoute } from '@/lib/routes';
 import {
@@ -45,7 +46,7 @@ export const Route = createFileRoute('/sitemap.xml')({
         if (websiteConfig.blog?.enable) {
           staticUrls.push({ path: '/blog', changefreq: 'weekly' });
         }
-        if (websiteConfig.payment?.enable) {
+        if (isMarketingPricingEnabled()) {
           staticUrls.push({ path: '/pricing', changefreq: 'weekly' });
         }
 

@@ -2,6 +2,7 @@
 
 import { Routes } from '@/lib/routes';
 import { useTranslations } from '@/lib/deskpet-i18n';
+import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import type { MenuItemConfig } from '../types';
 import { websiteConfig } from './website';
 
@@ -20,7 +21,7 @@ export function useFooterLinks(): MenuItemConfig[] {
           href: Routes.Features,
           external: false,
         },
-        ...(websiteConfig.payment?.enable
+        ...(isMarketingPricingEnabled()
           ? [
               {
                 title: t('product.items.pricing'),

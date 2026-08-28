@@ -1,7 +1,7 @@
 'use client';
 
 import { LocaleLink } from '@/lib/i18n/navigation';
-import { playgroundRoute, Routes } from '@/lib/routes';
+import { playgroundRoute } from '@/lib/routes';
 import { cn } from '@/utils/cn';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 import { MoreVerticalIcon } from 'lucide-react';
@@ -31,7 +31,7 @@ type PetCardGridProps = {
 };
 
 const cardButtonClassName =
-  'inline-flex min-h-11 flex-1 items-center justify-center rounded-full border-2 border-[#3A2B36] bg-deskpet-sun px-6 text-sm font-black text-[#3A2B36] shadow-[3px_4px_0_0_rgba(58,43,54,0.14)] transition-colors hover:bg-deskpet-sun/85 dark:border-border dark:text-deskpet-ink';
+  'inline-flex min-h-11 flex-1 items-center justify-center rounded-full border-2 border-[#3A2B36] bg-white px-6 text-sm font-black text-[#3A2B36] shadow-[3px_4px_0_0_rgba(58,43,54,0.14)] transition-[box-shadow,background-color] hover:bg-deskpet-mint hover:shadow-[4px_5px_0_0_rgba(58,43,54,0.18)] dark:border-border dark:bg-card dark:text-foreground';
 
 /** Fixed media frame so avatars cannot shrink-to-fit then jump larger after load. */
 const cardMediaFrameClassName =
@@ -141,13 +141,14 @@ export function PetCardGrid({
                     >
                       {tCta('playground')}
                     </LocaleLink>
-                    <LocaleLink
-                      href={Routes.DesktopPetCreator}
+                    <button
+                      type="button"
+                      hidden
                       className={cardButtonClassName}
-                      aria-label={`Create a pet like ${pet.breedLabel}`}
+                      aria-label={`Bring ${pet.breedLabel} home`}
                     >
                       {tCta('bringMeHome')}
-                    </LocaleLink>
+                    </button>
                   </div>
                 </div>
               </div>

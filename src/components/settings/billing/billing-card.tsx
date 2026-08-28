@@ -13,6 +13,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { authClient } from '@/auth/client';
 import { formatDate } from '@/lib/formatter';
+import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import { cn } from '@/lib/utils';
 import { useCurrentPlan } from '@/hooks/use-payment';
 import { getPricePlans } from '@/lib/price-plan';
@@ -20,6 +21,11 @@ import { Link } from '@tanstack/react-router';
 import { Routes } from '@/lib/routes';
 import { IconCircleCheck, IconClock, IconRefresh } from '@tabler/icons-react';
 import { useCallback } from 'react';
+
+const upgradePlanHref = isMarketingPricingEnabled()
+  ? Routes.Pricing
+  : Routes.DesktopPetCreator;
+
 /** Card container: full width, no bottom padding */
 const cardClass = cn('w-full overflow-hidden pt-6 pb-0 flex flex-col');
 /** Footer: right-aligned primary action, muted background */
@@ -130,7 +136,7 @@ export function BillingCard() {
         </CardContent>
         <CardFooter className={footerClass}>
           <Link
-            to={Routes.Pricing}
+            to={upgradePlanHref}
             className={buttonVariants({ variant: 'default' })}
           >
             {m.settings_billing_card_upgrade_plan()}
@@ -226,7 +232,7 @@ export function BillingCard() {
         {/* Free: show upgrade button */}
         {isFreePlan && (
           <Link
-            to={Routes.Pricing}
+            to={upgradePlanHref}
             className={buttonVariants({ variant: 'default' })}
           >
             {m.settings_billing_card_upgrade_plan()}

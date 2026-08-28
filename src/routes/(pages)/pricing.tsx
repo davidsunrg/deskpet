@@ -1,16 +1,16 @@
 import { authClient } from '@/auth/client';
 import { PricingTable } from '@/components/pricing/pricing-table';
-import { websiteConfig } from '@/config/website';
 import { useCurrentPlan } from '@/hooks/use-payment';
 import { deskpetPageTitle } from '@/lib/deskpet-seo';
 import { getDeskPetMessage } from '@/lib/deskpet-i18n';
+import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import { Routes } from '@/lib/routes';
 import { seo } from '@/lib/seo';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/(pages)/pricing')({
   beforeLoad: () => {
-    if (websiteConfig.payment?.enable === false) {
+    if (!isMarketingPricingEnabled()) {
       throw redirect({ to: Routes.Root });
     }
   },

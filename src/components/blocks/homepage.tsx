@@ -4,7 +4,7 @@ import BehaviorsSection from '@/components/blocks/behaviors/behaviors';
 import ViralPetVideosSection from '@/components/blocks/viral-pet-videos/viral-pet-videos';
 import FaqSection from '@/components/blocks/faqs/faqs';
 import PricingSection from '@/components/blocks/pricing';
-import { websiteConfig } from '@/config/website';
+import { isMarketingPricingEnabled } from '@/lib/marketing-pricing';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 
@@ -24,7 +24,7 @@ export function HomePage({ catalogPets, floatingPet }: HomePageProps) {
 
       <BehaviorsSection />
 
-      {websiteConfig.payment?.enable ? <PricingSection /> : <FaqSection />}
+      {isMarketingPricingEnabled() ? <PricingSection /> : <FaqSection />}
     </div>
   );
 }
