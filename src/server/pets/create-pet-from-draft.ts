@@ -4,12 +4,23 @@ import { copyObject, deleteObject } from '@/lib/storage/r2-s3';
 import type { CreatorRecognitionCache } from '@/types/creator-recognition';
 import {
   buildPetMakerFinalKey,
+  buildPetMakerFinalThumbnailKey,
   extensionFromKey,
   fileIdFromKey,
   isPetMakerStagingKeyForDraft,
 } from '@/utils/pets/pet-maker-storage-keys';
 import { PetCreationStatus } from '@/utils/pets/pet-creation-status';
+import {
+  normalizePetPhotoEntries,
+  petPhotoOwnedKeys,
+  type PetPhotoEntry,
+} from '@/utils/pets/pet-photo-entries';
 import { eq } from 'drizzle-orm';
+
+export type CreatePetFromDraftPhoto = {
+  key: string;
+  thumbnailKey: string | null;
+};
 
 export type CreatePetFromDraftInput = {
   userId: string;
@@ -19,13 +30,13 @@ export type CreatePetFromDraftInput = {
   breed: string;
   sex: string | null;
   avatarKey: string | null;
-  photoKeys: string[];
+  photos: CreatePetFromDraftPhoto[];
   creatorRecognition?: CreatorRecognitionCache | null;
 };
 
 export type CreatePetFromDraftResult = {
   petId: string;
-  finalPhotoKeys: string[];
+  finalPhotos: PetPhotoEntry[];
   finalAvatarKey: string | null;
 };
 
@@ -40,27 +51,50 @@ function assertStagingKeysForDraft(draftId: string, keys: string[]): void {
 export async function createPetFromDraft(
   input: CreatePetFromDraftInput
 ): Promise<CreatePetFromDraftResult> {
-  const allStagingKeys = [
-    ...input.photoKeys,
+  if (input.photos.length === 0) {
+    throw new Error('At least one photo is required.');
+  }
+
+  const stagingKeys = [
+    ...input.photos.flatMap((photo) =>
+      photo.thumbnailKey ? [photo.key, photo.thumbnailKey] : [photo.key]
+    ),
     ...(input.avatarKey ? [input.avatarKey] : []),
   ];
-  assertStagingKeysForDraft(input.draftId, allStagingKeys);
+  assertStagingKeysForDraft(input.draftId, stagingKeys);
 
   const petId = globalThis.crypto.randomUUID();
   const now = new Date();
-  const finalPhotoKeys: string[] = [];
+  const finalPhotos: PetPhotoEntry[] = [];
 
-  for (const stagingKey of input.photoKeys) {
-    const fileId = fileIdFromKey(stagingKey);
-    const ext = extensionFromKey(stagingKey);
+  for (const photo of input.photos) {
+    const fileId = fileIdFromKey(photo.key);
+    const ext = extensionFromKey(photo.key);
     const finalKey = buildPetMakerFinalKey({
       userId: input.userId,
       petId,
       fileId,
       extension: ext,
     });
-    await copyObject({ sourceKey: stagingKey, destinationKey: finalKey });
-    finalPhotoKeys.push(finalKey);
+    await copyObject({ sourceKey: photo.key, destinationKey: finalKey });
+
+    let finalThumbnailKey: string | null = null;
+    if (photo.thumbnailKey) {
+      finalThumbnailKey = buildPetMakerFinalThumbnailKey({
+        userId: input.userId,
+        petId,
+        fileId,
+      });
+      await copyObject({
+        sourceKey: photo.thumbnailKey,
+        destinationKey: finalThumbnailKey,
+      });
+    }
+
+    finalPhotos.push({
+      key: finalKey,
+      thumbnailKey: finalThumbnailKey,
+    });
   }
 
   let finalAvatarKey: string | null = null;
@@ -88,14 +122,14 @@ export async function createPetFromDraft(
     breed: input.breed,
     sex: input.sex,
     avatar: finalAvatarKey,
-    photoKeys: finalPhotoKeys,
+    photoKeys: finalPhotos,
     creatorRecognition: input.creatorRecognition ?? null,
     status: PetCreationStatus.ProfileCreated,
     createdAt: now,
     updatedAt: now,
   });
 
-  for (const stagingKey of allStagingKeys) {
+  for (const stagingKey of stagingKeys) {
     try {
       await deleteObject(stagingKey);
     } catch {
@@ -103,7 +137,7 @@ export async function createPetFromDraft(
     }
   }
 
-  return { petId, finalPhotoKeys, finalAvatarKey };
+  return { petId, finalPhotos, finalAvatarKey };
 }
 
 export async function userOwnsStorageKey(
@@ -118,7 +152,8 @@ export async function userOwnsStorageKey(
 
   for (const row of rows) {
     if (row.avatar === key) return true;
-    if (row.photoKeys.includes(key)) return true;
+    const owned = petPhotoOwnedKeys(normalizePetPhotoEntries(row.photoKeys));
+    if (owned.includes(key)) return true;
   }
   return false;
 }

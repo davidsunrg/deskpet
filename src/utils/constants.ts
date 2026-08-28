@@ -9,6 +9,8 @@ export const PET_MEDIA_MAX_FILE_SIZE = 20 * 1024 * 1024;
 
 export const PET_MEDIA_THUMBNAIL_MIME_TYPE = 'image/webp';
 
-export const PET_MEDIA_THUMBNAIL_QUALITY = 80;
+/** WebP quality for album / recognition thumbnails (matches reference). */
+export const PET_MEDIA_THUMBNAIL_QUALITY = 75;
 
-export const PET_MEDIA_THUMBNAIL_MAX_EDGE = 512;
+/** Long-edge max for album / recognition thumbnails (matches reference). */
+export const PET_MEDIA_THUMBNAIL_MAX_EDGE = 640;

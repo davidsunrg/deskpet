@@ -13,6 +13,11 @@ import { getCanonicalUrl, getFileAccessUrl } from '@/lib/urls';
 import { PetSex } from '@/utils/pet-catalog';
 import { PetCreationStatus } from '@/utils/pets/pet-creation-status';
 import {
+  normalizePetPhotoEntries,
+  petPhotoPreviewKey,
+  type PetPhotoEntry,
+} from '@/utils/pets/pet-photo-entries';
+import {
   DEFAULT_DASHBOARD_PET_DETAIL_STEP,
   type DashboardPetDetailStep,
 } from '@/utils/pets/dashboard-pet-detail-steps';
@@ -29,7 +34,7 @@ export type UserPetDetail = {
   breed: string;
   sex: string | null;
   avatar: string | null;
-  photoKeys: string[];
+  photoKeys: PetPhotoEntry[] | string[];
   status: string;
   deliveryAt: Date | null;
   paymentId: string | null;
@@ -68,7 +73,11 @@ export function DashboardPetDetail({
 
   const avatarUrl = pet.avatar ? getFileAccessUrl(pet.avatar) : null;
   const sexLabel = getSexLabel(pet.sex);
-  const photoUrls = pet.photoKeys.map((key) => getFileAccessUrl(key));
+  const photoEntries = normalizePetPhotoEntries(pet.photoKeys);
+  const photoUrls = photoEntries.map((entry) =>
+    getFileAccessUrl(petPhotoPreviewKey(entry))
+  );
+  const photoKeys = photoEntries.map((entry) => entry.key);
   const isPaid = pet.status === PetCreationStatus.Paid;
   const customizePlan = websiteConfig.payment?.price?.plans.customizeMyOwn;
   const checkoutPlanId = customizePlan?.id ?? 'customizeMyOwn';
@@ -123,7 +132,7 @@ export function DashboardPetDetail({
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {step === 'photos' ? (
           <DashboardPetDetailPhotosStep
-            photoKeys={pet.photoKeys}
+            photoKeys={photoKeys}
             photoUrls={photoUrls}
           />
         ) : null}

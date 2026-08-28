@@ -37,6 +37,8 @@ export type PetMakerLocalDraftPhoto = {
   localId: string;
   name: string;
   r2Key: string;
+  /** Staging thumbnail used for recognition + lightweight previews. */
+  thumbnailKey?: string | null;
   previewUrl: string;
   width?: number;
   height?: number;
@@ -88,13 +90,21 @@ export function readDraft(): PetMakerLocalDraft | null {
       breed: parsed.breed ?? '',
       sex: parsed.sex ?? '',
       avatarKey: parsed.avatarKey ?? null,
-      photos: parsed.photos.filter(
-        (photo): photo is PetMakerLocalDraftPhoto =>
-          !!photo &&
-          typeof photo.localId === 'string' &&
-          typeof photo.r2Key === 'string' &&
-          typeof photo.previewUrl === 'string'
-      ),
+      photos: parsed.photos
+        .filter(
+          (photo): photo is PetMakerLocalDraftPhoto =>
+            !!photo &&
+            typeof photo.localId === 'string' &&
+            typeof photo.r2Key === 'string' &&
+            typeof photo.previewUrl === 'string'
+        )
+        .map((photo) => ({
+          ...photo,
+          thumbnailKey:
+            typeof photo.thumbnailKey === 'string' && photo.thumbnailKey.trim()
+              ? photo.thumbnailKey.trim()
+              : null,
+        })),
       creatorRecognition: asCreatorRecognitionCache(parsed.creatorRecognition),
     };
   } catch {

@@ -5,9 +5,13 @@ import { deleteObject, getPresignedUploadUrl } from '@/lib/storage/r2-s3';
 import { getBaseUrl } from '@/lib/urls';
 import { authApiMiddleware } from '@/middlewares/auth-middleware';
 import type { CreatorRecognitionCache } from '@/types/creator-recognition';
-import { PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
+import {
+  PET_MEDIA_MAX_FILE_SIZE,
+  PET_MEDIA_THUMBNAIL_MIME_TYPE,
+} from '@/utils/constants';
 import {
   buildPetMakerStagingKey,
+  buildPetMakerStagingThumbnailKey,
   isPetMakerStagingKeyForDraft,
   isUuid,
 } from '@/utils/pets/pet-maker-storage-keys';
@@ -36,22 +40,41 @@ function extensionForContentType(contentType: string): string {
   }
 }
 
-const stagingUploadSchema = z.object({
-  draftId: z.string().refine(isUuid, 'Invalid draft id'),
-  fileId: z.string().refine(isUuid, 'Invalid file id'),
-  contentType: z.enum(ALLOWED_CONTENT_TYPES),
-  byteSize: z.number().int().positive().max(PET_MEDIA_MAX_FILE_SIZE),
-});
+const stagingUploadSchema = z
+  .object({
+    draftId: z.string().refine(isUuid, 'Invalid draft id'),
+    fileId: z.string().refine(isUuid, 'Invalid file id'),
+    contentType: z.enum(ALLOWED_CONTENT_TYPES),
+    byteSize: z.number().int().positive().max(PET_MEDIA_MAX_FILE_SIZE),
+    kind: z.enum(['photo', 'thumbnail']).default('photo'),
+  })
+  .superRefine((data, ctx) => {
+    if (
+      data.kind === 'thumbnail' &&
+      data.contentType !== PET_MEDIA_THUMBNAIL_MIME_TYPE
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Thumbnail uploads must be image/webp',
+        path: ['contentType'],
+      });
+    }
+  });
 
 export const getPetMakerStagingUploadUrlFn = createServerFn({ method: 'POST' })
   .validator(stagingUploadSchema)
   .handler(async ({ data }) => {
-    const extension = extensionForContentType(data.contentType);
-    const r2Key = buildPetMakerStagingKey({
-      draftId: data.draftId,
-      fileId: data.fileId,
-      extension,
-    });
+    const r2Key =
+      data.kind === 'thumbnail'
+        ? buildPetMakerStagingThumbnailKey({
+            draftId: data.draftId,
+            fileId: data.fileId,
+          })
+        : buildPetMakerStagingKey({
+            draftId: data.draftId,
+            fileId: data.fileId,
+            extension: extensionForContentType(data.contentType),
+          });
     const requestOrigin = getBaseUrl();
     const uploadUrl = await getPresignedUploadUrl({
       key: r2Key,
@@ -59,7 +82,13 @@ export const getPetMakerStagingUploadUrlFn = createServerFn({ method: 'POST' })
       proxyOrigin: requestOrigin,
     });
     const previewUrl = `${requestOrigin}/api/storage/file?key=${encodeURIComponent(r2Key)}`;
-    return { uploadUrl, r2Key, previewUrl, contentType: data.contentType };
+    return {
+      uploadUrl,
+      r2Key,
+      previewUrl,
+      contentType: data.contentType,
+      kind: data.kind,
+    };
   });
 
 const stagingDeleteSchema = z.object({
@@ -110,6 +139,11 @@ export const recognizePetMakerPhotosFn = createServerFn({ method: 'POST' })
     });
   });
 
+const petPhotoDraftSchema = z.object({
+  key: z.string().min(1),
+  thumbnailKey: z.string().min(1).nullable(),
+});
+
 const createPetSchema = z.object({
   draftId: z.string().refine(isUuid, 'Invalid draft id'),
   petName: z.string().trim().min(1).max(120),
@@ -117,7 +151,7 @@ const createPetSchema = z.object({
   breed: z.string().trim().min(1).max(120),
   sex: z.string().trim().max(32).nullable(),
   avatarKey: z.string().nullable(),
-  photoKeys: z.array(z.string()).min(1).max(MAX_CREATOR_PHOTOS),
+  photos: z.array(petPhotoDraftSchema).min(1).max(MAX_CREATOR_PHOTOS),
   creatorRecognition: creatorRecognitionCacheSchema.nullable().optional(),
 });
 
@@ -133,7 +167,7 @@ export const createPetFn = createServerFn({ method: 'POST' })
       breed: data.breed,
       sex: data.sex,
       avatarKey: data.avatarKey,
-      photoKeys: data.photoKeys,
+      photos: data.photos,
       creatorRecognition:
         (data.creatorRecognition as
           | CreatorRecognitionCache

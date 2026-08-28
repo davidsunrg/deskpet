@@ -12,7 +12,10 @@ import {
 } from '@/prompts/common/recognition/creator-pet-recognition-prompt';
 import { normalizeCreatorPetRecognitionData } from '@/utils/pets/creator-recognition';
 import { assertPetMakerRecognitionPhotoKeys } from '@/utils/pets/pet-maker-recognition-keys';
-import { buildPetMakerStagingKey } from '@/utils/pets/pet-maker-storage-keys';
+import {
+  buildPetMakerStagingKey,
+  buildPetMakerStagingThumbnailKey,
+} from '@/utils/pets/pet-maker-storage-keys';
 import {
   isUnsupportedCreatorRecognitionSpecies,
   mapPetRecognitionToPrefill,
@@ -130,10 +133,20 @@ describe('assertPetMakerRecognitionPhotoKeys', () => {
       fileId: '22222222-2222-4222-8222-222222222222',
       extension: 'webp',
     });
+    const thumb = buildPetMakerStagingThumbnailKey({
+      draftId,
+      fileId: '22222222-2222-4222-8222-222222222222',
+    });
     expect(
       assertPetMakerRecognitionPhotoKeys({
         draftId,
         photoKeys: [key],
+      })
+    ).toBeNull();
+    expect(
+      assertPetMakerRecognitionPhotoKeys({
+        draftId,
+        photoKeys: [thumb],
       })
     ).toBeNull();
   });

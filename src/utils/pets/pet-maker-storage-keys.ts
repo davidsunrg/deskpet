@@ -17,6 +17,14 @@ export function buildPetMakerStagingKey(input: {
   return `${PET_MAKER_STAGING_PREFIX}/${input.draftId}/${input.fileId}.${ext}`;
 }
 
+/** Staging thumbnail beside the primary photo (`…/{fileId}.thumbnail.webp`). */
+export function buildPetMakerStagingThumbnailKey(input: {
+  draftId: string;
+  fileId: string;
+}): string {
+  return `${PET_MAKER_STAGING_PREFIX}/${input.draftId}/${input.fileId}.thumbnail.webp`;
+}
+
 export function buildPetMakerFinalKey(input: {
   userId: string;
   petId: string;
@@ -25,6 +33,23 @@ export function buildPetMakerFinalKey(input: {
 }): string {
   const ext = input.extension.replace(/^\./, '').toLowerCase() || 'bin';
   return `${PET_MAKER_PREFIX}/${input.userId}/${input.petId}/${input.fileId}.${ext}`;
+}
+
+/** Final thumbnail beside the primary photo (`…/{fileId}.thumbnail.webp`). */
+export function buildPetMakerFinalThumbnailKey(input: {
+  userId: string;
+  petId: string;
+  fileId: string;
+}): string {
+  return `${PET_MAKER_PREFIX}/${input.userId}/${input.petId}/${input.fileId}.thumbnail.webp`;
+}
+
+export function isPetMakerStagingThumbnailKey(key: string): boolean {
+  return (
+    isPetMakerStagingKey(key) &&
+    key.toLowerCase().endsWith('.thumbnail.webp') &&
+    !key.includes('..')
+  );
 }
 
 export function isPetMakerStagingKey(key: string): boolean {
@@ -53,6 +78,8 @@ export function extensionFromKey(key: string): string {
 export function fileIdFromKey(key: string): string {
   const slash = key.lastIndexOf('/');
   const filename = slash === -1 ? key : key.slice(slash + 1);
+  const withoutThumb = filename.replace(/\.thumbnail\.webp$/i, '');
+  if (withoutThumb !== filename) return withoutThumb;
   const dot = filename.lastIndexOf('.');
   return dot === -1 ? filename : filename.slice(0, dot);
 }

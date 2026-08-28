@@ -10,7 +10,7 @@ export type PreparedPetMediaThumbnail = {
   file: File;
   mimeType: typeof PET_MEDIA_THUMBNAIL_MIME_TYPE;
   byteSize: number;
-  /** Source media natural size (stored / PhotoSwipe / tile aspect). */
+  /** Encoded thumbnail pixel size. */
   width: number;
   height: number;
 };
@@ -66,9 +66,17 @@ function drawThumbnail(
   return canvas;
 }
 
-async function thumbnailFromImageFile(
+/**
+ * Build a compressed WebP thumbnail for a pet maker photo before upload.
+ * Max edge 640px, quality 75 — matches reference recognition thumbnails.
+ */
+export async function preparePetMediaThumbnail(
   file: File
 ): Promise<PreparedPetMediaThumbnail> {
+  if (!file.type.startsWith('image/')) {
+    throw new Error('Unsupported media type.');
+  }
+
   const url = URL.createObjectURL(file);
   try {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -77,66 +85,21 @@ async function thumbnailFromImageFile(
       element.onerror = () => reject(new Error('Failed to load image.'));
       element.src = url;
     });
-    const width = image.naturalWidth;
-    const height = image.naturalHeight;
-    const canvas = drawThumbnail(image, width, height);
-    return canvasToWebpFile(canvas, PET_MEDIA_THUMBNAIL_QUALITY, width, height);
+
+    const sourceWidth = image.naturalWidth;
+    const sourceHeight = image.naturalHeight;
+    if (!sourceWidth || !sourceHeight) {
+      throw new Error('Image has no dimensions.');
+    }
+
+    const canvas = drawThumbnail(image, sourceWidth, sourceHeight);
+    return canvasToWebpFile(
+      canvas,
+      PET_MEDIA_THUMBNAIL_QUALITY,
+      canvas.width,
+      canvas.height
+    );
   } finally {
     URL.revokeObjectURL(url);
   }
-}
-
-async function thumbnailFromVideoFile(
-  file: File
-): Promise<PreparedPetMediaThumbnail> {
-  const url = URL.createObjectURL(file);
-  try {
-    const video = document.createElement('video');
-    video.muted = true;
-    video.playsInline = true;
-    video.preload = 'auto';
-    video.src = url;
-
-    await new Promise<void>((resolve, reject) => {
-      video.onloadeddata = () => resolve();
-      video.onerror = () => reject(new Error('Failed to load video.'));
-    });
-
-    // Seek near the start for a representative frame.
-    const seekTo = Math.min(0.25, Math.max(0, (video.duration || 1) * 0.05));
-    if (Number.isFinite(seekTo) && seekTo > 0) {
-      await new Promise<void>((resolve, reject) => {
-        video.onseeked = () => resolve();
-        video.onerror = () => reject(new Error('Failed to seek video.'));
-        video.currentTime = seekTo;
-      });
-    }
-
-    const width = video.videoWidth;
-    const height = video.videoHeight;
-    if (!width || !height) {
-      throw new Error('Video has no dimensions.');
-    }
-
-    const canvas = drawThumbnail(video, width, height);
-    return canvasToWebpFile(canvas, PET_MEDIA_THUMBNAIL_QUALITY, width, height);
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}
-
-/**
- * Build a compressed WebP thumbnail for a photo or video before upload.
- * Returned width/height are the original media dimensions.
- */
-export async function preparePetMediaThumbnail(
-  file: File
-): Promise<PreparedPetMediaThumbnail> {
-  if (file.type.startsWith('image/')) {
-    return thumbnailFromImageFile(file);
-  }
-  if (file.type.startsWith('video/')) {
-    return thumbnailFromVideoFile(file);
-  }
-  throw new Error('Unsupported media type.');
 }

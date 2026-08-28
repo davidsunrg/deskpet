@@ -9,6 +9,7 @@ import {
   DEFAULT_PET_CREATION_STATUS,
   type PetCreationStatus,
 } from '@/utils/pets/pet-creation-status';
+import type { PetPhotoEntry } from '@/utils/pets/pet-photo-entries';
 import { payment } from './payment.schema';
 import { user } from './auth.schema';
 
@@ -25,8 +26,12 @@ export const pet = sqliteTable(
     breed: text('breed').notNull(),
     sex: text('sex'),
     avatar: text('avatar'),
+    /**
+     * Photo entries: `{ key, thumbnailKey }[]`.
+     * Legacy rows may still be a plain `string[]` of primary keys.
+     */
     photoKeys: text('photo_keys', { mode: 'json' })
-      .$type<string[]>()
+      .$type<PetPhotoEntry[] | string[]>()
       .notNull(),
     /** Cached Ark recognition result from the pet maker photos step. */
     creatorRecognition: text('creator_recognition', { mode: 'json' }).$type<

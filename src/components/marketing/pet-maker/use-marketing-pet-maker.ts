@@ -24,7 +24,11 @@ import {
   isSupportedAvatarImageType,
   type SquareCropPixels,
 } from '@/utils/compress-square-avatar';
-import { MAX_FILE_SIZE, PET_MEDIA_MAX_FILE_SIZE } from '@/utils/constants';
+import {
+  MAX_FILE_SIZE,
+  PET_MEDIA_MAX_FILE_SIZE,
+  PET_MEDIA_THUMBNAIL_MIME_TYPE,
+} from '@/utils/constants';
 import {
   isPetSpecies,
   listPetBreedsForSpecies,
@@ -63,6 +67,7 @@ import {
   mapPetRecognitionToPrefill,
 } from '@/utils/pets/map-pet-recognition-to-prefill';
 import { preparePetActionReferenceImage } from '@/utils/pets/prepare-pet-action-reference-image';
+import { preparePetMediaThumbnail } from '@/utils/pets/prepare-pet-media-thumbnail';
 import { uploadPetAvatar } from '@/utils/pets/upload-pet-avatar';
 import {
   wrapNestedServerFn,
@@ -86,6 +91,8 @@ export type MarketingPetMakerPhoto = {
   status: 'pending' | 'uploading' | 'ready' | 'error';
   progress: number;
   r2Key?: string;
+  /** Staging thumbnail for recognition; optional for older drafts. */
+  thumbnailKey?: string | null;
   previewUrl?: string;
   error?: string;
 };
@@ -132,6 +139,7 @@ function wizardPhotosFromLocalDraft(): WizardPhoto[] {
     status: 'ready' as const,
     progress: 100,
     r2Key: photo.r2Key,
+    thumbnailKey: photo.thumbnailKey ?? null,
   }));
 }
 
@@ -272,6 +280,7 @@ export function useMarketingPetMaker(options?: {
             localId: photo.id,
             name: photo.name,
             r2Key: photo.r2Key!,
+            thumbnailKey: photo.thumbnailKey ?? null,
             previewUrl:
               photo.previewUrl ??
               `${window.location.origin}/api/storage/file?key=${encodeURIComponent(photo.r2Key!)}`,
@@ -428,9 +437,15 @@ export function useMarketingPetMaker(options?: {
       );
 
       try {
-        const reference = await preparePetActionReferenceImage(file);
+        const [reference, thumbnail] = await Promise.all([
+          preparePetActionReferenceImage(file),
+          preparePetMediaThumbnail(file),
+        ]);
         if (!isMountedRef.current) return;
         if (reference.byteSize > PET_MEDIA_MAX_FILE_SIZE) {
+          throw new Error(t('photos.fileTooLarge'));
+        }
+        if (thumbnail.byteSize > PET_MEDIA_MAX_FILE_SIZE) {
           throw new Error(t('photos.fileTooLarge'));
         }
 
@@ -438,34 +453,64 @@ export function useMarketingPetMaker(options?: {
           type: ACTION_POSE_REFERENCE_MIME_TYPE,
           lastModified: file.lastModified,
         });
-
-        const presignResult = await wrapNestedServerFn(() =>
-          getPetMakerStagingUploadUrlFn({
-            data: {
-              draftId,
-              fileId: localId,
-              contentType: ACTION_POSE_REFERENCE_MIME_TYPE,
-              byteSize: reference.byteSize,
-            },
-          })
-        );
-        if (!isMountedRef.current) return;
-        assertActionSuccess(presignResult, t('photos.uploadError'));
-        const slot = presignResult.data.data;
-
-        await uploadFileWithPresignedUrl(
-          uploadFile,
+        const thumbnailFile = new File(
+          [thumbnail.file],
+          `${localId}.thumbnail.webp`,
           {
-            uploadUrl: slot.uploadUrl,
-            contentType: slot.contentType,
-          },
-          (percent) => {
-            if (!isMountedRef.current) return;
-            setPhotos((current) =>
-              patchPhoto(current, localId, { progress: percent })
-            );
+            type: PET_MEDIA_THUMBNAIL_MIME_TYPE,
+            lastModified: file.lastModified,
           }
         );
+
+        const [presignResult, thumbnailPresignResult] = await Promise.all([
+          wrapNestedServerFn(() =>
+            getPetMakerStagingUploadUrlFn({
+              data: {
+                draftId,
+                fileId: localId,
+                contentType: ACTION_POSE_REFERENCE_MIME_TYPE,
+                byteSize: reference.byteSize,
+                kind: 'photo',
+              },
+            })
+          ),
+          wrapNestedServerFn(() =>
+            getPetMakerStagingUploadUrlFn({
+              data: {
+                draftId,
+                fileId: localId,
+                contentType: PET_MEDIA_THUMBNAIL_MIME_TYPE,
+                byteSize: thumbnail.byteSize,
+                kind: 'thumbnail',
+              },
+            })
+          ),
+        ]);
+        if (!isMountedRef.current) return;
+        assertActionSuccess(presignResult, t('photos.uploadError'));
+        assertActionSuccess(thumbnailPresignResult, t('photos.uploadError'));
+        const slot = presignResult.data.data;
+        const thumbnailSlot = thumbnailPresignResult.data.data;
+
+        await Promise.all([
+          uploadFileWithPresignedUrl(
+            uploadFile,
+            {
+              uploadUrl: slot.uploadUrl,
+              contentType: slot.contentType,
+            },
+            (percent) => {
+              if (!isMountedRef.current) return;
+              setPhotos((current) =>
+                patchPhoto(current, localId, { progress: percent })
+              );
+            }
+          ),
+          uploadFileWithPresignedUrl(thumbnailFile, {
+            uploadUrl: thumbnailSlot.uploadUrl,
+            contentType: thumbnailSlot.contentType,
+          }),
+        ]);
         if (!isMountedRef.current) return;
 
         setPhotos((current) =>
@@ -473,6 +518,7 @@ export function useMarketingPetMaker(options?: {
             status: 'ready',
             progress: 100,
             r2Key: slot.r2Key,
+            thumbnailKey: thumbnailSlot.r2Key,
             previewUrl: slot.previewUrl,
             error: undefined,
           })
@@ -548,10 +594,14 @@ export function useMarketingPetMaker(options?: {
 
     void (async () => {
       try {
-        if (target.r2Key) {
+        const keysToDelete = [target.r2Key, target.thumbnailKey].filter(
+          (key): key is string => !!key
+        );
+
+        for (const r2Key of keysToDelete) {
           const result = await wrapNestedServerFn(() =>
             deletePetMakerStagingObjectFn({
-              data: { draftId, r2Key: target.r2Key! },
+              data: { draftId, r2Key },
             })
           );
           if (!isMountedRef.current) return;
@@ -705,9 +755,12 @@ export function useMarketingPetMaker(options?: {
       throw new Error(t('profile.speciesRequired'));
     }
 
-    const photoKeys = readyPhotos
-      .map((photo) => photo.r2Key)
-      .filter((key): key is string => !!key);
+    const photosPayload = readyPhotos
+      .filter((photo) => !!photo.r2Key)
+      .map((photo) => ({
+        key: photo.r2Key!,
+        thumbnailKey: photo.thumbnailKey ?? null,
+      }));
 
     const result = await wrapNestedServerFn(() =>
       createPetFn({
@@ -718,7 +771,7 @@ export function useMarketingPetMaker(options?: {
           breed: speciesUsesBreeds(species) ? breed : PetBreed.Any,
           sex,
           avatarKey: null,
-          photoKeys,
+          photos: photosPayload,
           creatorRecognition: recognitionCache,
         },
       })
@@ -900,10 +953,14 @@ export function useMarketingPetMaker(options?: {
 
   const startBackgroundRecognition = useCallback(
     (photoList: WizardPhoto[]) => {
-      const readyKeys = photoList
+      const readyPhotosForRecognition = photoList
         .filter((photo) => photo.status === 'ready' && photo.r2Key)
-        .map((photo) => photo.r2Key!)
         .slice(0, MAX_CREATOR_PHOTOS);
+
+      // Prefer thumbnails (reference behavior); fall back to primary for older drafts.
+      const readyKeys = readyPhotosForRecognition.map(
+        (photo) => photo.thumbnailKey || photo.r2Key!
+      );
 
       if (readyKeys.length === 0) {
         setRecognitionStatus('skipped');
