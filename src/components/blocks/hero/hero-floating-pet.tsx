@@ -1,5 +1,6 @@
 'use client';
 
+import { HeroExampleActionButtons } from '@/components/blocks/hero/hero-example-action-buttons';
 import { PetActionMenu } from '@/components/pets/pet-action-menu';
 import { usePetActionAutoplay } from '@/components/pets/use-pet-action-autoplay';
 import { logicalActionLabel } from '@/components/playground/action-label';
@@ -14,7 +15,15 @@ import {
 import type { LogicalActionId } from '@/utils/pets/pet-action-sequence';
 import type { WalkEdgeHit } from '@/utils/pets/pet-walk-motion';
 import type { PlaygroundPet } from '@/utils/playground-pet';
-import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
+import { createPortal } from 'react-dom';
 
 const HERO_PET_HEIGHT = 320;
 const HERO_PET_SIZE = {
@@ -30,11 +39,14 @@ type HeroFloatingPetProps = {
   side: 'left' | 'right';
   /** Showcase / registry pet id used by `data-hero-photo-anchor`. */
   photoPetId: string;
+  /** Example pet display name (e.g. Cooper), not the breed label. */
+  displayPetName: string;
 };
 
 /**
  * Home-page floating companion with playground interactions: drag, look-scrub,
- * right-click actions, and double-buffered clip playback.
+ * right-click actions, visible action buttons under the photo, and
+ * double-buffered clip playback.
  *
  * Starts on sit_idle and stays put until the user picks an action; then random
  * autoplay can resume like the playground.
@@ -47,9 +59,11 @@ export function HeroFloatingPet({
   boundsRef,
   side,
   photoPetId,
+  displayPetName,
 }: HeroFloatingPetProps) {
   const petRef = useRef<PlaygroundPetStageHandle>(null);
   const [autoplayEnabled, setAutoplayEnabled] = useState(false);
+  const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null);
   const {
     selectedAction,
     logicalActionId,
@@ -63,6 +77,28 @@ export function HeroFloatingPet({
     actions: pet.actions,
     enabled: autoplayEnabled,
   });
+
+  useEffect(() => {
+    const root = boundsRef.current;
+    if (!root) return;
+
+    const resolveSlot = () => {
+      const next = root.querySelector(
+        `[data-hero-actions-slot="${photoPetId}"]`
+      );
+      setActionsSlot(next instanceof HTMLElement ? next : null);
+    };
+
+    resolveSlot();
+
+    const observer =
+      typeof MutationObserver !== 'undefined'
+        ? new MutationObserver(resolveSlot)
+        : null;
+    observer?.observe(root, { childList: true, subtree: true });
+
+    return () => observer?.disconnect();
+  }, [boundsRef, photoPetId]);
 
   const onHitWalkEdge = useCallback(
     (edge: WalkEdgeHit) => {
@@ -107,36 +143,51 @@ export function HeroFloatingPet({
   }
 
   return (
-    <div
-      className="pointer-events-none absolute inset-0 z-[60] overflow-hidden"
-      data-testid={`hero-floating-pet-${pet.key}`}
-    >
-      <PetActionMenu
-        trigger={
-          // `display: contents` wrapper takes the context-menu trigger props;
-          // PlaygroundPetStage owns its own root div props (drag/look handlers).
-          <div className="contents">
-            <PlaygroundPetStage
-              ref={petRef}
-              pet={pet}
-              action={selectedAction}
-              boundsRef={boundsRef}
-              windowSize={HERO_PET_SIZE}
-              initialSide={side}
-              anchorSelector={`[data-hero-photo-anchor="${photoPetId}"]`}
-              anchorSide={side}
-              persistLayout={false}
-              videoLoop={videoLoop}
-              playbackNonce={playbackNonce}
-              onVideoEnded={onVideoEnded}
-              onHitWalkEdge={onHitWalkEdge}
-            />
-          </div>
-        }
-        menuTestId={`hero-pet-context-menu-${pet.key}`}
-        items={actionMenuItems}
-        onSelect={onSelectLogicalAction}
-      />
-    </div>
+    <>
+      <div
+        className="pointer-events-none absolute inset-0 z-[60] overflow-hidden"
+        data-testid={`hero-floating-pet-${pet.key}`}
+      >
+        <PetActionMenu
+          trigger={
+            // `display: contents` wrapper takes the context-menu trigger props;
+            // PlaygroundPetStage owns its own root div props (drag/look handlers).
+            <div className="contents">
+              <PlaygroundPetStage
+                ref={petRef}
+                pet={pet}
+                action={selectedAction}
+                boundsRef={boundsRef}
+                windowSize={HERO_PET_SIZE}
+                initialSide={side}
+                anchorSelector={`[data-hero-photo-anchor="${photoPetId}"]`}
+                anchorSide={side}
+                persistLayout={false}
+                videoLoop={videoLoop}
+                playbackNonce={playbackNonce}
+                onVideoEnded={onVideoEnded}
+                onHitWalkEdge={onHitWalkEdge}
+              />
+            </div>
+          }
+          menuTestId={`hero-pet-context-menu-${pet.key}`}
+          items={actionMenuItems}
+          onSelect={onSelectLogicalAction}
+        />
+      </div>
+
+      {actionsSlot
+        ? createPortal(
+            <HeroExampleActionButtons
+              petName={displayPetName}
+              petId={photoPetId}
+              items={logicalMenuItems}
+              selectedLogicalActionId={logicalActionId}
+              onSelectLogicalAction={onSelectLogicalAction}
+            />,
+            actionsSlot
+          )
+        : null}
+    </>
   );
 }

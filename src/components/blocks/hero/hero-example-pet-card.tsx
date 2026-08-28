@@ -45,7 +45,7 @@ export function HeroExamplePetCard({ pet }: HeroExamplePetCardProps) {
             />
           </div>
         </div>
-        <figcaption className="px-3 py-3 text-center text-sm leading-snug text-deskpet-muted sm:px-4 sm:pb-4 sm:text-[15px]">
+        <figcaption className="px-3 py-3 text-center text-sm leading-snug text-deskpet-muted sm:px-4 sm:text-[15px]">
           <span className="font-black tracking-tight text-deskpet-ink dark:text-foreground">
             {pet.makerExample.petName}
           </span>
@@ -57,6 +57,12 @@ export function HeroExamplePetCard({ pet }: HeroExamplePetCardProps) {
           </span>
         </figcaption>
       </figure>
+
+      <div
+        data-hero-actions-slot={pet.id}
+        className="min-h-0"
+        aria-live="polite"
+      />
     </article>
   );
 }

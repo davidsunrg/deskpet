@@ -24,6 +24,7 @@
       "examplesPhotoLabel": "Your photo",
       "examplesResultLabel": "DeskPet result",
       "examplesUploadedBy": "Uploaded by {name}",
+      "examplesActionsHint": "Click a button below to play with {name}",
       "examplesCta": "Make yours"
     },
     "pets": {

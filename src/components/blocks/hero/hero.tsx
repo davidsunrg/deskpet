@@ -40,11 +40,29 @@ export default function HeroSection({
       floatingPets.find((pet) => pet.species === PetSpecies.Dog) ?? null;
     const cat =
       floatingPets.find((pet) => pet.species === PetSpecies.Cat) ?? null;
+
+    const displayNameFor = (petId: string, fallback: string) =>
+      pets.find((pet) => pet.id === petId)?.makerExample?.petName ?? fallback;
+
     return [
-      dog ? { pet: dog, side: 'left' as const, photoPetId: dog.key } : null,
-      cat ? { pet: cat, side: 'right' as const, photoPetId: cat.key } : null,
+      dog
+        ? {
+            pet: dog,
+            side: 'left' as const,
+            photoPetId: dog.key,
+            displayPetName: displayNameFor(dog.key, dog.name),
+          }
+        : null,
+      cat
+        ? {
+            pet: cat,
+            side: 'right' as const,
+            photoPetId: cat.key,
+            displayPetName: displayNameFor(cat.key, cat.name),
+          }
+        : null,
     ].filter((item): item is NonNullable<typeof item> => item != null);
-  }, [floatingPets]);
+  }, [floatingPets, pets]);
 
   return (
     <section id="hero" ref={heroRef} className="relative overflow-hidden">
@@ -57,13 +75,14 @@ export default function HeroSection({
         <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.9_0.03_65/.08)_0,oklch(0.65_0.015_50/.03)_80%,transparent_100%)]" />
       </div>
 
-      {floatingCompanions.map(({ pet, side, photoPetId }) => (
+      {floatingCompanions.map(({ pet, side, photoPetId, displayPetName }) => (
         <Suspense key={pet.key} fallback={null}>
           <HeroFloatingPetLazy
             pet={pet}
             boundsRef={heroRef}
             side={side}
             photoPetId={photoPetId}
+            displayPetName={displayPetName}
           />
         </Suspense>
       ))}
