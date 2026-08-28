@@ -53,7 +53,6 @@ export default function HeroSection({
   floatingPet = null,
 }: HeroSectionProps) {
   const t = useTranslations('HomePage.hero');
-  const tPets = useTranslations('HomePage.pets');
   const heroRef = useRef<HTMLElement | null>(null);
 
   return (
@@ -148,15 +147,6 @@ export default function HeroSection({
             cardTestIdPrefix="home-pet"
             className="mx-auto flex w-full max-w-5xl flex-wrap justify-center gap-4 px-4 sm:gap-5 sm:px-6 [&>article]:w-[min(100%,17.5rem)]"
           />
-          <div className="mt-8 flex justify-center">
-            <LocaleLink
-              href={Routes.Pets}
-              data-testid="home-view-all-pets"
-              className="inline-flex h-10 items-center justify-center rounded-full border-2 border-deskpet-ink bg-white px-5 text-sm font-black text-deskpet-ink shadow-[3px_4px_0_0_rgba(58,43,54,0.14)] transition-[box-shadow,background-color] hover:bg-deskpet-mint hover:shadow-[4px_5px_0_0_rgba(58,43,54,0.18)] dark:border-border dark:bg-card dark:text-foreground"
-            >
-              {tPets('viewAll')} →
-            </LocaleLink>
-          </div>
         </div>
       </div>
     </section>

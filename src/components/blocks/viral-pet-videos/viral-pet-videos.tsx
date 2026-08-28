@@ -74,14 +74,11 @@ export default function ViralPetVideosSection() {
       <div className="relative mx-auto max-w-7xl px-1 sm:px-2">
         <ScrollReveal>
           <div className="mx-auto mb-[22px] max-w-3xl space-y-3 text-center">
-            <div className="flex justify-center">
-              <span className="inline-flex items-center rounded-full border-2 border-deskpet-ink bg-deskpet-sun px-3 py-1 text-[11px] font-black tracking-[0.06em] text-deskpet-ink uppercase shadow-[2px_2px_0_0_rgba(55,39,51,0.12)] dark:border-border dark:text-foreground">
-                {t('badge')}
-              </span>
-            </div>
             <HeaderSection
+              title={t('badge')}
               subtitle={t('title')}
               className="items-center gap-2 text-center"
+              titleClassName="text-[13px] font-black tracking-[0.08em] text-[#155b43] dark:text-deskpet-mint"
               subtitleClassName="text-balance text-[clamp(34px,5vw,48px)] font-black leading-[1.05] tracking-[-0.045em] text-deskpet-ink dark:text-foreground"
             />
             <p className="text-base font-medium leading-[1.6] text-muted-foreground">
