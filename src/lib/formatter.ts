@@ -54,7 +54,7 @@ export function formatDateTime(date: Date): string {
 
 /**
  * Friendly local date-time for customer-facing estimates.
- * Example: "Aug 29, 2026 · 1:51 PM"
+ * Example: "Aug 29, 2026 1:51 PM"
  */
 export function formatFriendlyDateTime(date: Date): string {
   const datePart = new Intl.DateTimeFormat('en-US', {
@@ -67,5 +67,5 @@ export function formatFriendlyDateTime(date: Date): string {
     minute: '2-digit',
     hour12: true,
   }).format(date);
-  return `${datePart} · ${timePart}`;
+  return `${datePart} ${timePart}`;
 }
