@@ -1130,10 +1130,7 @@
       "paidDescription": "Your custom pet plan is active. We will continue building your companion from here.",
       "pricing": {
         "offerLabel": "LIMITED-TIME OFFER",
-        "offerTitle": "Save $50 if you join today",
         "offerTitleEnded": "Limited-time offer ended",
-        "countdownCaption": "Offer ends when the timer hits zero",
-        "countdownCaptionEnded": "Check back for future offers",
         "brand": "Custom Pet",
         "oneTimeBadge": "Handcrafted",
         "heroTitle": "Orders Open",

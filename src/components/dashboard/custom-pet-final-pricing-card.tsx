@@ -4,80 +4,12 @@ import { CustomPetHeroDogIcon } from '@/components/dashboard/custom-pet-hero-dog
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import { cn } from '@/lib/utils';
-import {
-  IconCalendar,
-  IconLoader2,
-} from '@tabler/icons-react';
-import { TimerIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { IconCalendar, IconLoader2 } from '@tabler/icons-react';
 
-const OFFER_DURATION_MS = 2 * 60 * 60 * 1000;
-const OFFER_STORAGE_KEY = 'deskpet:custom-pet-offer-expiration';
 const QUEUE_COUNT = 27;
 const PRICE = '$79.99';
 const OLD_PRICE = '$129.99';
 const DELIVERY_HOURS = 24;
-
-type CountdownParts = {
-  hours: string;
-  minutes: string;
-  seconds: string;
-  expired: boolean;
-};
-
-function padTwo(value: number): string {
-  return String(value).padStart(2, '0');
-}
-
-function readCountdown(expirationTime: number): CountdownParts {
-  const remaining = Math.max(0, expirationTime - Date.now());
-  const totalSeconds = Math.floor(remaining / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return {
-    hours: padTwo(hours),
-    minutes: padTwo(minutes),
-    seconds: padTwo(seconds),
-    expired: remaining <= 0,
-  };
-}
-
-function getOrCreateExpirationTime(): number {
-  const saved = localStorage.getItem(OFFER_STORAGE_KEY);
-  if (saved) {
-    const timestamp = Number(saved);
-    if (Number.isFinite(timestamp) && timestamp > Date.now()) {
-      return timestamp;
-    }
-  }
-
-  const next = Date.now() + OFFER_DURATION_MS;
-  localStorage.setItem(OFFER_STORAGE_KEY, String(next));
-  return next;
-}
-
-function useOfferCountdown(): CountdownParts & { mounted: boolean } {
-  const [mounted, setMounted] = useState(false);
-  const [countdown, setCountdown] = useState<CountdownParts>(() =>
-    readCountdown(Date.now() + OFFER_DURATION_MS)
-  );
-
-  useEffect(() => {
-    const expirationTime = getOrCreateExpirationTime();
-    setMounted(true);
-    setCountdown(readCountdown(expirationTime));
-
-    const intervalId = window.setInterval(() => {
-      setCountdown(readCountdown(expirationTime));
-    }, 1000);
-
-    return () => window.clearInterval(intervalId);
-  }, []);
-
-  return { ...countdown, mounted };
-}
 
 function DashedDivider() {
   return (
@@ -102,11 +34,6 @@ export function CustomPetFinalPricingCard({
   const t = useTranslations('CreatePetWizard');
   const tp = (key: string, values?: Record<string, string | number>) =>
     t(`final.pricing.${key}`, values);
-  const { hours, minutes, seconds, expired, mounted } = useOfferCountdown();
-
-  const displayHours = mounted ? hours : '02';
-  const displayMinutes = mounted ? minutes : '00';
-  const displaySeconds = mounted ? seconds : '00';
 
   return (
     <article
@@ -117,36 +44,6 @@ export function CustomPetFinalPricingCard({
         className
       )}
     >
-      <section className="border-b-2 border-deskpet-ink/80 bg-[#fff0ef] px-4 py-2.5 sm:px-5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <div className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-deskpet-ink bg-[#e53e3e] text-white">
-              <TimerIcon className="size-4" aria-hidden />
-            </div>
-            <p className="m-0 text-[10px] font-black tracking-[0.12em] text-[#d53535] sm:text-xs">
-              {expired ? tp('offerTitleEnded') : tp('offerLabel')}
-            </p>
-          </div>
-
-          <div
-            className="flex shrink-0 items-center gap-1 font-black text-lg tracking-tight text-[#d93636] tabular-nums sm:text-xl"
-            aria-live="polite"
-          >
-            <span className="min-w-9 rounded-lg border-2 border-deskpet-ink bg-[#e33e3e] px-1.5 py-1 text-center text-sm text-white sm:min-w-10">
-              {displayHours}
-            </span>
-            <span>:</span>
-            <span className="min-w-9 rounded-lg border-2 border-deskpet-ink bg-[#e33e3e] px-1.5 py-1 text-center text-sm text-white sm:min-w-10">
-              {displayMinutes}
-            </span>
-            <span>:</span>
-            <span className="min-w-9 rounded-lg border-2 border-deskpet-ink bg-[#e33e3e] px-1.5 py-1 text-center text-sm text-white sm:min-w-10">
-              {displaySeconds}
-            </span>
-          </div>
-        </div>
-      </section>
-
       <div className="px-4 py-4 sm:px-5 sm:py-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <p className="m-0 text-xs font-black tracking-[0.08em] text-[#0d6359] sm:text-sm">

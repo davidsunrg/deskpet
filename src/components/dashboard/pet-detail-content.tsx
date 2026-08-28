@@ -5,6 +5,7 @@ import {
   DashboardCardHeader,
 } from '@/components/dashboard/dashboard-card';
 import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
+import { CustomPetLimitedOfferBanner } from '@/components/dashboard/custom-pet-limited-offer-banner';
 import { PetAvatar } from '@/components/pets/pet-avatar';
 import { markPetCheckoutStartedFn } from '@/api/pet-maker-wizard';
 import { createCheckoutSession } from '@/api/payment';
@@ -301,11 +302,13 @@ export function PetDetailContent({
               </div>
             ) : (
               <div className="flex min-h-0 flex-1 items-center justify-center">
-                <CustomPetFinalPricingCard
-                  className="w-full max-w-md"
-                  busy={checkoutBusy}
-                  onJoinQueue={handleJoinQueue}
-                />
+                <div className="flex w-full max-w-md flex-col gap-3">
+                  <CustomPetLimitedOfferBanner />
+                  <CustomPetFinalPricingCard
+                    busy={checkoutBusy}
+                    onJoinQueue={handleJoinQueue}
+                  />
+                </div>
               </div>
             )}
           </section>
