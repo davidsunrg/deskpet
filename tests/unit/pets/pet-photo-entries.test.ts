@@ -39,29 +39,26 @@ describe('pet maker thumbnail keys', () => {
 });
 
 describe('normalizePetPhotoEntries', () => {
-  test('normalizes legacy string arrays', () => {
-    const entries = normalizePetPhotoEntries([
-      'pet-maker/u/p/a.webp',
-      '  ',
-      'pet-maker/u/p/b.webp',
-    ]);
-    expect(entries).toEqual([
-      { key: 'pet-maker/u/p/a.webp', thumbnailKey: null },
-      { key: 'pet-maker/u/p/b.webp', thumbnailKey: null },
-    ]);
-    expect(petPhotoPrimaryKeys(entries)).toEqual([
-      'pet-maker/u/p/a.webp',
-      'pet-maker/u/p/b.webp',
-    ]);
-  });
-
-  test('normalizes structured entries and prefers thumbnails for preview', () => {
+  test('keeps structured entries and prefers thumbnails for preview', () => {
     const entries = normalizePetPhotoEntries([
       {
         key: 'pet-maker/u/p/a.webp',
         thumbnailKey: 'pet-maker/u/p/a.thumbnail.webp',
       },
       { key: 'pet-maker/u/p/b.webp', thumbnailKey: null },
+      'legacy-string-ignored.webp',
+      { thumbnailKey: 'missing-key.webp' },
+    ]);
+    expect(entries).toEqual([
+      {
+        key: 'pet-maker/u/p/a.webp',
+        thumbnailKey: 'pet-maker/u/p/a.thumbnail.webp',
+      },
+      { key: 'pet-maker/u/p/b.webp', thumbnailKey: null },
+    ]);
+    expect(petPhotoPrimaryKeys(entries)).toEqual([
+      'pet-maker/u/p/a.webp',
+      'pet-maker/u/p/b.webp',
     ]);
     expect(petPhotoPreviewKey(entries[0]!)).toBe(
       'pet-maker/u/p/a.thumbnail.webp'

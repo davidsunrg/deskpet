@@ -34,7 +34,7 @@ export type UserPetDetail = {
   breed: string;
   sex: string | null;
   avatar: string | null;
-  photoKeys: PetPhotoEntry[] | string[];
+  photoKeys: PetPhotoEntry[];
   status: string;
   deliveryAt: Date | null;
   paymentId: string | null;

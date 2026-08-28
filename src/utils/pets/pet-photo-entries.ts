@@ -8,26 +8,15 @@ export type PetPhotoEntry = {
   thumbnailKey: string | null;
 };
 
-/** Normalize legacy `string[]` or structured entries from `pet.photo_keys`. */
+/** Narrow unknown JSON from `pet.photo_keys` into structured entries. */
 export function normalizePetPhotoEntries(value: unknown): PetPhotoEntry[] {
   if (!Array.isArray(value)) return [];
 
   const entries: PetPhotoEntry[] = [];
   for (const item of value) {
-    if (typeof item === 'string') {
-      const key = item.trim();
-      if (!key) continue;
-      entries.push({ key, thumbnailKey: null });
-      continue;
-    }
     if (!item || typeof item !== 'object') continue;
     const record = item as Record<string, unknown>;
-    const key =
-      typeof record.key === 'string'
-        ? record.key.trim()
-        : typeof record.r2Key === 'string'
-          ? record.r2Key.trim()
-          : '';
+    const key = typeof record.key === 'string' ? record.key.trim() : '';
     if (!key) continue;
     const thumbnailRaw = record.thumbnailKey;
     const thumbnailKey =

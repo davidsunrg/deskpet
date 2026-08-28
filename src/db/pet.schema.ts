@@ -28,10 +28,9 @@ export const pet = sqliteTable(
     avatar: text('avatar'),
     /**
      * Photo entries: `{ key, thumbnailKey }[]`.
-     * Legacy rows may still be a plain `string[]` of primary keys.
      */
     photoKeys: text('photo_keys', { mode: 'json' })
-      .$type<PetPhotoEntry[] | string[]>()
+      .$type<PetPhotoEntry[]>()
       .notNull(),
     /** Cached Ark recognition result from the pet maker photos step. */
     creatorRecognition: text('creator_recognition', { mode: 'json' }).$type<
