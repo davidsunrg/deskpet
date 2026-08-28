@@ -57,6 +57,13 @@ type PlaygroundPetStageProps = {
   windowSize?: { width: number; height: number };
   /** Initial horizontal placement when no stored layout is used. */
   initialSide?: 'left' | 'right';
+  /**
+   * Optional CSS selector (scoped under bounds) for an element the pet should
+   * sit beside on first reveal — e.g. a hero example photo.
+   */
+  anchorSelector?: string;
+  /** Which side of the anchor the pet sits on. Defaults to `initialSide`. */
+  anchorSide?: 'left' | 'right';
   /** Disable shared playground layout reads/writes for embedded stages. */
   persistLayout?: boolean;
   /** When false, play once and fire onEnded (autoplay sequencer). */
@@ -69,6 +76,52 @@ type PlaygroundPetStageProps = {
   /** Fires once when the companion is ready to be shown (placed + first frame). */
   onStartupReady?: () => void;
 };
+
+function isHeroPhotoGridStacked(boundsEl: HTMLElement): boolean {
+  const photos = [
+    ...boundsEl.querySelectorAll('[data-hero-photo-anchor]'),
+  ] as HTMLElement[];
+  if (photos.length < 2) {
+    return (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 639px)').matches
+    );
+  }
+  const [first, second] = photos.map((el) => el.getBoundingClientRect());
+  // Single column: cards share roughly the same left edge.
+  return (
+    Math.abs(first.left - second.left) <
+    Math.min(first.width, second.width) * 0.25
+  );
+}
+
+function positionRelativeToAnchor(input: {
+  boundsEl: HTMLElement;
+  anchorEl: HTMLElement;
+  size: { width: number; height: number };
+  side: 'left' | 'right';
+  placement: 'beside' | 'above';
+}): { x: number; y: number } {
+  const bounds = input.boundsEl.getBoundingClientRect();
+  const anchor = input.anchorEl.getBoundingClientRect();
+
+  if (input.placement === 'above') {
+    return {
+      x: anchor.left - bounds.left + (anchor.width - input.size.width) / 2,
+      // Overlap the top of the photo so the pet sits on the card.
+      y: anchor.top - bounds.top - input.size.height * 0.42,
+    };
+  }
+
+  const y = anchor.top - bounds.top + (anchor.height - input.size.height) / 2;
+  // Slight overlap so the pet reads as "next to" the photo, not far away.
+  const overlap = Math.round(input.size.width * 0.28);
+  const x =
+    input.side === 'left'
+      ? anchor.left - bounds.left - input.size.width + overlap
+      : anchor.right - bounds.left - overlap;
+  return { x, y };
+}
 
 /**
  * Playground pet stage: look-scrub on hover; drag to reposition within the playground.
@@ -85,6 +138,8 @@ export const PlaygroundPetStage = forwardRef<
     boundsRef,
     windowSize,
     initialSide,
+    anchorSelector,
+    anchorSide,
     persistLayout = true,
     videoLoop = true,
     playbackNonce = 0,
@@ -116,6 +171,7 @@ export const PlaygroundPetStage = forwardRef<
   const isStartupReady = hasRestoredPosition && hasResolvedInitialMediaSize;
   const startupPetKeyRef = useRef(pet.key);
   const didRestoreRef = useRef(false);
+  const lastAnchorPlacementRef = useRef<'beside' | 'above' | null>(null);
   const hasResolvedMediaSizeRef = useRef(false);
   const onStartupReadyRef = useRef(onStartupReady);
   onStartupReadyRef.current = onStartupReady;
@@ -307,8 +363,9 @@ export const PlaygroundPetStage = forwardRef<
 
   const restorePetPosition = useCallback(
     (aspectOverride?: number) => {
+      const boundsEl = boundsRef.current;
       const bounds = getBoundsSize();
-      if (bounds.width <= 0 || bounds.height <= 0) {
+      if (!boundsEl || bounds.width <= 0 || bounds.height <= 0) {
         return false;
       }
 
@@ -328,22 +385,42 @@ export const PlaygroundPetStage = forwardRef<
         setMediaAspect(layout.petAspect);
       }
 
-      const placement = computeInitialPlaygroundPetPlacement({
-        bounds,
-        visibleWidth: getVisibleWidth(),
-        displayScale: lookScrubScale,
-        aspect: aspectNow,
-        storedPosition: layout?.petPosition ?? null,
-      });
-      const position = initialSide
-        ? {
-            x:
-              initialSide === 'right'
-                ? Math.max(24, bounds.width - size.width - 24)
-                : 24,
-            y: Math.max(80, Math.round((bounds.height - size.height) / 2)),
-          }
-        : placement.position;
+      const side = anchorSide ?? initialSide ?? 'left';
+      let position: { x: number; y: number } | null = null;
+
+      if (anchorSelector) {
+        const anchorEl = boundsEl.querySelector(anchorSelector);
+        if (!(anchorEl instanceof HTMLElement)) {
+          // Photo card not mounted yet — retry via ResizeObserver.
+          return false;
+        }
+        const placement = isHeroPhotoGridStacked(boundsEl) ? 'above' : 'beside';
+        position = positionRelativeToAnchor({
+          boundsEl,
+          anchorEl,
+          size,
+          side,
+          placement,
+        });
+        lastAnchorPlacementRef.current = placement;
+      } else if (initialSide) {
+        position = {
+          x:
+            initialSide === 'right'
+              ? Math.max(24, bounds.width - size.width - 24)
+              : 24,
+          y: Math.max(80, Math.round((bounds.height - size.height) / 2)),
+        };
+      } else {
+        const placement = computeInitialPlaygroundPetPlacement({
+          bounds,
+          visibleWidth: getVisibleWidth(),
+          displayScale: lookScrubScale,
+          aspect: aspectNow,
+          storedPosition: layout?.petPosition ?? null,
+        });
+        position = placement.position;
+      }
 
       const next = clampPetPosition(
         position,
@@ -357,6 +434,9 @@ export const PlaygroundPetStage = forwardRef<
       return true;
     },
     [
+      anchorSelector,
+      anchorSide,
+      boundsRef,
       companionRef,
       getBoundsSize,
       getVisibleWidth,
@@ -382,26 +462,74 @@ export const PlaygroundPetStage = forwardRef<
   // Bounds can be 0 on the first paint (or after wallpaper chrome mounts).
   // Retry placement when the canvas actually gets a size — opening DevTools
   // used to "fix" this by triggering a resize.
+  // Also watch DOM mutations so hero photo anchors can appear after first paint.
   useEffect(() => {
     const el = boundsRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') {
+    if (!el) {
       return;
     }
-    const observer = new ResizeObserver(() => {
-      if (didRestoreRef.current) {
+
+    const tryRestore = () => {
+      const stacked = isHeroPhotoGridStacked(el);
+      const placement = stacked ? 'above' : 'beside';
+
+      if (!didRestoreRef.current) {
+        if (restorePetPosition()) {
+          didRestoreRef.current = true;
+          if (anchorSelector) {
+            lastAnchorPlacementRef.current = placement;
+          }
+        }
         return;
       }
-      if (restorePetPosition()) {
-        didRestoreRef.current = true;
+
+      // Hero anchors: re-snap when the photo grid flips between stacked and
+      // side-by-side, unless the user is actively dragging.
+      if (
+        anchorSelector &&
+        !persistLayout &&
+        !isDragging &&
+        lastAnchorPlacementRef.current !== placement
+      ) {
+        if (restorePetPosition()) {
+          lastAnchorPlacementRef.current = placement;
+        }
       }
-    });
-    observer.observe(el);
+    };
+
+    tryRestore();
+
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            tryRestore();
+          })
+        : null;
+    resizeObserver?.observe(el);
     const parent = el.parentElement;
     if (parent) {
-      observer.observe(parent);
+      resizeObserver?.observe(parent);
     }
-    return () => observer.disconnect();
-  }, [boundsRef, restorePetPosition]);
+
+    const mutationObserver =
+      typeof MutationObserver !== 'undefined'
+        ? new MutationObserver(() => {
+            tryRestore();
+          })
+        : null;
+    mutationObserver?.observe(el, { childList: true, subtree: true });
+
+    return () => {
+      resizeObserver?.disconnect();
+      mutationObserver?.disconnect();
+    };
+  }, [
+    anchorSelector,
+    boundsRef,
+    isDragging,
+    persistLayout,
+    restorePetPosition,
+  ]);
 
   // Keep feet anchored when measured aspect updates window size — only after
   // startup reveal, so the first aspect correction is applied while still hidden.

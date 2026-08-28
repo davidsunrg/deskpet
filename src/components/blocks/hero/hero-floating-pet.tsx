@@ -2,10 +2,6 @@
 
 import { PetActionMenu } from '@/components/pets/pet-action-menu';
 import { usePetActionAutoplay } from '@/components/pets/use-pet-action-autoplay';
-import type { PlaygroundPet } from '@/utils/playground-pet';
-import type { LogicalActionId } from '@/utils/pets/pet-action-sequence';
-import type { WalkEdgeHit } from '@/utils/pets/pet-walk-motion';
-import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
 import { logicalActionLabel } from '@/components/playground/action-label';
 import {
   PlaygroundPetStage,
@@ -15,6 +11,10 @@ import {
   isPetActionMenuItem,
   PetActionMenuItem,
 } from '@/enums/pet-action-menu-item';
+import type { LogicalActionId } from '@/utils/pets/pet-action-sequence';
+import type { WalkEdgeHit } from '@/utils/pets/pet-walk-motion';
+import type { PlaygroundPet } from '@/utils/playground-pet';
+import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
 
 const HERO_PET_HEIGHT = 320;
 const HERO_PET_SIZE = {
@@ -26,7 +26,10 @@ type HeroFloatingPetProps = {
   pet: PlaygroundPet;
   /** Bounds for walk clamping / placement (usually the hero section). */
   boundsRef: RefObject<HTMLElement | null>;
+  /** Sit on this side of the matching hero example photo. */
   side: 'left' | 'right';
+  /** Showcase / registry pet id used by `data-hero-photo-anchor`. */
+  photoPetId: string;
 };
 
 /**
@@ -43,6 +46,7 @@ export function HeroFloatingPet({
   pet,
   boundsRef,
   side,
+  photoPetId,
 }: HeroFloatingPetProps) {
   const petRef = useRef<PlaygroundPetStageHandle>(null);
   const [autoplayEnabled, setAutoplayEnabled] = useState(false);
@@ -105,7 +109,7 @@ export function HeroFloatingPet({
   return (
     <div
       className="pointer-events-none absolute inset-0 z-[60] overflow-hidden"
-      data-testid="hero-floating-pet"
+      data-testid={`hero-floating-pet-${pet.key}`}
     >
       <PetActionMenu
         trigger={
@@ -119,6 +123,8 @@ export function HeroFloatingPet({
               boundsRef={boundsRef}
               windowSize={HERO_PET_SIZE}
               initialSide={side}
+              anchorSelector={`[data-hero-photo-anchor="${photoPetId}"]`}
+              anchorSide={side}
               persistLayout={false}
               videoLoop={videoLoop}
               playbackNonce={playbackNonce}
@@ -127,7 +133,7 @@ export function HeroFloatingPet({
             />
           </div>
         }
-        menuTestId="hero-pet-context-menu"
+        menuTestId={`hero-pet-context-menu-${pet.key}`}
         items={actionMenuItems}
         onSelect={onSelectLogicalAction}
       />

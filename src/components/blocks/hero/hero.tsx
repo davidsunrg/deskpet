@@ -1,20 +1,18 @@
 'use client';
 
-import { AnimatedGroup } from '@/components/tailark/motion/animated-group';
-import { TextEffect } from '@/components/tailark/motion/text-effect';
+import { HeroPetExamples } from '@/components/blocks/hero/hero-pet-examples';
 import { CtaButton } from '@/components/ui/cta-button';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { PetCardGrid } from '@/components/pets/pet-card-grid';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import type { PlaygroundPet } from '@/utils/playground-pet';
-import type { ShowcasePet } from '@/utils/showcase-pets';
-import { lazy, Suspense, useRef } from 'react';
+import { PetSpecies, type ShowcasePet } from '@/utils/showcase-pets';
+import { lazy, Suspense, useMemo, useRef } from 'react';
 import { usePostHog } from 'posthog-js/react';
 
 const HeroFloatingPetLazy = lazy(() =>
@@ -23,39 +21,30 @@ const HeroFloatingPetLazy = lazy(() =>
   }))
 );
 
-const transitionVariants = {
-  item: {
-    hidden: {
-      opacity: 0,
-      y: 12,
-      scale: 0.95,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: 'spring' as const,
-        bounce: 0,
-        duration: 0.8,
-      },
-    },
-  },
-};
-
 type HeroSectionProps = {
   pets: ShowcasePet[];
-  /** Interactive floating dog on the left. */
-  floatingPet?: PlaygroundPet | null;
+  /** Interactive floating companions (dog left / cat right beside photos). */
+  floatingPets?: PlaygroundPet[];
 };
 
 export default function HeroSection({
   pets,
-  floatingPet = null,
+  floatingPets = [],
 }: HeroSectionProps) {
   const t = useTranslations('HomePage.hero');
   const heroRef = useRef<HTMLElement | null>(null);
   const posthog = usePostHog();
+
+  const floatingCompanions = useMemo(() => {
+    const dog =
+      floatingPets.find((pet) => pet.species === PetSpecies.Dog) ?? null;
+    const cat =
+      floatingPets.find((pet) => pet.species === PetSpecies.Cat) ?? null;
+    return [
+      dog ? { pet: dog, side: 'left' as const, photoPetId: dog.key } : null,
+      cat ? { pet: cat, side: 'right' as const, photoPetId: cat.key } : null,
+    ].filter((item): item is NonNullable<typeof item> => item != null);
+  }, [floatingPets]);
 
   return (
     <section id="hero" ref={heroRef} className="relative overflow-hidden">
@@ -68,81 +57,27 @@ export default function HeroSection({
         <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.9_0.03_65/.08)_0,oklch(0.65_0.015_50/.03)_80%,transparent_100%)]" />
       </div>
 
-      {floatingPet ? (
-        <Suspense fallback={null}>
+      {floatingCompanions.map(({ pet, side, photoPetId }) => (
+        <Suspense key={pet.key} fallback={null}>
           <HeroFloatingPetLazy
-            pet={floatingPet}
+            pet={pet}
             boundsRef={heroRef}
-            side="left"
+            side={side}
+            photoPetId={photoPetId}
           />
         </Suspense>
-      ) : null}
+      ))}
 
       <div className="relative pt-12 pb-0">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
-            <TextEffect
-              per="line"
-              preset="fade-in-blur"
-              speedSegment={0.3}
-              as="h1"
-              className="mt-8 text-balance text-5xl font-sans font-black lg:mt-8 xl:text-[5rem]"
-            >
+            <h1 className="mt-8 text-balance text-5xl font-sans font-black lg:mt-8 xl:text-[5rem]">
               {t('title')}
-            </TextEffect>
+            </h1>
 
-            <TextEffect
-              per="line"
-              preset="fade-in-blur"
-              speedSegment={0.3}
-              delay={0.5}
-              as="p"
-              className="mx-auto mt-8 max-w-4xl text-balance text-lg text-muted-foreground"
-            >
+            <p className="mx-auto mt-8 max-w-4xl text-balance text-lg text-muted-foreground">
               {t('description')}
-            </TextEffect>
-
-            <div id="get-started" className="mx-auto mt-10 text-center">
-              <AnimatedGroup
-                variants={{
-                  container: {
-                    visible: {
-                      transition: {
-                        staggerChildren: 0.05,
-                        delayChildren: 0.15,
-                      },
-                    },
-                  },
-                  ...transitionVariants,
-                }}
-                className="mt-7 flex flex-row flex-wrap items-center justify-center gap-4"
-              >
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <CtaButton
-                      asChild
-                      type="button"
-                      className="h-11 px-6"
-                      data-testid="hero-cta-make-pet"
-                    >
-                      <LocaleLink
-                        href={Routes.DesktopPetCreator}
-                        onClick={() => {
-                          posthog?.capture('hero_make_pet_clicked', {
-                            section: 'hero',
-                          });
-                        }}
-                      >
-                        <span className="text-nowrap">{t('secondary')}</span>
-                      </LocaleLink>
-                    </CtaButton>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t('ctaMakeMyOwnTooltip')}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </AnimatedGroup>
-            </div>
+            </p>
           </div>
         </div>
 
@@ -150,12 +85,36 @@ export default function HeroSection({
           id="hero-pets"
           className="relative z-20 mt-10 w-full scroll-mt-24 pb-12"
         >
-          <PetCardGrid
-            pets={pets}
-            testId="home-pet-grid"
-            cardTestIdPrefix="home-pet"
-            className="mx-auto flex w-full max-w-5xl flex-wrap justify-center gap-4 px-4 sm:gap-5 sm:px-6 [&>article]:w-[min(100%,17.5rem)]"
-          />
+          <HeroPetExamples pets={pets} />
+
+          <div id="get-started" className="mx-auto mt-8 text-center sm:mt-10">
+            <div className="flex flex-row flex-wrap items-center justify-center gap-4">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <CtaButton
+                    asChild
+                    type="button"
+                    className="h-11 px-6"
+                    data-testid="hero-cta-make-pet"
+                  >
+                    <LocaleLink
+                      href={Routes.DesktopPetCreator}
+                      onClick={() => {
+                        posthog?.capture('hero_make_pet_clicked', {
+                          section: 'hero',
+                        });
+                      }}
+                    >
+                      <span className="text-nowrap">{t('secondary')}</span>
+                    </LocaleLink>
+                  </CtaButton>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{t('ctaMakeMyOwnTooltip')}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </div>
         </div>
       </div>
     </section>

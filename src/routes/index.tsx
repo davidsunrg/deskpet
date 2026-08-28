@@ -7,13 +7,11 @@ import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
   loader: async () => {
-    const [homePlayablePets, catalogPets] = await Promise.all([
+    const [floatingPets, catalogPets] = await Promise.all([
       listPlaygroundPresetPets({ visibleIn: 'home' }),
       listHeroPets(HERO_PET_PREVIEW_COUNT),
     ]);
-    const floatingPet =
-      homePlayablePets.find((pet) => pet.species === 'dog') ?? null;
-    return { catalogPets, floatingPet };
+    return { catalogPets, floatingPets };
   },
   head: () => {
     const title = `Desktop Pet for Free – Play Online & Download | ${getDeskPetMessage('Metadata.title')}`;
@@ -24,7 +22,7 @@ export const Route = createFileRoute('/')({
 });
 
 function IndexPage() {
-  const { catalogPets, floatingPet } = Route.useLoaderData();
+  const { catalogPets, floatingPets } = Route.useLoaderData();
 
-  return <HomePage catalogPets={catalogPets} floatingPet={floatingPet} />;
+  return <HomePage catalogPets={catalogPets} floatingPets={floatingPets} />;
 }

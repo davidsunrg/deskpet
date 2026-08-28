@@ -11,6 +11,11 @@ export const goldenRetrieverResources = {
   name: 'Golden Retriever',
   avatarR2Key: 'avatars/aeb2a91e-493b-4202-80ec-f70387a6da96.jpg',
   thumbnailR2Key: 'avatars/aeb2a91e-493b-4202-80ec-f70387a6da96.jpg',
+  makerExample: {
+    photoR2Key: 'pets/dog/golden-retriever/photo.webp',
+    petName: 'Cooper',
+    uploadedBy: 'Alex Rivera',
+  },
   actions: [
     {
       key: PetActionClip.SitIdle,

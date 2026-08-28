@@ -53,6 +53,12 @@ export type ShowcasePet = {
   /** Detail route (`/pets/{species}/{breed}`). */
   href: string;
   description?: string | null;
+  /** Homepage before/after maker example (original photo vs result). */
+  makerExample?: {
+    photoUrl: string;
+    petName: string;
+    uploadedBy: string;
+  };
 };
 
 /** Match zpet `basePetWindowSize` for showcase floating previews. */

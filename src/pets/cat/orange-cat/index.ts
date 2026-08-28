@@ -11,6 +11,11 @@ export const orangeCatResources = {
   name: 'Orange Cat',
   avatarR2Key: 'avatars/0a2feec5-95b7-4464-946e-019b2c6f38a9.jpg',
   thumbnailR2Key: 'avatars/0a2feec5-95b7-4464-946e-019b2c6f38a9.jpg',
+  makerExample: {
+    photoR2Key: 'pets/cat/orange-cat/photo.webp',
+    petName: 'Darcy',
+    uploadedBy: 'Jordan Lee',
+  },
   actions: [
     {
       key: PetActionClip.SitIdle,

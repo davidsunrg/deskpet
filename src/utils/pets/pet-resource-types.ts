@@ -50,6 +50,16 @@ export type PetResourceFaq = {
   answer: string;
 };
 
+/** Homepage before/after maker example: original photo → generated DeskPet. */
+export type PetResourceMakerExample = {
+  /** Input photo object key relative to STORAGE_PUBLIC_URL. */
+  photoR2Key: string;
+  /** Display name for the example pet. */
+  petName: string;
+  /** Display name of who uploaded the photo. */
+  uploadedBy: string;
+};
+
 export type PetResourceDetail = {
   /** Catalog preset used for interactive preview media. Defaults to this resource. */
   playPresetKey?: string;
@@ -78,6 +88,8 @@ export type PetResourceManifest = {
   avatarR2Key: string;
   /** Optional card-optimized image relative to STORAGE_PUBLIC_URL. */
   thumbnailR2Key?: string;
+  /** Optional photo→DeskPet comparison used on the homepage hero. */
+  makerExample?: PetResourceMakerExample;
   actions: readonly PetResourceAction[];
   poses?: readonly PetResourcePose[];
   visibility?: PetResourceVisibility;

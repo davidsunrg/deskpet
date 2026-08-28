@@ -19,6 +19,7 @@ export type {
   PetResourceDetailCopy,
   PetResourceFaq,
   PetResourceInteraction,
+  PetResourceMakerExample,
   PetResourceManifest,
   PetResourcePose,
   PetResourceVisibility,
@@ -176,6 +177,18 @@ export function petResourceToShowcasePet(
     actions,
     href: petDetailRoute(resource.id),
     description: input.description,
+    ...(resource.makerExample
+      ? {
+          makerExample: {
+            photoUrl: buildPetResourceUrl(
+              input.publicStorageBase,
+              resource.makerExample.photoR2Key
+            ),
+            petName: resource.makerExample.petName,
+            uploadedBy: resource.makerExample.uploadedBy,
+          },
+        }
+      : {}),
   };
 }
 

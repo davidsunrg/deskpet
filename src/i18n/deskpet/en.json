@@ -18,7 +18,13 @@
       "secondary": "Make My Own",
       "playground": "Playground",
       "openFullPlayground": "Open Full Playground",
-      "viewAll": "View all"
+      "viewAll": "View all",
+      "examplesEyebrow": "Real examples",
+      "examplesTitle": "From photo to desktop pet",
+      "examplesPhotoLabel": "Your photo",
+      "examplesResultLabel": "DeskPet result",
+      "examplesUploadedBy": "Uploaded by {name}",
+      "examplesCta": "Make yours"
     },
     "pets": {
       "title": "Our Pets",
