@@ -4,7 +4,7 @@ type CustomPetHeroDogIconProps = {
   className?: string;
 };
 
-/** Dog sketch with heart bubble — used on the Final pricing paywall hero. */
+/** Cat sketch with heart bubble — used on the Final pricing paywall hero. */
 export function CustomPetHeroDogIcon({ className }: CustomPetHeroDogIconProps) {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- static public asset
