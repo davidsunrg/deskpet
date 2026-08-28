@@ -15,37 +15,22 @@ const isPaymentEnabled = paymentProvider !== '';
 // Price/product IDs per provider; add a new row when adding a provider
 const providerPriceIds = {
   stripe: {
-    proMonthly: clientEnv.VITE_STRIPE_PRICE_PRO_MONTHLY,
-    proYearly: clientEnv.VITE_STRIPE_PRICE_PRO_YEARLY,
-    lifetime: clientEnv.VITE_STRIPE_PRICE_LIFETIME,
-    customizeMyOwn: clientEnv.VITE_STRIPE_PRICE_LIFETIME,
+    customizeMyOwn: clientEnv.VITE_STRIPE_PRICE_CUSTOM_MY_OWN,
   },
   creem: {
-    proMonthly: clientEnv.VITE_CREEM_PRODUCT_PRO_MONTHLY,
-    proYearly: clientEnv.VITE_CREEM_PRODUCT_PRO_YEARLY,
-    lifetime: clientEnv.VITE_CREEM_PRODUCT_LIFETIME,
-    customizeMyOwn: clientEnv.VITE_CREEM_PRODUCT_LIFETIME,
+    customizeMyOwn: clientEnv.VITE_CREEM_PRODUCT_CUSTOM_MY_OWN,
   },
   waffo: {
-    proMonthly: clientEnv.VITE_WAFFO_PRODUCT_PRO_MONTHLY,
-    proYearly: clientEnv.VITE_WAFFO_PRODUCT_PRO_YEARLY,
-    lifetime: clientEnv.VITE_WAFFO_PRODUCT_LIFETIME,
-    customizeMyOwn: clientEnv.VITE_WAFFO_PRODUCT_LIFETIME,
+    customizeMyOwn: clientEnv.VITE_WAFFO_PRODUCT_CUSTOM_MY_OWN,
   },
 } satisfies Record<
   Exclude<typeof paymentProvider, ''>,
-  Record<
-    'proMonthly' | 'proYearly' | 'lifetime' | 'customizeMyOwn',
-    string | undefined
-  >
+  Record<'customizeMyOwn', string | undefined>
 >;
 const activePriceIds = isPaymentEnabled
   ? providerPriceIds[paymentProvider]
   : undefined;
 const priceIds = {
-  proMonthly: activePriceIds?.proMonthly ?? '',
-  proYearly: activePriceIds?.proYearly ?? '',
-  lifetime: activePriceIds?.lifetime ?? '',
   customizeMyOwn: activePriceIds?.customizeMyOwn ?? '',
 };
 
