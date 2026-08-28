@@ -34,6 +34,8 @@ jobs:
       VITE_UMAMI_SCRIPT: ${{ secrets.VITE_UMAMI_SCRIPT }}
       VITE_CRISP_WEBSITE_ID: ${{ secrets.VITE_CRISP_WEBSITE_ID }}
       VITE_WAFFO_PRODUCT_CUSTOM_MY_OWN: ${{ secrets.VITE_WAFFO_PRODUCT_CUSTOM_MY_OWN }}
+      VITE_POSTHOG_KEY: ${{ secrets.VITE_POSTHOG_KEY }}
+      VITE_POSTHOG_HOST: ${{ secrets.VITE_POSTHOG_HOST }}
 
     steps:
       - name: Checkout code
