@@ -3,7 +3,7 @@
 import { authClient } from '@/auth/client';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { LocaleLink } from '@/lib/i18n/navigation';
-import { Routes } from '@/lib/routes';
+import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
 import { m } from '@/locale/paraglide/messages';
@@ -38,7 +38,7 @@ export function MarketingLoginButton({
 
   if (showDashboard) {
     return (
-      <LocaleLink href={Routes.Dashboard} className={loginButtonClass}>
+      <LocaleLink href={DEFAULT_LOGIN_REDIRECT} className={loginButtonClass}>
         {dashboardLabel}
       </LocaleLink>
     );
