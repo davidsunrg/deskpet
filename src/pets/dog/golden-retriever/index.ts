@@ -15,7 +15,7 @@ export const goldenRetrieverResources = {
     photoR2Key: 'pets/dog/golden-retriever/photo.webp',
     petName: 'Cooper',
     uploadedBy: 'Alex Rivera',
-    uploadedAt: 'Aug 12, 2026',
+    uploadedAt: 'Aug 22, 2026',
   },
   actions: [
     {

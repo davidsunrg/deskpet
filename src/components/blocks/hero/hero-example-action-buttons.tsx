@@ -43,7 +43,7 @@ export function HeroExampleActionButtons({
       className="mx-3 mb-3 sm:mx-4 sm:mb-4"
       data-testid={`hero-example-actions-${petId}`}
     >
-      <p className="m-0 mb-2.5 text-center text-sm font-semibold tracking-tight text-deskpet-muted">
+      <p className="m-0 mb-3 rounded-xl bg-deskpet-mint-soft px-3 py-2 text-center text-[13px] font-bold leading-snug text-[#155b43] dark:bg-deskpet-mint/20 dark:text-deskpet-mint">
         {t('examplesActionsHint', { name: petName })}
       </p>
       <div className="flex flex-col gap-2">
