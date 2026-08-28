@@ -186,6 +186,11 @@ export function useMarketingPetMaker() {
   );
   const [sex, setSex] = useState<PetSex | ''>(() => initialLocalDraft.sex);
   const [creatingPet, setCreatingPet] = useState(false);
+  // True on OAuth return when create was pending, so the wizard can hide the
+  // form before session/create finishes and avoid a flash of editable UI.
+  const [resumingCreateAfterAuth, setResumingCreateAfterAuth] = useState(() =>
+    readPendingPetMakerCreateAfterAuth()
+  );
   const [recognitionStatus, setRecognitionStatus] =
     useState<RecognitionStatus>('idle');
   const [recognitionData, setRecognitionData] =
@@ -774,8 +779,10 @@ export function useMarketingPetMaker() {
     setAuthOpen(false);
     if (!validateCreateReadiness()) {
       setCreatingPet(false);
+      setResumingCreateAfterAuth(false);
       return;
     }
+    setResumingCreateAfterAuth(true);
     setCreatingPet(true);
     try {
       await submitPetRecord();
@@ -785,6 +792,7 @@ export function useMarketingPetMaker() {
         userFacingClientErrorMessage(error, t('profile.createError'))
       );
       setCreatingPet(false);
+      setResumingCreateAfterAuth(false);
     }
   }, [submitPetRecord, t, validateCreateReadiness]);
 
@@ -794,9 +802,11 @@ export function useMarketingPetMaker() {
     if (creatingPet || authOpen) return;
 
     clearPendingPetMakerCreateAfterAuth();
+    setResumingCreateAfterAuth(true);
     void (async () => {
       if (!validateCreateReadiness()) {
         setCreatingPet(false);
+        setResumingCreateAfterAuth(false);
         return;
       }
       setCreatingPet(true);
@@ -808,6 +818,7 @@ export function useMarketingPetMaker() {
           userFacingClientErrorMessage(error, t('profile.createError'))
         );
         setCreatingPet(false);
+        setResumingCreateAfterAuth(false);
       }
     })();
   }, [
@@ -928,6 +939,7 @@ export function useMarketingPetMaker() {
     handleSpeciesChange,
     canContinue,
     creatingPet,
+    resumingCreateAfterAuth,
     waitingForRecognition,
     uploadingPhotos,
     handleContinue,
