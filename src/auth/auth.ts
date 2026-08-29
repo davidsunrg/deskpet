@@ -140,6 +140,9 @@ export const auth = betterAuth({
   emailVerification: {
     // https://www.better-auth.com/docs/concepts/email#auto-signin-after-verification
     autoSignInAfterVerification: true,
+    // OTP signup sends via sendVerificationOTP only (see signupWithOtp).
+    // Keep this false so signUpEmail does not also send a magic-link email.
+    sendOnSignUp: false,
     // https://www.better-auth.com/docs/authentication/email-password#require-email-verification
     sendVerificationEmail: async ({ user, url }) => {
       await sendEmail({
