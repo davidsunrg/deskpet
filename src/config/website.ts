@@ -65,12 +65,12 @@ export const websiteConfig: WebsiteConfig = {
     supportEmail: 'DeskPet <support@updates.bymail.ai>',
   },
   newsletter: {
-    enable: true,
+    enable: false,
     provider: 'resend',
-    autoSubscribeAfterSignUp: true,
+    autoSubscribeAfterSignUp: false,
   },
   notification: {
-    enable: true,
+    enable: false,
     provider: 'discord',
   },
   cache: {
