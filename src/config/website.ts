@@ -61,8 +61,8 @@ export const websiteConfig: WebsiteConfig = {
   mail: {
     enable: true,
     provider: 'resend',
-    fromEmail: 'DeskPet <no-reply@updates.bymail.ai>',
-    supportEmail: 'DeskPet <support@updates.bymail.ai>',
+    fromEmail: 'DeskPet <no-reply@updates.deskpet.ai>',
+    supportEmail: 'DeskPet <support@updates.deskpet.ai>',
   },
   newsletter: {
     enable: false,
