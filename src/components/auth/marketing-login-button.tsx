@@ -1,13 +1,14 @@
 'use client';
 
 import { authClient } from '@/auth/client';
-import { LoginWrapper } from '@/components/auth/login-wrapper';
+import { AuthDialog } from '@/components/auth/auth-dialog';
 import { isRealSignedInUser } from '@/lib/auth/session-identity';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { DEFAULT_LOGIN_REDIRECT } from '@/lib/routes';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
 import { m } from '@/locale/paraglide/messages';
+import { useState } from 'react';
 
 interface MarketingLoginButtonProps {
   className?: string;
@@ -24,6 +25,7 @@ export function MarketingLoginButton({
   const { data: session, isPending } = authClient.useSession();
   const isSignedIn = isRealSignedInUser(session?.user);
   const showDashboard = isPending ? initialIsSignedIn : isSignedIn;
+  const [authOpen, setAuthOpen] = useState(false);
   const loginLabel = m.auth_common_login();
   const dashboardLabel = m.dashboard_title();
 
@@ -37,7 +39,9 @@ export function MarketingLoginButton({
     className
   );
 
-  if (showDashboard) {
+  // Keep AuthDialog mounted while open so session refetch / signed-in UI swap
+  // does not unmount the OTP step when the user switches browser tabs.
+  if (showDashboard && !authOpen) {
     return (
       <LocaleLink href={DEFAULT_LOGIN_REDIRECT} className={loginButtonClass}>
         {dashboardLabel}
@@ -46,10 +50,19 @@ export function MarketingLoginButton({
   }
 
   return (
-    <LoginWrapper mode="modal" asChild callbackUrl={callbackUrl}>
-      <button type="button" className={loginButtonClass}>
+    <>
+      <button
+        type="button"
+        className={loginButtonClass}
+        onClick={() => setAuthOpen(true)}
+      >
         {loginLabel}
       </button>
-    </LoginWrapper>
+      <AuthDialog
+        open={authOpen}
+        onOpenChange={setAuthOpen}
+        callbackUrl={callbackUrl}
+      />
+    </>
   );
 }
