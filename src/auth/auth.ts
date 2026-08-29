@@ -4,12 +4,12 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { tanstackStartCookies } from 'better-auth/tanstack-start';
 import { getDb } from '@/db';
 import { sendEmail } from '@/mail';
-import { subscribe } from '@/newsletter';
 import { getBaseUrl } from '@/lib/urls';
 import { serverEnv } from '@/env/server';
 import { websiteConfig } from '@/config/website';
 import { createGoogleTokenHandlers } from '@/auth/google-token-handlers';
 import { getTrustedOrigins } from '@/auth/trusted-origins';
+import { runOnCreateUserSideEffects } from '@/server/auth/on-create-user';
 import { emailHarmony } from 'better-auth-harmony';
 import { admin, bearer, emailOTP } from 'better-auth/plugins';
 import { google, verifyGoogleIdToken } from 'better-auth/social-providers';
@@ -120,38 +120,9 @@ export const auth = betterAuth({
     // disable freshness check for user deletion
     freshAge: 0 /* 60 * 60 * 24 */,
   },
-  emailAndPassword: {
-    // https://discord.com/channels/1300839113142046730/1300839113594769431/1454280549060444393
-    // Marketing UI uses email OTP; credential login stays available when enabled.
-    enabled:
-      (websiteConfig.auth?.enableCredentialLogin ?? false) ||
-      (websiteConfig.auth?.enableEmailOtpLogin ?? false),
-    // https://www.better-auth.com/docs/concepts/email#2-require-email-verification
-    requireEmailVerification: true,
-    // https://www.better-auth.com/docs/authentication/email-password#forget-password
-    sendResetPassword: async ({ user, url }) => {
-      await sendEmail({
-        to: user.email,
-        template: 'forgotPassword',
-        context: { url, name: user.name ?? '' },
-      });
-    },
-  },
   emailVerification: {
     // https://www.better-auth.com/docs/concepts/email#auto-signin-after-verification
     autoSignInAfterVerification: true,
-    // OTP signup sends via sendVerificationOTP only (see signupWithOtp).
-    // Keep this false so signUpEmail does not also send a magic-link email.
-    sendOnSignUp: false,
-    // https://www.better-auth.com/docs/authentication/email-password#require-email-verification
-    sendVerificationEmail: async ({ user, url }) => {
-      await sendEmail({
-        to: user.email,
-        template: 'verifyEmail',
-        context: { url, name: user.name ?? '' },
-      });
-    },
-    sendOnSignIn: true,
   },
   socialProviders: {
     // https://www.better-auth.com/docs/authentication/google
@@ -194,26 +165,36 @@ export const auth = betterAuth({
     // https://www.better-auth.com/docs/concepts/database#database-hooks
     user: {
       create: {
-        after: async (user) => {
-          await onCreateUser(user);
+        after: async (createdUser) => {
+          await runOnCreateUserSideEffects(createdUser as User);
         },
       },
     },
   },
   plugins: [
     emailOTP({
-      otpLength: 6,
-      expiresIn: 60 * 5,
-      allowedAttempts: 3,
+      // disableSignUp defaults to false — sign-in OTP may create the account.
+      // Do not set disableSignUp: true or BA returns 200 without sending mail
+      // for unknown emails.
       overrideDefaultEmailVerification: true,
       sendVerificationOTP: async ({ email, otp, type }) => {
+        const name = email.split('@')[0] || email;
         const template =
           type === 'email-verification' ? 'signUpOtp' : 'signInOtp';
-        await sendEmail({
+        const result = await sendEmail({
           to: email,
           template,
-          context: { otp, name: '' },
+          context: { otp, name },
         });
+        if (!result.success) {
+          throw new Error(
+            typeof result.error === 'string'
+              ? result.error
+              : type === 'email-verification'
+                ? 'Failed to send sign-up OTP email'
+                : 'Failed to send sign-in OTP email'
+          );
+        }
       },
     }),
     // https://www.better-auth.com/docs/plugins/bearer
@@ -249,28 +230,3 @@ export const auth = betterAuth({
     },
   },
 });
-
-/**
- * Runs after a new user is created. Auto-subscribes to newsletter when enabled.
- */
-async function onCreateUser(user: User) {
-  const newsletterConfig = websiteConfig.newsletter;
-  if (
-    !user.email ||
-    !newsletterConfig?.enable ||
-    !newsletterConfig.autoSubscribeAfterSignUp
-  ) {
-    return;
-  }
-
-  try {
-    const subscribed = await subscribe(user.email);
-    if (!subscribed) {
-      console.error(`onCreateUser, user ${user.email} failed to subscribe`);
-    } else {
-      console.log(`onCreateUser, user ${user.email} subscribed to newsletter`);
-    }
-  } catch (error) {
-    console.error('onCreateUser, newsletter subscription error:', error);
-  }
-}
