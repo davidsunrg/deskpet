@@ -37,7 +37,7 @@ export default function EmailLayout({ children }: EmailLayoutProps) {
             {children}
             <Hr className="my-8" />
             <Text className="mt-4">
-              {m.site_name(undefined, en)} {m.mail_layout_team(undefined, en)}
+              {m.mail_layout_team(undefined, en)}
             </Text>
             <Text>
               ©️ {year} {m.mail_layout_copyright(undefined, en)}
