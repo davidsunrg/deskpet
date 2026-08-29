@@ -60,7 +60,7 @@ export const websiteConfig: WebsiteConfig = {
   },
   mail: {
     enable: true,
-    provider: 'cloudflare',
+    provider: 'resend',
     fromEmail: 'DeskPet <no-reply@updates.bymail.ai>',
     supportEmail: 'DeskPet <support@updates.bymail.ai>',
   },
