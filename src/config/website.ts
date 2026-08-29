@@ -62,7 +62,7 @@ export const websiteConfig: WebsiteConfig = {
     enable: true,
     provider: 'resend',
     fromEmail: 'DeskPet <no-reply@updates.deskpet.ai>',
-    supportEmail: 'DeskPet <support@updates.deskpet.ai>',
+    supportEmail: 'DeskPet <david@deskpet.ai>',
   },
   newsletter: {
     enable: false,
