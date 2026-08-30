@@ -1,18 +1,31 @@
+import { CheckCircle2Icon } from 'lucide-react';
+import { PetMakerExamplesSection } from '@/components/blocks/hero/pet-maker-examples-section';
+import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
+import { CustomPetLimitedOfferBanner } from '@/components/dashboard/custom-pet-limited-offer-banner';
 import {
   dashboardCardClass,
   DashboardCardHeader,
 } from '@/components/dashboard/dashboard-card';
-import { CustomPetFinalPricingCard } from '@/components/dashboard/custom-pet-final-pricing-card';
-import { CustomPetLimitedOfferBanner } from '@/components/dashboard/custom-pet-limited-offer-banner';
-import { PetMakerExamplesSection } from '@/components/blocks/hero/pet-maker-examples-section';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { useTranslations } from '@/lib/deskpet-i18n';
 import { formatFriendlyDateTime } from '@/lib/formatter';
 import { cn } from '@/lib/utils';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import type { ShowcasePet } from '@/utils/showcase-pets';
-import { CheckCircle2Icon } from 'lucide-react';
 
 const SUPPORT_EMAIL = 'david@deskpet.ai';
+
+const FINAL_PRICING_FAQ_IDS = [
+  'deliveryTime',
+  'deliveryMethod',
+  'platforms',
+  'contact',
+] as const;
 
 type DashboardPetDetailFinalStepProps = {
   isPaid: boolean;
@@ -29,6 +42,62 @@ function toDate(value: Date | string | null | undefined): Date | null {
   if (!value) return null;
   const date = value instanceof Date ? value : new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function FinalPricingFaq() {
+  const t = useTranslations('DashboardPetDetail');
+  const tf = (key: string) => t(`final.pricing.faq.${key}`);
+
+  return (
+    <section
+      className="mx-auto w-full max-w-5xl px-4 pb-4 sm:px-6"
+      aria-labelledby="final-pricing-faq-title"
+    >
+      <div className="mx-auto max-w-2xl text-center">
+        <p
+          id="final-pricing-faq-title"
+          className="m-0 text-sm font-black uppercase tracking-[0.16em] text-deskpet-muted"
+        >
+          {tf('title')}
+        </p>
+      </div>
+
+      <Accordion type="single" collapsible className="mt-7 grid w-full gap-2">
+        {FINAL_PRICING_FAQ_IDS.map((id) => (
+          <AccordionItem
+            key={id}
+            value={id}
+            className={cn(
+              'overflow-hidden rounded-[16px] border-2 border-deskpet-ink bg-white',
+              'shadow-[3px_4px_0_0_rgba(56,42,53,0.09)]',
+              'dark:border-border dark:bg-card dark:shadow-[3px_4px_0_0_rgba(0,0,0,0.35)]',
+              'not-last:border-b-2'
+            )}
+          >
+            <AccordionTrigger
+              className={cn(
+                'items-center justify-start gap-2.5 px-3.5 py-3 text-left text-sm font-extrabold text-deskpet-ink hover:no-underline dark:text-foreground',
+                '**:data-[slot=accordion-trigger-icon]:hidden'
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className="inline-block shrink-0 text-[9px] leading-none transition-transform duration-200 group-aria-expanded/accordion-trigger:rotate-90"
+              >
+                ▶
+              </span>
+              {tf(`items.${id}.question`)}
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="px-3.5 pb-3.5 text-sm font-medium leading-6 text-deskpet-muted dark:text-muted-foreground">
+                {tf(`items.${id}.answer`)}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </section>
+  );
 }
 
 export function DashboardPetDetailFinalStep({
@@ -122,9 +191,10 @@ export function DashboardPetDetailFinalStep({
             <PetMakerExamplesSection
               pets={examplePets}
               floatingPets={floatingPets}
-              className="pb-4"
             />
           ) : null}
+
+          <FinalPricingFaq />
         </div>
       )}
     </section>

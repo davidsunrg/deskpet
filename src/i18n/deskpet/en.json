@@ -1217,7 +1217,28 @@
         "priceCaption": "One-time purchase",
         "savePill": "SAVE $50",
         "cta": "Order Now",
-        "belowCta": "{count} custom pets currently ahead of you"
+        "belowCta": "{count} custom pets currently ahead of you",
+        "faq": {
+          "title": "FAQ",
+          "items": {
+            "deliveryTime": {
+              "question": "How long does delivery take?",
+              "answer": "Most custom pets are ready within 24 hours. Each one needs hands-on polish so motion and details feel right, and orders are fulfilled in queue order—so a short wait keeps quality high."
+            },
+            "deliveryMethod": {
+              "question": "How do you deliver my pet?",
+              "answer": "When your pet is ready, we email you and unlock it in your DeskPet dashboard. You can open it there or download it to your desktop right away—no physical shipping."
+            },
+            "platforms": {
+              "question": "Is the result for browser or desktop?",
+              "answer": "Both. Play in the browser playground, and use the same companion in the DeskPet desktop app for macOS or Windows."
+            },
+            "contact": {
+              "question": "What if I have a problem or question?",
+              "answer": "Email us anytime at david@deskpet.ai—we're happy to help with orders, delivery, or anything about your custom pet."
+            }
+          }
+        }
       }
     },
     "profile": {

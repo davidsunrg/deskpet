@@ -14,19 +14,6 @@ type HeroExampleActionButtonsProps = {
   onSelectLogicalAction: (actionId: string) => void;
 };
 
-/** Split menu items into two visual rows (status/sit, then walk). */
-function splitActionRows(
-  items: readonly LogicalActionMenuItem[]
-): LogicalActionMenuItem[][] {
-  if (items.length === 0) return [];
-  const walkStart = items.findIndex((item) => item.group === 'walk');
-  if (walkStart > 0) {
-    return [items.slice(0, walkStart), items.slice(walkStart)];
-  }
-  const mid = Math.ceil(items.length / 2);
-  return [items.slice(0, mid), items.slice(mid)];
-}
-
 export function HeroExampleActionButtons({
   petName,
   petId,
@@ -35,7 +22,6 @@ export function HeroExampleActionButtons({
   onSelectLogicalAction,
 }: HeroExampleActionButtonsProps) {
   const t = useTranslations('HomePage.hero');
-  const rows = splitActionRows(items);
 
   return (
     <nav
@@ -46,39 +32,32 @@ export function HeroExampleActionButtons({
       <p className="m-0 mb-3 rounded-xl bg-deskpet-mint-soft px-3 py-2 text-center text-[13px] font-bold leading-snug text-[#155b43] dark:bg-deskpet-mint/20 dark:text-deskpet-mint">
         {t('examplesActionsHint', { name: petName })}
       </p>
-      <div className="flex flex-col gap-2">
-        {rows.map((row) => (
-          <ul
-            key={row.map((item) => item.id).join('-')}
-            className="m-0 flex list-none flex-wrap justify-center gap-2 p-0"
-          >
-            {row.map((item) => {
-              const selected = item.id === selectedLogicalActionId;
-              return (
-                <li key={item.id} className="min-w-0 shrink-0">
-                  <Button
-                    type="button"
-                    variant={selected ? 'brutal' : 'brutalOutline'}
-                    size="sm"
-                    disabled={Boolean(item.disabled)}
-                    className={cn(
-                      'h-8 rounded-full px-3 text-[12px]',
-                      item.disabled && 'opacity-40'
-                    )}
-                    aria-pressed={selected}
-                    onClick={() => {
-                      if (item.disabled) return;
-                      onSelectLogicalAction(item.id);
-                    }}
-                  >
-                    <span className="truncate">{logicalActionLabel(item)}</span>
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-        ))}
-      </div>
+      <ul className="m-0 grid list-none grid-cols-3 gap-2 p-0">
+        {items.map((item) => {
+          const selected = item.id === selectedLogicalActionId;
+          return (
+            <li key={item.id} className="min-w-0">
+              <Button
+                type="button"
+                variant={selected ? 'brutal' : 'brutalOutline'}
+                size="sm"
+                disabled={Boolean(item.disabled)}
+                className={cn(
+                  'h-8 w-full rounded-full px-2 text-[12px]',
+                  item.disabled && 'opacity-40'
+                )}
+                aria-pressed={selected}
+                onClick={() => {
+                  if (item.disabled) return;
+                  onSelectLogicalAction(item.id);
+                }}
+              >
+                <span className="truncate">{logicalActionLabel(item)}</span>
+              </Button>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 }
