@@ -31,6 +31,11 @@ const HERO_PET_SIZE = {
   height: HERO_PET_HEIGHT,
 } as const;
 
+/** How far Final-tab pets may hang past each content edge (half the video width). */
+export const HERO_CONTENT_EDGE_OVERHANG_PX = Math.round(
+  HERO_PET_SIZE.width * 0.5
+);
+
 type HeroFloatingPetProps = {
   pet: PlaygroundPet;
   /** Bounds for walk clamping / placement (usually the hero section). */
@@ -196,6 +201,7 @@ export function HeroFloatingPet({
               initialSide={side}
               anchorSelector={`[data-hero-photo-anchor="${photoPetId}"]`}
               anchorSide={side}
+              anchorPlacement="above"
               persistLayout={false}
               videoLoop={videoLoop}
               playbackNonce={playbackNonce}

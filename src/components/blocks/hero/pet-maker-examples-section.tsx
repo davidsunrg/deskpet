@@ -1,6 +1,9 @@
 'use client';
 
-import { HeroFloatingPet } from '@/components/blocks/hero/hero-floating-pet';
+import {
+  HeroFloatingPet,
+  HERO_CONTENT_EDGE_OVERHANG_PX,
+} from '@/components/blocks/hero/hero-floating-pet';
 import { HeroPetExamples } from '@/components/blocks/hero/hero-pet-examples';
 import { cn } from '@/lib/utils';
 import type { PlaygroundPet } from '@/utils/playground-pet';
@@ -8,15 +11,17 @@ import { PetSpecies, type ShowcasePet } from '@/utils/showcase-pets';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+const DASHBOARD_CONTENT_SELECTOR = '[data-slot="sidebar-inset"]';
+
 type PetMakerExamplesSectionProps = {
   pets: ShowcasePet[];
   floatingPets?: PlaygroundPet[];
   className?: string;
   /**
-   * Let floating companions walk the full viewport (fixed overlay), while photo
-   * cards and action buttons stay in this section — used on the Final tab.
+   * Let floating companions roam the dashboard content pane (SidebarInset),
+   * with a half-video hang past each side — used on the Final tab.
    */
-  viewportRoam?: boolean;
+  contentRoam?: boolean;
 };
 
 /**
@@ -27,22 +32,31 @@ export function PetMakerExamplesSection({
   pets,
   floatingPets = [],
   className,
-  viewportRoam = false,
+  contentRoam = false,
 }: PetMakerExamplesSectionProps) {
   const contentRootRef = useRef<HTMLDivElement | null>(null);
   const localBoundsRef = useRef<HTMLDivElement | null>(null);
-  const viewportBoundsRef = useRef<HTMLDivElement | null>(null);
+  const roamBoundsRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [viewportBoundsEl, setViewportBoundsEl] =
-    useState<HTMLDivElement | null>(null);
+  const [contentHost, setContentHost] = useState<HTMLElement | null>(null);
+  const [roamBoundsEl, setRoamBoundsEl] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const boundsRef = viewportRoam ? viewportBoundsRef : localBoundsRef;
+  useEffect(() => {
+    if (!contentRoam || !mounted) {
+      setContentHost(null);
+      return;
+    }
+    const host = document.querySelector(DASHBOARD_CONTENT_SELECTOR);
+    setContentHost(host instanceof HTMLElement ? host : null);
+  }, [contentRoam, mounted]);
+
+  const boundsRef = contentRoam ? roamBoundsRef : localBoundsRef;
   const canRenderFloating =
-    !viewportRoam || (mounted && viewportBoundsEl != null);
+    !contentRoam || (contentHost != null && roamBoundsEl != null);
 
   const floatingCompanions = useMemo(() => {
     const dog =
@@ -75,29 +89,33 @@ export function PetMakerExamplesSection({
 
   return (
     <>
-      {viewportRoam && mounted
+      {contentRoam && contentHost
         ? createPortal(
             <div
               ref={(node) => {
-                viewportBoundsRef.current = node;
-                setViewportBoundsEl(node);
+                roamBoundsRef.current = node;
+                setRoamBoundsEl(node);
               }}
-              className="pointer-events-none fixed inset-0 z-[80] overflow-hidden"
-              data-pet-viewport-bounds=""
+              className="pointer-events-none absolute inset-y-0 z-[80] overflow-hidden"
+              style={{
+                left: -HERO_CONTENT_EDGE_OVERHANG_PX,
+                right: -HERO_CONTENT_EDGE_OVERHANG_PX,
+              }}
+              data-pet-content-bounds=""
               aria-hidden
             />,
-            document.body
+            contentHost
           )
         : null}
 
       <div
         ref={(node) => {
           contentRootRef.current = node;
-          if (!viewportRoam) {
+          if (!contentRoam) {
             localBoundsRef.current = node;
           }
         }}
-        className={cn(!viewportRoam && 'relative', className)}
+        className={cn(!contentRoam && 'relative', className)}
       >
         {canRenderFloating
           ? floatingCompanions.map(
@@ -106,8 +124,8 @@ export function PetMakerExamplesSection({
                   key={pet.key}
                   pet={pet}
                   boundsRef={boundsRef}
-                  contentRootRef={viewportRoam ? contentRootRef : undefined}
-                  portalToBounds={viewportRoam}
+                  contentRootRef={contentRoam ? contentRootRef : undefined}
+                  portalToBounds={contentRoam}
                   side={side}
                   photoPetId={photoPetId}
                   displayPetName={displayPetName}

@@ -58,18 +58,23 @@ type PlaygroundPetStageProps = {
   /** Initial horizontal placement when no stored layout is used. */
   initialSide?: 'left' | 'right';
   /**
-   * Optional CSS selector for an element the pet should sit beside on first
-   * reveal — e.g. a hero example photo. Scoped under `anchorRootRef` when set,
-   * otherwise under `boundsRef`.
+   * Optional CSS selector for an element the pet should sit beside/above on
+   * first reveal — e.g. a hero example photo. Scoped under `anchorRootRef`
+   * when set, otherwise under `boundsRef`.
    */
   anchorSelector?: string;
   /**
    * Root used to find photo anchors. Defaults to `boundsRef`. Pass a separate
-   * content root when walk bounds are a fixed viewport overlay.
+   * content root when walk bounds are a fixed overlay.
    */
   anchorRootRef?: RefObject<HTMLElement | null>;
   /** Which side of the anchor the pet sits on. Defaults to `initialSide`. */
   anchorSide?: 'left' | 'right';
+  /**
+   * Initial anchor placement. `auto` places above stacked photo grids and
+   * beside side-by-side grids; `above` / `beside` force one mode.
+   */
+  anchorPlacement?: 'auto' | 'above' | 'beside';
   /** Disable shared playground layout reads/writes for embedded stages. */
   persistLayout?: boolean;
   /** When false, play once and fire onEnded (autoplay sequencer). */
@@ -101,6 +106,14 @@ function isHeroPhotoGridStacked(boundsEl: HTMLElement): boolean {
   );
 }
 
+function resolveAnchorPlacement(
+  rootEl: HTMLElement,
+  mode: 'auto' | 'above' | 'beside'
+): 'above' | 'beside' {
+  if (mode === 'above' || mode === 'beside') return mode;
+  return isHeroPhotoGridStacked(rootEl) ? 'above' : 'beside';
+}
+
 function positionRelativeToAnchor(input: {
   boundsEl: HTMLElement;
   anchorEl: HTMLElement;
@@ -113,9 +126,14 @@ function positionRelativeToAnchor(input: {
 
   if (input.placement === 'above') {
     return {
-      x: anchor.left - bounds.left + (anchor.width - input.size.width) / 2,
-      // Overlap the top of the photo so the pet sits on the card.
-      y: anchor.top - bounds.top - input.size.height * 0.42,
+      // Nudge slightly right of true center so the subject reads better in-frame.
+      x:
+        anchor.left -
+        bounds.left +
+        (anchor.width - input.size.width) / 2 +
+        input.size.width * 0.12,
+      // Center on the photo so the companion sits in the middle of the card.
+      y: anchor.top - bounds.top + (anchor.height - input.size.height) / 2,
     };
   }
 
@@ -147,6 +165,7 @@ export const PlaygroundPetStage = forwardRef<
     anchorSelector,
     anchorRootRef,
     anchorSide,
+    anchorPlacement = 'auto',
     persistLayout = true,
     videoLoop = true,
     playbackNonce = 0,
@@ -340,11 +359,16 @@ export const PlaygroundPetStage = forwardRef<
   /** Keep walk motion inside the currently visible scroll strip. */
   const getWalkBoundsSize = useCallback(() => {
     const bounds = getBoundsSize();
+    // Content-area roam expands the bounds element past the pane edges so pets
+    // can hang off the sides — walk must use that width, not the parent width.
+    const useBoundsWidth = Boolean(
+      boundsRef.current?.hasAttribute('data-pet-content-bounds')
+    );
     return {
-      width: getVisibleWidth(),
+      width: useBoundsWidth ? bounds.width : getVisibleWidth(),
       height: bounds.height,
     };
-  }, [getBoundsSize, getVisibleWidth]);
+  }, [boundsRef, getBoundsSize, getVisibleWidth]);
 
   const handleHitWalkEdge = useCallback(
     (edge: WalkEdgeHit) => {
@@ -405,9 +429,7 @@ export const PlaygroundPetStage = forwardRef<
           // Photo card not mounted yet — retry via ResizeObserver.
           return false;
         }
-        const placement = isHeroPhotoGridStacked(anchorRootEl)
-          ? 'above'
-          : 'beside';
+        const placement = resolveAnchorPlacement(anchorRootEl, anchorPlacement);
         position = positionRelativeToAnchor({
           boundsEl,
           anchorEl,
@@ -450,6 +472,7 @@ export const PlaygroundPetStage = forwardRef<
       anchorRootRef,
       anchorSelector,
       anchorSide,
+      anchorPlacement,
       boundsRef,
       companionRef,
       getBoundsSize,
@@ -486,8 +509,7 @@ export const PlaygroundPetStage = forwardRef<
 
     const tryRestore = () => {
       const stackedRoot = anchorRootRef?.current ?? el;
-      const stacked = isHeroPhotoGridStacked(stackedRoot);
-      const placement = stacked ? 'above' : 'beside';
+      const placement = resolveAnchorPlacement(stackedRoot, anchorPlacement);
 
       if (!didRestoreRef.current) {
         if (restorePetPosition()) {
@@ -551,6 +573,7 @@ export const PlaygroundPetStage = forwardRef<
   }, [
     anchorRootRef,
     anchorSelector,
+    anchorPlacement,
     boundsRef,
     isDragging,
     persistLayout,
