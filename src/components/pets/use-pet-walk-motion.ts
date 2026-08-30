@@ -9,6 +9,7 @@ import {
 import {
   clampWalkPositionAtEdges,
   stepWalkPosition,
+  wrapHorizontalPetX,
   type WalkEdgeHit,
   type WalkScreenDirection,
 } from '@/utils/pets/pet-walk-motion';
@@ -44,12 +45,18 @@ type UsePetWalkMotionOptions = {
   petPositionRef: RefObject<PetPosition>;
   setPetPosition: Dispatch<SetStateAction<PetPosition>>;
   onHitEdge?: (edge: WalkEdgeHit) => void;
+  /**
+   * When true, exiting left/right re-enters from the opposite side instead of
+   * clamping and requesting a turn.
+   */
+  horizontalWrap?: boolean;
 };
 
 /**
  * Translate the pet window while an action's box motion is active.
  * Prefer explicit `motionConfig.boxMotion`; otherwise fall back to walk_*_loop.
- * Horizontal motion clamps at edges and asks the controller to turn around.
+ * Horizontal motion clamps at edges and asks the controller to turn around,
+ * unless `horizontalWrap` is enabled.
  */
 export function usePetWalkMotion({
   actionKey,
@@ -64,6 +71,7 @@ export function usePetWalkMotion({
   petPositionRef,
   setPetPosition,
   onHitEdge,
+  horizontalWrap = false,
 }: UsePetWalkMotionOptions) {
   const previousDirectionRef = useRef<WalkScreenDirection | null>(null);
   const lastEdgeHitRef = useRef<{ edge: WalkEdgeHit; at: number } | null>(null);
@@ -88,14 +96,24 @@ export function usePetWalkMotion({
 
     if (previousDirection && !canEverMove) {
       const current = petPositionRef.current;
+      const bounds = getBoundsSize();
       const clamped = clampPetPosition(
         current,
         companionRef.current,
-        getBoundsSize(),
+        bounds,
         petSize
       );
-      if (clamped.x !== current.x || clamped.y !== current.y) {
-        const next = { x: clamped.x, y: clamped.y };
+      const next = horizontalWrap
+        ? {
+            x: wrapHorizontalPetX({
+              x: current.x,
+              boundsWidth: bounds.width,
+              petWidth: petSize.width,
+            }),
+            y: clamped.y,
+          }
+        : clamped;
+      if (next.x !== current.x || next.y !== current.y) {
         petPositionRef.current = next;
         setPetPosition(next);
       }
@@ -159,31 +177,43 @@ export function usePetWalkMotion({
           ? { minSpeedPxPerSec: resolved.minSpeedPxPerSec }
           : {}),
       });
-      const edgeResult = clampWalkPositionAtEdges({
-        x: steppedX,
-        boundsWidth: bounds.width,
-        petWidth: petSize.width,
-        edgeMargin: 0,
-        direction: resolved.direction,
-      });
-      // Y stays in the stage; X clamps at visible walk edges.
       const clamped = clampPetPosition(
         { x: current.x, y: current.y },
         companionRef.current,
         bounds,
         petSize
       );
-      const next = { x: Math.round(edgeResult.x), y: clamped.y };
 
+      let nextX: number;
+      let edge: WalkEdgeHit | null = null;
+      if (horizontalWrap) {
+        nextX = wrapHorizontalPetX({
+          x: steppedX,
+          boundsWidth: bounds.width,
+          petWidth: petSize.width,
+        });
+      } else {
+        const edgeResult = clampWalkPositionAtEdges({
+          x: steppedX,
+          boundsWidth: bounds.width,
+          petWidth: petSize.width,
+          edgeMargin: 0,
+          direction: resolved.direction,
+        });
+        nextX = edgeResult.x;
+        edge = edgeResult.edge;
+      }
+
+      const next = { x: Math.round(nextX), y: clamped.y };
       petPositionRef.current = next;
       setPetPosition(next);
 
-      if (edgeResult.edge) {
+      if (edge) {
         const now = Date.now();
         const last = lastEdgeHitRef.current;
-        if (!last || last.edge !== edgeResult.edge || now - last.at >= 900) {
-          lastEdgeHitRef.current = { edge: edgeResult.edge, at: now };
-          onHitEdgeRef.current?.(edgeResult.edge);
+        if (!last || last.edge !== edge || now - last.at >= 900) {
+          lastEdgeHitRef.current = { edge, at: now };
+          onHitEdgeRef.current?.(edge);
         }
       }
     };
@@ -205,5 +235,6 @@ export function usePetWalkMotion({
     petSize,
     setPetPosition,
     videoRef,
+    horizontalWrap,
   ]);
 }

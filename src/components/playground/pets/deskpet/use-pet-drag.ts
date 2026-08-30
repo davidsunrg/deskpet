@@ -1,3 +1,4 @@
+import { wrapHorizontalPetX } from '@/utils/pets/pet-walk-motion';
 import {
   useCallback,
   useLayoutEffect,
@@ -29,6 +30,10 @@ type UsePetDragOptions = {
    */
   originCenter?: { x: number; y: number } | null;
   fallbackSize?: { width: number; height: number };
+  /**
+   * When true, dragging past left/right re-enters from the opposite side.
+   */
+  horizontalWrap?: boolean;
 };
 
 export function usePetDrag({
@@ -38,6 +43,7 @@ export function usePetDrag({
   autoPlace = true,
   originCenter = null,
   fallbackSize,
+  horizontalWrap = false,
 }: UsePetDragOptions): {
   companionRef: RefObject<HTMLDivElement | null>;
   petPosition: PetPosition;
@@ -65,6 +71,32 @@ export function usePetDrag({
 
   petPositionRef.current = petPosition;
 
+  const constrainPosition = useCallback(
+    (position: PetPosition, bounds = getBoundsSize()) => {
+      const clamped = clampPetPosition(
+        position,
+        companionRef.current,
+        bounds,
+        fallbackSize
+      );
+      if (!horizontalWrap) return clamped;
+      const petWidth =
+        companionRef.current?.offsetWidth ||
+        companionRef.current?.getBoundingClientRect().width ||
+        fallbackSize?.width ||
+        192;
+      return {
+        x: wrapHorizontalPetX({
+          x: position.x,
+          boundsWidth: bounds.width,
+          petWidth,
+        }),
+        y: clamped.y,
+      };
+    },
+    [fallbackSize, getBoundsSize, horizontalWrap]
+  );
+
   const originKey = originCenter ? `${originCenter.x},${originCenter.y}` : null;
 
   useLayoutEffect(() => {
@@ -77,14 +109,12 @@ export function usePetDrag({
       lastOriginKeyRef.current = originKey;
       const width = fallbackSize?.width ?? 0;
       const height = fallbackSize?.height ?? 0;
-      const next = clampPetPosition(
+      const next = constrainPosition(
         {
           x: Math.round(originCenter.x - width / 2),
           y: Math.round(originCenter.y - height / 2),
         },
-        companionRef.current,
-        bounds,
-        fallbackSize
+        bounds
       );
       petPositionRef.current = next;
       setPetPosition(next);
@@ -99,17 +129,13 @@ export function usePetDrag({
           y: Math.max(PET_EDGE_MARGIN, Math.round(bounds.height * placeAt.y)),
         }
       : initialPosition;
-    const next = clampPetPosition(
-      seed,
-      companionRef.current,
-      bounds,
-      fallbackSize
-    );
+    const next = constrainPosition(seed, bounds);
     petPositionRef.current = next;
     setPetPosition(next);
     setHasPlaced(true);
   }, [
     autoPlace,
+    constrainPosition,
     fallbackSize,
     getBoundsSize,
     hasPlaced,
@@ -122,19 +148,14 @@ export function usePetDrag({
   useLayoutEffect(() => {
     const handleResize = () => {
       setPetPosition((current) => {
-        const next = clampPetPosition(
-          current,
-          companionRef.current,
-          getBoundsSize(),
-          fallbackSize
-        );
+        const next = constrainPosition(current);
         petPositionRef.current = next;
         return next;
       });
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [fallbackSize, getBoundsSize]);
+  }, [constrainPosition]);
 
   const handlePointerDown = useCallback(
     (event: PointerEvent<HTMLDivElement>) => {
@@ -158,19 +179,14 @@ export function usePetDrag({
       const drag = dragRef.current;
       if (!drag || drag.pointerId !== event.pointerId) return;
       event.preventDefault();
-      const next = clampPetPosition(
-        {
-          x: drag.startX + event.clientX - drag.startClientX,
-          y: drag.startY + event.clientY - drag.startClientY,
-        },
-        companionRef.current,
-        getBoundsSize(),
-        fallbackSize
-      );
+      const next = constrainPosition({
+        x: drag.startX + event.clientX - drag.startClientX,
+        y: drag.startY + event.clientY - drag.startClientY,
+      });
       petPositionRef.current = next;
       setPetPosition(next);
     },
-    [fallbackSize, getBoundsSize]
+    [constrainPosition]
   );
 
   const finishDrag = useCallback(
@@ -183,17 +199,12 @@ export function usePetDrag({
       dragRef.current = null;
       setIsDragging(false);
       setPetPosition((current) => {
-        const next = clampPetPosition(
-          current,
-          companionRef.current,
-          getBoundsSize(),
-          fallbackSize
-        );
+        const next = constrainPosition(current);
         petPositionRef.current = next;
         return next;
       });
     },
-    [fallbackSize, getBoundsSize]
+    [constrainPosition]
   );
 
   const companionStyle = useMemo(

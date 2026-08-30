@@ -97,3 +97,21 @@ export function clampWalkPositionAtEdges(input: {
 
   return { x: clampedX, edge };
 }
+
+/**
+ * Wrap horizontal position so exiting one side re-enters from the opposite side.
+ * Uses the pet's horizontal center against the stage width.
+ */
+export function wrapHorizontalPetX(input: {
+  x: number;
+  boundsWidth: number;
+  petWidth: number;
+}): number {
+  const { boundsWidth, petWidth } = input;
+  if (!(boundsWidth > 0) || !(petWidth > 0)) {
+    return Math.round(input.x);
+  }
+  let center = input.x + petWidth / 2;
+  center = ((center % boundsWidth) + boundsWidth) % boundsWidth;
+  return Math.round(center - petWidth / 2);
+}

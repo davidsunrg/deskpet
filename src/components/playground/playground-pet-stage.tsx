@@ -24,7 +24,10 @@ import {
   type RefObject,
 } from 'react';
 import { computeInitialPlaygroundPetPlacement } from '@/utils/pets/compute-initial-playground-pet-placement';
-import type { WalkEdgeHit } from '@/utils/pets/pet-walk-motion';
+import {
+  wrapHorizontalPetX,
+  type WalkEdgeHit,
+} from '@/utils/pets/pet-walk-motion';
 import {
   clampPetPosition,
   repositionForPetSizeChange,
@@ -84,6 +87,11 @@ type PlaygroundPetStageProps = {
   onVideoEnded?: () => void;
   /** Edge of the visible walk area — request opposite walk direction. */
   onHitWalkEdge?: (edge: WalkEdgeHit) => void;
+  /**
+   * When true, walking/dragging past left/right re-enters from the opposite
+   * side instead of clamping or turning around.
+   */
+  horizontalWrap?: boolean;
   /** Fires once when the companion is ready to be shown (placed + first frame). */
   onStartupReady?: () => void;
 };
@@ -171,6 +179,7 @@ export const PlaygroundPetStage = forwardRef<
     playbackNonce = 0,
     onVideoEnded,
     onHitWalkEdge,
+    horizontalWrap = false,
     onStartupReady,
   },
   ref
@@ -337,6 +346,7 @@ export const PlaygroundPetStage = forwardRef<
     initialPosition: PLAYGROUND_PET_FALLBACK_POSITION,
     autoPlace: false,
     fallbackSize: size,
+    horizontalWrap,
   });
 
   debugSnapshotRef.current = () => {
@@ -389,7 +399,8 @@ export const PlaygroundPetStage = forwardRef<
     companionRef,
     petPositionRef,
     setPetPosition,
-    onHitEdge: handleHitWalkEdge,
+    onHitEdge: horizontalWrap ? undefined : handleHitWalkEdge,
+    horizontalWrap,
   });
 
   const restorePetPosition = useCallback(
@@ -457,12 +468,22 @@ export const PlaygroundPetStage = forwardRef<
         position = placement.position;
       }
 
-      const next = clampPetPosition(
+      const clamped = clampPetPosition(
         position,
         companionRef.current,
         bounds,
         size
       );
+      const next = horizontalWrap
+        ? {
+            x: wrapHorizontalPetX({
+              x: position.x,
+              boundsWidth: bounds.width,
+              petWidth: size.width,
+            }),
+            y: clamped.y,
+          }
+        : clamped;
       petPositionRef.current = next;
       setPetPosition(next);
       setHasRestoredPosition(true);
@@ -477,6 +498,7 @@ export const PlaygroundPetStage = forwardRef<
       companionRef,
       getBoundsSize,
       getVisibleWidth,
+      horizontalWrap,
       initialSide,
       lookScrubScale,
       mediaAspect,

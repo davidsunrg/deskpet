@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  HeroFloatingPet,
-  HERO_CONTENT_EDGE_OVERHANG_PX,
-} from '@/components/blocks/hero/hero-floating-pet';
+import { HeroFloatingPet } from '@/components/blocks/hero/hero-floating-pet';
 import { HeroPetExamples } from '@/components/blocks/hero/hero-pet-examples';
 import { cn } from '@/lib/utils';
 import type { PlaygroundPet } from '@/utils/playground-pet';
@@ -18,8 +15,8 @@ type PetMakerExamplesSectionProps = {
   floatingPets?: PlaygroundPet[];
   className?: string;
   /**
-   * Let floating companions roam the dashboard content pane (SidebarInset),
-   * with a half-video hang past each side — used on the Final tab.
+   * Let floating companions roam the dashboard content pane (SidebarInset) —
+   * used on the Final tab.
    */
   contentRoam?: boolean;
 };
@@ -96,11 +93,7 @@ export function PetMakerExamplesSection({
                 roamBoundsRef.current = node;
                 setRoamBoundsEl(node);
               }}
-              className="pointer-events-none absolute inset-y-0 z-[80] overflow-hidden"
-              style={{
-                left: -HERO_CONTENT_EDGE_OVERHANG_PX,
-                right: -HERO_CONTENT_EDGE_OVERHANG_PX,
-              }}
+              className="pointer-events-none absolute inset-0 z-[80] overflow-hidden"
               data-pet-content-bounds=""
               aria-hidden
             />,
