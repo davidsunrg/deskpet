@@ -21,11 +21,6 @@ export function useNavbarLinks(): MenuItemConfig[] {
 
   return [
     {
-      title: t('pets.title'),
-      href: Routes.Pets,
-      external: false,
-    },
-    {
       title: t('playground.title'),
       href: Routes.Playground,
       external: false,
