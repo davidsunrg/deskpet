@@ -35,6 +35,16 @@ type HeroFloatingPetProps = {
   pet: PlaygroundPet;
   /** Bounds for walk clamping / placement (usually the hero section). */
   boundsRef: RefObject<HTMLElement | null>;
+  /**
+   * Root for photo anchors + action button slots. Defaults to `boundsRef`.
+   * Use when walk bounds are a fixed viewport overlay.
+   */
+  contentRootRef?: RefObject<HTMLElement | null>;
+  /**
+   * Render the pet layer into `boundsRef` via portal (needed for fixed
+   * fullscreen walk layers that are not a DOM ancestor of this component).
+   */
+  portalToBounds?: boolean;
   /** Sit on this side of the matching hero example photo. */
   side: 'left' | 'right';
   /** Showcase / registry pet id used by `data-hero-photo-anchor`. */
@@ -57,6 +67,8 @@ type HeroFloatingPetProps = {
 export function HeroFloatingPet({
   pet,
   boundsRef,
+  contentRootRef,
+  portalToBounds = false,
   side,
   photoPetId,
   displayPetName,
@@ -64,6 +76,9 @@ export function HeroFloatingPet({
   const petRef = useRef<PlaygroundPetStageHandle>(null);
   const [autoplayEnabled, setAutoplayEnabled] = useState(false);
   const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null);
+  const [boundsPortalEl, setBoundsPortalEl] = useState<HTMLElement | null>(
+    null
+  );
   const {
     selectedAction,
     logicalActionId,
@@ -79,7 +94,26 @@ export function HeroFloatingPet({
   });
 
   useEffect(() => {
-    const root = boundsRef.current;
+    if (!portalToBounds) {
+      setBoundsPortalEl(null);
+      return;
+    }
+
+    const sync = () => {
+      setBoundsPortalEl(boundsRef.current);
+    };
+    sync();
+
+    const observer =
+      typeof MutationObserver !== 'undefined'
+        ? new MutationObserver(sync)
+        : null;
+    observer?.observe(document.body, { childList: true, subtree: true });
+    return () => observer?.disconnect();
+  }, [boundsRef, portalToBounds]);
+
+  useEffect(() => {
+    const root = contentRootRef?.current ?? boundsRef.current;
     if (!root) return;
 
     const resolveSlot = () => {
@@ -98,7 +132,7 @@ export function HeroFloatingPet({
     observer?.observe(root, { childList: true, subtree: true });
 
     return () => observer?.disconnect();
-  }, [boundsRef, photoPetId]);
+  }, [boundsRef, contentRootRef, photoPetId]);
 
   const onHitWalkEdge = useCallback(
     (edge: WalkEdgeHit) => {
@@ -142,39 +176,48 @@ export function HeroFloatingPet({
     return null;
   }
 
+  const layer = (
+    <div
+      className="pointer-events-none absolute inset-0 z-[60] overflow-hidden"
+      data-testid={`hero-floating-pet-${pet.key}`}
+    >
+      <PetActionMenu
+        trigger={
+          // `display: contents` wrapper takes the context-menu trigger props;
+          // PlaygroundPetStage owns its own root div props (drag/look handlers).
+          <div className="contents">
+            <PlaygroundPetStage
+              ref={petRef}
+              pet={pet}
+              action={selectedAction}
+              boundsRef={boundsRef}
+              anchorRootRef={contentRootRef}
+              windowSize={HERO_PET_SIZE}
+              initialSide={side}
+              anchorSelector={`[data-hero-photo-anchor="${photoPetId}"]`}
+              anchorSide={side}
+              persistLayout={false}
+              videoLoop={videoLoop}
+              playbackNonce={playbackNonce}
+              onVideoEnded={onVideoEnded}
+              onHitWalkEdge={onHitWalkEdge}
+            />
+          </div>
+        }
+        menuTestId={`hero-pet-context-menu-${pet.key}`}
+        items={actionMenuItems}
+        onSelect={onSelectLogicalAction}
+      />
+    </div>
+  );
+
   return (
     <>
-      <div
-        className="pointer-events-none absolute inset-0 z-[60] overflow-hidden"
-        data-testid={`hero-floating-pet-${pet.key}`}
-      >
-        <PetActionMenu
-          trigger={
-            // `display: contents` wrapper takes the context-menu trigger props;
-            // PlaygroundPetStage owns its own root div props (drag/look handlers).
-            <div className="contents">
-              <PlaygroundPetStage
-                ref={petRef}
-                pet={pet}
-                action={selectedAction}
-                boundsRef={boundsRef}
-                windowSize={HERO_PET_SIZE}
-                initialSide={side}
-                anchorSelector={`[data-hero-photo-anchor="${photoPetId}"]`}
-                anchorSide={side}
-                persistLayout={false}
-                videoLoop={videoLoop}
-                playbackNonce={playbackNonce}
-                onVideoEnded={onVideoEnded}
-                onHitWalkEdge={onHitWalkEdge}
-              />
-            </div>
-          }
-          menuTestId={`hero-pet-context-menu-${pet.key}`}
-          items={actionMenuItems}
-          onSelect={onSelectLogicalAction}
-        />
-      </div>
+      {portalToBounds
+        ? boundsPortalEl
+          ? createPortal(layer, boundsPortalEl)
+          : null
+        : layer}
 
       {actionsSlot
         ? createPortal(

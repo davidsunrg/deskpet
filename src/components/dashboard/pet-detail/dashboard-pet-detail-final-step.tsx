@@ -191,6 +191,7 @@ export function DashboardPetDetailFinalStep({
             <PetMakerExamplesSection
               pets={examplePets}
               floatingPets={floatingPets}
+              viewportRoam
             />
           ) : null}
 

@@ -58,10 +58,16 @@ type PlaygroundPetStageProps = {
   /** Initial horizontal placement when no stored layout is used. */
   initialSide?: 'left' | 'right';
   /**
-   * Optional CSS selector (scoped under bounds) for an element the pet should
-   * sit beside on first reveal — e.g. a hero example photo.
+   * Optional CSS selector for an element the pet should sit beside on first
+   * reveal — e.g. a hero example photo. Scoped under `anchorRootRef` when set,
+   * otherwise under `boundsRef`.
    */
   anchorSelector?: string;
+  /**
+   * Root used to find photo anchors. Defaults to `boundsRef`. Pass a separate
+   * content root when walk bounds are a fixed viewport overlay.
+   */
+  anchorRootRef?: RefObject<HTMLElement | null>;
   /** Which side of the anchor the pet sits on. Defaults to `initialSide`. */
   anchorSide?: 'left' | 'right';
   /** Disable shared playground layout reads/writes for embedded stages. */
@@ -139,6 +145,7 @@ export const PlaygroundPetStage = forwardRef<
     windowSize,
     initialSide,
     anchorSelector,
+    anchorRootRef,
     anchorSide,
     persistLayout = true,
     videoLoop = true,
@@ -364,6 +371,7 @@ export const PlaygroundPetStage = forwardRef<
   const restorePetPosition = useCallback(
     (aspectOverride?: number) => {
       const boundsEl = boundsRef.current;
+      const anchorRootEl = anchorRootRef?.current ?? boundsEl;
       const bounds = getBoundsSize();
       if (!boundsEl || bounds.width <= 0 || bounds.height <= 0) {
         return false;
@@ -389,12 +397,17 @@ export const PlaygroundPetStage = forwardRef<
       let position: { x: number; y: number } | null = null;
 
       if (anchorSelector) {
-        const anchorEl = boundsEl.querySelector(anchorSelector);
+        if (!anchorRootEl) {
+          return false;
+        }
+        const anchorEl = anchorRootEl.querySelector(anchorSelector);
         if (!(anchorEl instanceof HTMLElement)) {
           // Photo card not mounted yet — retry via ResizeObserver.
           return false;
         }
-        const placement = isHeroPhotoGridStacked(boundsEl) ? 'above' : 'beside';
+        const placement = isHeroPhotoGridStacked(anchorRootEl)
+          ? 'above'
+          : 'beside';
         position = positionRelativeToAnchor({
           boundsEl,
           anchorEl,
@@ -434,6 +447,7 @@ export const PlaygroundPetStage = forwardRef<
       return true;
     },
     [
+      anchorRootRef,
       anchorSelector,
       anchorSide,
       boundsRef,
@@ -465,12 +479,14 @@ export const PlaygroundPetStage = forwardRef<
   // Also watch DOM mutations so hero photo anchors can appear after first paint.
   useEffect(() => {
     const el = boundsRef.current;
+    const anchorRootEl = anchorRootRef?.current ?? el;
     if (!el) {
       return;
     }
 
     const tryRestore = () => {
-      const stacked = isHeroPhotoGridStacked(el);
+      const stackedRoot = anchorRootRef?.current ?? el;
+      const stacked = isHeroPhotoGridStacked(stackedRoot);
       const placement = stacked ? 'above' : 'beside';
 
       if (!didRestoreRef.current) {
@@ -510,6 +526,9 @@ export const PlaygroundPetStage = forwardRef<
     if (parent) {
       resizeObserver?.observe(parent);
     }
+    if (anchorRootEl && anchorRootEl !== el) {
+      resizeObserver?.observe(anchorRootEl);
+    }
 
     const mutationObserver =
       typeof MutationObserver !== 'undefined'
@@ -518,12 +537,19 @@ export const PlaygroundPetStage = forwardRef<
           })
         : null;
     mutationObserver?.observe(el, { childList: true, subtree: true });
+    if (anchorRootEl && anchorRootEl !== el) {
+      mutationObserver?.observe(anchorRootEl, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     return () => {
       resizeObserver?.disconnect();
       mutationObserver?.disconnect();
     };
   }, [
+    anchorRootRef,
     anchorSelector,
     boundsRef,
     isDragging,
