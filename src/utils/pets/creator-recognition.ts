@@ -6,6 +6,7 @@ import type {
 import {
   getPetBreedLabel,
   listPetBreedsForSpecies,
+  normalizePetBreedForSpecies,
   PetBreed,
   type PetSpecies,
 } from '@/utils/pet-catalog';
@@ -113,6 +114,13 @@ function normalizeBreedForSpecies(
 
   for (const candidate of candidates) {
     const lower = candidate.toLowerCase();
+    const normalized = normalizePetBreedForSpecies(
+      species as PetSpecies,
+      lower
+    );
+    if (normalized && normalized !== PetBreed.Any) {
+      return normalized;
+    }
     if (options.includes(lower as (typeof options)[number])) {
       return lower;
     }

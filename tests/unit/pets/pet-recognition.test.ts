@@ -114,8 +114,11 @@ describe('mapPetRecognitionToPrefill', () => {
       mapPetRecognitionToPrefill({
         species: 'cat',
         breed: 'orange-cat',
-      }).species
-    ).toBe('cat');
+      })
+    ).toEqual({
+      species: 'cat',
+      breed: 'domestic-shorthair',
+    });
     expect(isUnsupportedCreatorRecognitionSpecies('character')).toBe(true);
     expect(mapPetRecognitionToPrefill({ species: 'character' })).toEqual({
       species: '',

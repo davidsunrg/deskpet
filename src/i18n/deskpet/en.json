@@ -479,77 +479,13 @@
       "hide": "Hide"
     },
     "breeds": {
-      "blue-british-shorthair": {
-        "description": "A plush blue British Shorthair with calm idle loops—ideal for quiet focus on your desktop.",
-        "breed": "Blue British Shorthair"
+      "american-shorthair": {
+        "description": "American Shorthair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "American Shorthair"
       },
-      "golden-british-shorthair": {
-        "description": "A warm golden British Shorthair companion that softens long workdays with cozy motion.",
-        "breed": "Golden British Shorthair"
-      },
-      "silver-british-shorthair": {
-        "description": "A cool silver British Shorthair with polished idle clips for clean, modern desks.",
-        "breed": "Silver British Shorthair"
-      },
-      "blue-and-white-british-shorthair": {
-        "description": "A bicolor blue-and-white British Shorthair with balanced everyday desktop energy.",
-        "breed": "Blue-and-White British Shorthair"
-      },
-      "tabby-cat": {
-        "description": "A classic striped tabby with curious idle motion—playful company for browser breaks.",
-        "breed": "Tabby Cat"
-      },
-      "cheese-tabby": {
-        "description": "A sunny orange cheese tabby with bold stripes and upbeat desktop presence.",
-        "breed": "Cheese Tabby"
-      },
-      "scottish-fold": {
-        "description": "A soft Scottish Fold with folded ears and gentle loops for quieter evenings.",
-        "breed": "Scottish Fold"
-      },
-      "tuxedo-cat": {
-        "description": "A crisp black-and-white tuxedo cat with cheeky glances and high-contrast charm.",
-        "breed": "Tuxedo Cat"
-      },
-      "chinese-li-hua": {
-        "description": "Chinese Li Hua is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Chinese Li Hua"
-      },
-      "birman": {
-        "description": "Birman is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Birman"
-      },
-      "calico-cat": {
-        "description": "Calico Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Calico Cat"
-      },
-      "chinese-lion-cat": {
-        "description": "Chinese Lion Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Chinese Lion Cat"
-      },
-      "orange-cat": {
-        "description": "Orange Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Orange Cat"
-      },
-      "persian-cat": {
-        "description": "Persian Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Persian Cat"
-      },
-      "chinchilla-persian": {
-        "description": "Chinchilla Persian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Chinchilla Persian"
-      },
-      "sphynx": {
-        "description": "Sphynx is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Sphynx"
-      },
-      "garfield-cat": {
-        "description": "Garfield Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Garfield Cat"
-      },
-      "bengal-cat": {
-        "description": "Bengal Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Bengal Cat"
+      "british-shorthair": {
+        "description": "British Shorthair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "British Shorthair"
       },
       "maine-coon": {
         "description": "Maine Coon is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
@@ -559,6 +495,50 @@
         "description": "Ragdoll is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
         "breed": "Ragdoll"
       },
+      "persian": {
+        "description": "Persian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Persian"
+      },
+      "siamese": {
+        "description": "Siamese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Siamese"
+      },
+      "bengal": {
+        "description": "Bengal is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bengal"
+      },
+      "sphynx": {
+        "description": "Sphynx is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Sphynx"
+      },
+      "scottish-fold": {
+        "description": "Scottish Fold is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Scottish Fold"
+      },
+      "abyssinian": {
+        "description": "Abyssinian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Abyssinian"
+      },
+      "russian-blue": {
+        "description": "Russian Blue is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Russian Blue"
+      },
+      "norwegian-forest-cat": {
+        "description": "Norwegian Forest Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Norwegian Forest Cat"
+      },
+      "birman": {
+        "description": "Birman is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Birman"
+      },
+      "exotic-shorthair": {
+        "description": "Exotic Shorthair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Exotic Shorthair"
+      },
+      "british-longhair": {
+        "description": "British Longhair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "British Longhair"
+      },
       "devon-rex": {
         "description": "Devon Rex is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
         "breed": "Devon Rex"
@@ -567,17 +547,137 @@
         "description": "American Curl is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
         "breed": "American Curl"
       },
-      "siamese-cat": {
-        "description": "Siamese Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Siamese Cat"
+      "bombay": {
+        "description": "Bombay is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bombay"
       },
-      "norwegian-forest-cat": {
-        "description": "Norwegian Forest Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Norwegian Forest Cat"
+      "burmese": {
+        "description": "Burmese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Burmese"
       },
-      "bombay-cat": {
-        "description": "Bombay Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Bombay Cat"
+      "tonkinese": {
+        "description": "Tonkinese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Tonkinese"
+      },
+      "oriental-shorthair": {
+        "description": "Oriental Shorthair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Oriental Shorthair"
+      },
+      "balinese": {
+        "description": "Balinese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Balinese"
+      },
+      "manx": {
+        "description": "Manx is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Manx"
+      },
+      "turkish-angora": {
+        "description": "Turkish Angora is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Turkish Angora"
+      },
+      "turkish-van": {
+        "description": "Turkish Van is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Turkish Van"
+      },
+      "himalayan": {
+        "description": "Himalayan is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Himalayan"
+      },
+      "savannah": {
+        "description": "Savannah is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Savannah"
+      },
+      "cornish-rex": {
+        "description": "Cornish Rex is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Cornish Rex"
+      },
+      "selkirk-rex": {
+        "description": "Selkirk Rex is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Selkirk Rex"
+      },
+      "chartreux": {
+        "description": "Chartreux is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chartreux"
+      },
+      "egyptian-mau": {
+        "description": "Egyptian Mau is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Egyptian Mau"
+      },
+      "ocicat": {
+        "description": "Ocicat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Ocicat"
+      },
+      "somali": {
+        "description": "Somali is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Somali"
+      },
+      "japanese-bobtail": {
+        "description": "Japanese Bobtail is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Japanese Bobtail"
+      },
+      "american-bobtail": {
+        "description": "American Bobtail is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "American Bobtail"
+      },
+      "singapura": {
+        "description": "Singapura is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Singapura"
+      },
+      "snowshoe": {
+        "description": "Snowshoe is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Snowshoe"
+      },
+      "ragamuffin": {
+        "description": "Ragamuffin is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Ragamuffin"
+      },
+      "siberian": {
+        "description": "Siberian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Siberian"
+      },
+      "munchkin": {
+        "description": "Munchkin is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Munchkin"
+      },
+      "peterbald": {
+        "description": "Peterbald is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Peterbald"
+      },
+      "la-perm": {
+        "description": "LaPerm is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "LaPerm"
+      },
+      "nebelung": {
+        "description": "Nebelung is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Nebelung"
+      },
+      "havana-brown": {
+        "description": "Havana Brown is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Havana Brown"
+      },
+      "korat": {
+        "description": "Korat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Korat"
+      },
+      "chinese-li-hua": {
+        "description": "Chinese Li Hua is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chinese Li Hua"
+      },
+      "chinese-lion-cat": {
+        "description": "Chinese Lion Cat is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chinese Lion Cat"
+      },
+      "domestic-shorthair": {
+        "description": "Domestic Shorthair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Domestic Shorthair"
+      },
+      "domestic-longhair": {
+        "description": "Domestic Longhair is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Domestic Longhair"
+      },
+      "orange-cat": {
+        "description": "A sunny orange tabby companion with playful desktop energy—preview ready in your browser.",
+        "breed": "Orange Cat"
       },
       "golden-retriever": {
         "description": "Golden Retriever is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",

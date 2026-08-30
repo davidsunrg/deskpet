@@ -1,6 +1,7 @@
 import {
   getPetBreedLabel,
   listPetBreedsForSpecies,
+  normalizePetBreedForSpecies,
   PetBreed,
   PetSpecies,
   speciesUsesBreeds,
@@ -82,9 +83,9 @@ export function mapPetRecognitionToPrefill(input: {
 
   const breedId = input.breed?.trim().toLowerCase() ?? '';
   if (breedId && breedId !== PetBreed.Any) {
-    const options = listPetBreedsForSpecies(species);
-    if (options.includes(breedId as PetBreedId)) {
-      return { species, breed: breedId as PetBreedId };
+    const normalized = normalizePetBreedForSpecies(species, breedId);
+    if (normalized && normalized !== PetBreed.Any) {
+      return { species, breed: normalized };
     }
   }
 

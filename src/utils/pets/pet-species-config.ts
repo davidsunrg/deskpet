@@ -42,40 +42,83 @@ function breed(id: string, label: string): PetBreedConfig {
   };
 }
 
+/**
+ * Map retired color / coat / legacy ids onto current formal breed ids.
+ * Keeps stored pets and recognition payloads valid after catalog cleanups.
+ */
+const LEGACY_BREED_ALIASES: Readonly<Record<string, string>> = {
+  'blue-british-shorthair': 'british-shorthair',
+  'golden-british-shorthair': 'british-shorthair',
+  'silver-british-shorthair': 'british-shorthair',
+  'blue-and-white-british-shorthair': 'british-shorthair',
+  'chinchilla-persian': 'persian',
+  'persian-cat': 'persian',
+  'siamese-cat': 'siamese',
+  'bengal-cat': 'bengal',
+  'bombay-cat': 'bombay',
+  'tabby-cat': 'domestic-shorthair',
+  'cheese-tabby': 'domestic-shorthair',
+  'tuxedo-cat': 'domestic-shorthair',
+  'calico-cat': 'domestic-shorthair',
+  'orange-cat': 'domestic-shorthair',
+  'garfield-cat': 'domestic-shorthair',
+};
+
 export const PET_SPECIES_CONFIG = {
   cat: {
     label: 'Cat',
     iconEmoji: '🐈',
     actionProfile: 'cat',
     breeds: [
-      breed('blue-british-shorthair', 'Blue British Shorthair'),
-      breed('golden-british-shorthair', 'Golden British Shorthair'),
-      breed('silver-british-shorthair', 'Silver British Shorthair'),
-      breed(
-        'blue-and-white-british-shorthair',
-        'Blue-and-White British Shorthair'
-      ),
-      breed('tabby-cat', 'Tabby Cat'),
-      breed('cheese-tabby', 'Cheese Tabby'),
-      breed('scottish-fold', 'Scottish Fold'),
-      breed('tuxedo-cat', 'Tuxedo Cat'),
-      breed('chinese-li-hua', 'Chinese Li Hua'),
-      breed('birman', 'Birman'),
-      breed('calico-cat', 'Calico Cat'),
-      breed('chinese-lion-cat', 'Chinese Lion Cat'),
-      breed('orange-cat', 'Orange Cat'),
-      breed('persian-cat', 'Persian Cat'),
-      breed('chinchilla-persian', 'Chinchilla Persian'),
-      breed('sphynx', 'Sphynx'),
-      breed('garfield-cat', 'Garfield Cat'),
-      breed('bengal-cat', 'Bengal Cat'),
+      breed('american-shorthair', 'American Shorthair'),
+      breed('british-shorthair', 'British Shorthair'),
       breed('maine-coon', 'Maine Coon'),
       breed('ragdoll', 'Ragdoll'),
+      breed('persian', 'Persian'),
+      breed('siamese', 'Siamese'),
+      breed('bengal', 'Bengal'),
+      breed('sphynx', 'Sphynx'),
+      breed('scottish-fold', 'Scottish Fold'),
+      breed('abyssinian', 'Abyssinian'),
+      breed('russian-blue', 'Russian Blue'),
+      breed('norwegian-forest-cat', 'Norwegian Forest Cat'),
+      breed('birman', 'Birman'),
+      breed('exotic-shorthair', 'Exotic Shorthair'),
+      breed('british-longhair', 'British Longhair'),
       breed('devon-rex', 'Devon Rex'),
       breed('american-curl', 'American Curl'),
-      breed('siamese-cat', 'Siamese Cat'),
-      breed('norwegian-forest-cat', 'Norwegian Forest Cat'),
-      breed('bombay-cat', 'Bombay Cat'),
+      breed('bombay', 'Bombay'),
+      breed('burmese', 'Burmese'),
+      breed('tonkinese', 'Tonkinese'),
+      breed('oriental-shorthair', 'Oriental Shorthair'),
+      breed('balinese', 'Balinese'),
+      breed('manx', 'Manx'),
+      breed('turkish-angora', 'Turkish Angora'),
+      breed('turkish-van', 'Turkish Van'),
+      breed('himalayan', 'Himalayan'),
+      breed('savannah', 'Savannah'),
+      breed('cornish-rex', 'Cornish Rex'),
+      breed('selkirk-rex', 'Selkirk Rex'),
+      breed('chartreux', 'Chartreux'),
+      breed('egyptian-mau', 'Egyptian Mau'),
+      breed('ocicat', 'Ocicat'),
+      breed('somali', 'Somali'),
+      breed('japanese-bobtail', 'Japanese Bobtail'),
+      breed('american-bobtail', 'American Bobtail'),
+      breed('singapura', 'Singapura'),
+      breed('snowshoe', 'Snowshoe'),
+      breed('ragamuffin', 'Ragamuffin'),
+      breed('siberian', 'Siberian'),
+      breed('munchkin', 'Munchkin'),
+      breed('peterbald', 'Peterbald'),
+      breed('la-perm', 'LaPerm'),
+      breed('nebelung', 'Nebelung'),
+      breed('havana-brown', 'Havana Brown'),
+      breed('korat', 'Korat'),
+      breed('chinese-li-hua', 'Chinese Li Hua'),
+      breed('chinese-lion-cat', 'Chinese Lion Cat'),
+      breed('domestic-shorthair', 'Domestic Shorthair'),
+      breed('domestic-longhair', 'Domestic Longhair'),
     ],
   },
   dog: {
@@ -215,7 +258,11 @@ export function getPetSpeciesActionProfile(species: string): PetActionProfile {
 }
 
 export function getPetBreedConfig(breed: string): PetBreedConfig | null {
-  return BREED_BY_ID.get(breed) ?? null;
+  const canonical = LEGACY_BREED_ALIASES[breed] ?? breed;
+  if (canonical === ANY_PET_BREED_ID) {
+    return ANY_PET_BREED;
+  }
+  return BREED_BY_ID.get(canonical) ?? null;
 }
 
 export function getPetBreedLabel(breed: string): string {
@@ -261,8 +308,9 @@ export function normalizeBreedForSpeciesConfig(
   if (trimmed === species) {
     return ANY_PET_BREED_ID;
   }
+  const canonical = LEGACY_BREED_ALIASES[trimmed] ?? trimmed;
   const match = PET_SPECIES_CONFIG[species].breeds.find(
-    (item) => item.id === trimmed
+    (item) => item.id === canonical
   );
   return match ? (match.id as PetBreed) : null;
 }

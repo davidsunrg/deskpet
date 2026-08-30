@@ -1,13 +1,13 @@
 import { PetActionClip } from '@/enums/pet-action-clip';
-import { PetBreed, PetSpecies } from '@/utils/pet-catalog';
+import { PetSpecies } from '@/utils/pet-catalog';
 import type { PetResourceManifest } from '@/utils/pets/pet-resource-types';
 
 const displayScale = 1.4;
 
 export const orangeCatResources = {
-  id: PetBreed.OrangeCat,
+  id: 'orange-cat',
   species: PetSpecies.Cat,
-  breed: PetBreed.OrangeCat,
+  breed: 'orange-cat',
   name: 'Orange Cat',
   avatarR2Key: 'avatars/0a2feec5-95b7-4464-946e-019b2c6f38a9.jpg',
   thumbnailR2Key: 'avatars/0a2feec5-95b7-4464-946e-019b2c6f38a9.jpg',
