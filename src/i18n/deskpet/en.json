@@ -587,29 +587,289 @@
         "description": "Labrador Retriever is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
         "breed": "Labrador Retriever"
       },
-      "corgi": {
-        "description": "Corgi is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Corgi"
-      },
-      "shiba-inu": {
-        "description": "Shiba Inu is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Shiba Inu"
-      },
-      "poodle": {
-        "description": "Poodle is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Poodle"
-      },
-      "husky": {
-        "description": "Husky is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
-        "breed": "Husky"
+      "german-shepherd": {
+        "description": "German Shepherd is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "German Shepherd"
       },
       "french-bulldog": {
         "description": "French Bulldog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
         "breed": "French Bulldog"
       },
+      "bulldog": {
+        "description": "Bulldog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bulldog"
+      },
+      "poodle": {
+        "description": "Poodle is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Poodle"
+      },
+      "beagle": {
+        "description": "Beagle is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Beagle"
+      },
+      "rottweiler": {
+        "description": "Rottweiler is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Rottweiler"
+      },
+      "german-shorthaired-pointer": {
+        "description": "German Shorthaired Pointer is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "German Shorthaired Pointer"
+      },
+      "dachshund": {
+        "description": "Dachshund is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Dachshund"
+      },
+      "corgi": {
+        "description": "Corgi is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Corgi"
+      },
+      "australian-shepherd": {
+        "description": "Australian Shepherd is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Australian Shepherd"
+      },
+      "yorkshire-terrier": {
+        "description": "Yorkshire Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Yorkshire Terrier"
+      },
+      "boxer": {
+        "description": "Boxer is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Boxer"
+      },
+      "cavalier-king-charles-spaniel": {
+        "description": "Cavalier King Charles Spaniel is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Cavalier King Charles Spaniel"
+      },
+      "doberman-pinscher": {
+        "description": "Doberman Pinscher is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Doberman Pinscher"
+      },
+      "miniature-schnauzer": {
+        "description": "Miniature Schnauzer is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Miniature Schnauzer"
+      },
+      "cane-corso": {
+        "description": "Cane Corso is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Cane Corso"
+      },
+      "great-dane": {
+        "description": "Great Dane is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Great Dane"
+      },
+      "shih-tzu": {
+        "description": "Shih Tzu is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Shih Tzu"
+      },
+      "boston-terrier": {
+        "description": "Boston Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Boston Terrier"
+      },
+      "pomeranian": {
+        "description": "Pomeranian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Pomeranian"
+      },
+      "havanese": {
+        "description": "Havanese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Havanese"
+      },
+      "shetland-sheepdog": {
+        "description": "Shetland Sheepdog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Shetland Sheepdog"
+      },
+      "brittany": {
+        "description": "Brittany is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Brittany"
+      },
+      "english-springer-spaniel": {
+        "description": "English Springer Spaniel is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "English Springer Spaniel"
+      },
+      "cocker-spaniel": {
+        "description": "Cocker Spaniel is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Cocker Spaniel"
+      },
+      "pug": {
+        "description": "Pug is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Pug"
+      },
       "border-collie": {
         "description": "Border Collie is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
         "breed": "Border Collie"
+      },
+      "mastiff": {
+        "description": "Mastiff is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Mastiff"
+      },
+      "chihuahua": {
+        "description": "Chihuahua is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chihuahua"
+      },
+      "maltese": {
+        "description": "Maltese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Maltese"
+      },
+      "shiba-inu": {
+        "description": "Shiba Inu is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Shiba Inu"
+      },
+      "husky": {
+        "description": "Siberian Husky is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Siberian Husky"
+      },
+      "alaskan-malamute": {
+        "description": "Alaskan Malamute is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Alaskan Malamute"
+      },
+      "samoyed": {
+        "description": "Samoyed is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Samoyed"
+      },
+      "akita": {
+        "description": "Akita is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Akita"
+      },
+      "chow-chow": {
+        "description": "Chow Chow is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Chow Chow"
+      },
+      "shar-pei": {
+        "description": "Shar Pei is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Shar Pei"
+      },
+      "basenji": {
+        "description": "Basenji is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Basenji"
+      },
+      "whippet": {
+        "description": "Whippet is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Whippet"
+      },
+      "greyhound": {
+        "description": "Greyhound is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Greyhound"
+      },
+      "weimaraner": {
+        "description": "Weimaraner is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Weimaraner"
+      },
+      "vizsla": {
+        "description": "Vizsla is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Vizsla"
+      },
+      "basset-hound": {
+        "description": "Basset Hound is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Basset Hound"
+      },
+      "bloodhound": {
+        "description": "Bloodhound is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bloodhound"
+      },
+      "dalmatian": {
+        "description": "Dalmatian is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Dalmatian"
+      },
+      "bernese-mountain-dog": {
+        "description": "Bernese Mountain Dog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bernese Mountain Dog"
+      },
+      "saint-bernard": {
+        "description": "Saint Bernard is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Saint Bernard"
+      },
+      "newfoundland": {
+        "description": "Newfoundland is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Newfoundland"
+      },
+      "great-pyrenees": {
+        "description": "Great Pyrenees is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Great Pyrenees"
+      },
+      "belgian-malinois": {
+        "description": "Belgian Malinois is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Belgian Malinois"
+      },
+      "collie": {
+        "description": "Collie is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Collie"
+      },
+      "old-english-sheepdog": {
+        "description": "Old English Sheepdog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Old English Sheepdog"
+      },
+      "irish-setter": {
+        "description": "Irish Setter is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Irish Setter"
+      },
+      "bichon-frise": {
+        "description": "Bichon Frise is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bichon Frise"
+      },
+      "west-highland-white-terrier": {
+        "description": "West Highland White Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "West Highland White Terrier"
+      },
+      "scottish-terrier": {
+        "description": "Scottish Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Scottish Terrier"
+      },
+      "jack-russell-terrier": {
+        "description": "Jack Russell Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Jack Russell Terrier"
+      },
+      "staffordshire-bull-terrier": {
+        "description": "Staffordshire Bull Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Staffordshire Bull Terrier"
+      },
+      "american-staffordshire-terrier": {
+        "description": "American Staffordshire Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "American Staffordshire Terrier"
+      },
+      "afghan-hound": {
+        "description": "Afghan Hound is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Afghan Hound"
+      },
+      "papillon": {
+        "description": "Papillon is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Papillon"
+      },
+      "pekingese": {
+        "description": "Pekingese is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Pekingese"
+      },
+      "japanese-chin": {
+        "description": "Japanese Chin is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Japanese Chin"
+      },
+      "japanese-spitz": {
+        "description": "Japanese Spitz is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Japanese Spitz"
+      },
+      "miniature-pinscher": {
+        "description": "Miniature Pinscher is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Miniature Pinscher"
+      },
+      "italian-greyhound": {
+        "description": "Italian Greyhound is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Italian Greyhound"
+      },
+      "bull-terrier": {
+        "description": "Bull Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Bull Terrier"
+      },
+      "airedale-terrier": {
+        "description": "Airedale Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Airedale Terrier"
+      },
+      "soft-coated-wheaten-terrier": {
+        "description": "Soft Coated Wheaten Terrier is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Soft Coated Wheaten Terrier"
+      },
+      "rhodesian-ridgeback": {
+        "description": "Rhodesian Ridgeback is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Rhodesian Ridgeback"
+      },
+      "portuguese-water-dog": {
+        "description": "Portuguese Water Dog is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.",
+        "breed": "Portuguese Water Dog"
       }
     },
     "species": {

@@ -2,7 +2,7 @@
  * Authoritative pet species / breed catalog.
  * Add a new species here — UI, validation, labels, and action routing read this.
  *
- * Every species gets an `Any` breed option (injected), including those with no
+ * Every species gets an `Other` breed option (injected), including those with no
  * specific breeds listed.
  */
 
@@ -24,14 +24,14 @@ export type PetSpeciesConfig = {
   breeds: readonly PetBreedConfig[];
 };
 
-/** Shared breed option available on every species. */
+/** Shared catch-all breed option available on every species (stored as `any`). */
 export const ANY_PET_BREED_ID = 'any';
 
 export const ANY_PET_BREED: PetBreedConfig = {
   id: ANY_PET_BREED_ID,
-  label: 'Any',
+  label: 'Other',
   description:
-    'Any is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.',
+    'Other is a friendly desktop companion you can preview, customize, and use as a starting point for your own pet.',
 };
 
 function breed(id: string, label: string): PetBreedConfig {
@@ -85,12 +85,77 @@ export const PET_SPECIES_CONFIG = {
     breeds: [
       breed('golden-retriever', 'Golden Retriever'),
       breed('labrador-retriever', 'Labrador Retriever'),
-      breed('corgi', 'Corgi'),
-      breed('shiba-inu', 'Shiba Inu'),
-      breed('poodle', 'Poodle'),
-      breed('husky', 'Husky'),
+      breed('german-shepherd', 'German Shepherd'),
       breed('french-bulldog', 'French Bulldog'),
+      breed('bulldog', 'Bulldog'),
+      breed('poodle', 'Poodle'),
+      breed('beagle', 'Beagle'),
+      breed('rottweiler', 'Rottweiler'),
+      breed('german-shorthaired-pointer', 'German Shorthaired Pointer'),
+      breed('dachshund', 'Dachshund'),
+      breed('corgi', 'Corgi'),
+      breed('australian-shepherd', 'Australian Shepherd'),
+      breed('yorkshire-terrier', 'Yorkshire Terrier'),
+      breed('boxer', 'Boxer'),
+      breed('cavalier-king-charles-spaniel', 'Cavalier King Charles Spaniel'),
+      breed('doberman-pinscher', 'Doberman Pinscher'),
+      breed('miniature-schnauzer', 'Miniature Schnauzer'),
+      breed('cane-corso', 'Cane Corso'),
+      breed('great-dane', 'Great Dane'),
+      breed('shih-tzu', 'Shih Tzu'),
+      breed('boston-terrier', 'Boston Terrier'),
+      breed('pomeranian', 'Pomeranian'),
+      breed('havanese', 'Havanese'),
+      breed('shetland-sheepdog', 'Shetland Sheepdog'),
+      breed('brittany', 'Brittany'),
+      breed('english-springer-spaniel', 'English Springer Spaniel'),
+      breed('cocker-spaniel', 'Cocker Spaniel'),
+      breed('pug', 'Pug'),
       breed('border-collie', 'Border Collie'),
+      breed('mastiff', 'Mastiff'),
+      breed('chihuahua', 'Chihuahua'),
+      breed('maltese', 'Maltese'),
+      breed('shiba-inu', 'Shiba Inu'),
+      breed('husky', 'Siberian Husky'),
+      breed('alaskan-malamute', 'Alaskan Malamute'),
+      breed('samoyed', 'Samoyed'),
+      breed('akita', 'Akita'),
+      breed('chow-chow', 'Chow Chow'),
+      breed('shar-pei', 'Shar Pei'),
+      breed('basenji', 'Basenji'),
+      breed('whippet', 'Whippet'),
+      breed('greyhound', 'Greyhound'),
+      breed('weimaraner', 'Weimaraner'),
+      breed('vizsla', 'Vizsla'),
+      breed('basset-hound', 'Basset Hound'),
+      breed('bloodhound', 'Bloodhound'),
+      breed('dalmatian', 'Dalmatian'),
+      breed('bernese-mountain-dog', 'Bernese Mountain Dog'),
+      breed('saint-bernard', 'Saint Bernard'),
+      breed('newfoundland', 'Newfoundland'),
+      breed('great-pyrenees', 'Great Pyrenees'),
+      breed('belgian-malinois', 'Belgian Malinois'),
+      breed('collie', 'Collie'),
+      breed('old-english-sheepdog', 'Old English Sheepdog'),
+      breed('irish-setter', 'Irish Setter'),
+      breed('bichon-frise', 'Bichon Frise'),
+      breed('west-highland-white-terrier', 'West Highland White Terrier'),
+      breed('scottish-terrier', 'Scottish Terrier'),
+      breed('jack-russell-terrier', 'Jack Russell Terrier'),
+      breed('staffordshire-bull-terrier', 'Staffordshire Bull Terrier'),
+      breed('american-staffordshire-terrier', 'American Staffordshire Terrier'),
+      breed('afghan-hound', 'Afghan Hound'),
+      breed('papillon', 'Papillon'),
+      breed('pekingese', 'Pekingese'),
+      breed('japanese-chin', 'Japanese Chin'),
+      breed('japanese-spitz', 'Japanese Spitz'),
+      breed('miniature-pinscher', 'Miniature Pinscher'),
+      breed('italian-greyhound', 'Italian Greyhound'),
+      breed('bull-terrier', 'Bull Terrier'),
+      breed('airedale-terrier', 'Airedale Terrier'),
+      breed('soft-coated-wheaten-terrier', 'Soft Coated Wheaten Terrier'),
+      breed('rhodesian-ridgeback', 'Rhodesian Ridgeback'),
+      breed('portuguese-water-dog', 'Portuguese Water Dog'),
     ],
   },
 } as const satisfies Record<string, PetSpeciesConfig>;
@@ -170,7 +235,7 @@ export function isPetSpeciesId(value: string): value is PetSpecies {
 
 /**
  * Whether the profile UI should show a breed picker.
- * Species with no specific breeds (only shared `any`) hide the picker.
+ * Species with no specific breeds (only shared `other`/`any`) hide the picker.
  */
 export function speciesUsesBreedsFromConfig(species: PetSpecies): boolean {
   return PET_SPECIES_CONFIG[species].breeds.length > 0;
@@ -180,7 +245,7 @@ export function listPetBreedIdsForSpecies(species: PetSpecies): PetBreed[] {
   const specific = PET_SPECIES_CONFIG[species].breeds.map(
     (item) => item.id as PetBreed
   );
-  return [ANY_PET_BREED_ID, ...specific];
+  return [...specific, ANY_PET_BREED_ID];
 }
 
 export function normalizeBreedForSpeciesConfig(
