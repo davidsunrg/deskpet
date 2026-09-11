@@ -1,6 +1,7 @@
 'use client';
 
 import { markPetCheckoutStartedFn } from '@/api/dashboard-pets';
+import { notifyPetFinalPayClick } from '@/api/notify-pet-final-paywall';
 import { createCheckoutSession } from '@/api/payment';
 import { DashboardPetDetailBasicsStep } from '@/components/dashboard/pet-detail/dashboard-pet-detail-basics-step';
 import { DashboardPetDetailDetailsStep } from '@/components/dashboard/pet-detail/dashboard-pet-detail-details-step';
@@ -91,6 +92,14 @@ export function DashboardPetDetail({
 
     try {
       setCheckoutBusy(true);
+      void notifyPetFinalPayClick({
+        data: {
+          petId: pet.id,
+          petName: pet.name,
+          species: pet.species,
+          breed: pet.breed,
+        },
+      });
       posthog?.capture('checkout_started', {
         section: 'pet_final_step',
         plan_id: checkoutPlanId,
@@ -124,7 +133,15 @@ export function DashboardPetDetail({
     } finally {
       setCheckoutBusy(false);
     }
-  }, [checkoutPlanId, pet.id, posthog, priceId]);
+  }, [
+    checkoutPlanId,
+    pet.breed,
+    pet.id,
+    pet.name,
+    pet.species,
+    posthog,
+    priceId,
+  ]);
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">

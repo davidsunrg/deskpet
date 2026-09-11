@@ -1,6 +1,5 @@
 'use client';
 
-import { notifyPetVideoInterest } from '@/api/notify-pet-video-interest';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +24,7 @@ import {
   MonitorPlayIcon,
   XIcon,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const DURATION_OPTIONS = ['5s', '10s', '15s'] as const;
 const RESOLUTION_OPTIONS = ['480p', '720p', '1080p'] as const;
@@ -62,7 +61,6 @@ export function PetVideoMaker() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [comingSoonOpen, setComingSoonOpen] = useState(false);
-  const interestNotifiedRef = useRef(false);
 
   useEffect(() => {
     if (!selectedFile) {
@@ -75,20 +73,6 @@ export function PetVideoMaker() {
   }, [selectedFile]);
 
   const hasImage = Boolean(selectedFile);
-
-  const notifyInterest = () => {
-    if (interestNotifiedRef.current) return;
-    interestNotifiedRef.current = true;
-    void notifyPetVideoInterest({
-      data: {
-        duration,
-        resolution,
-        audioEnabled,
-        prompt,
-        hasImage: true,
-      },
-    });
-  };
 
   const optionChipClass = (active: boolean) =>
     cn(
@@ -265,7 +249,6 @@ export function PetVideoMaker() {
             className="h-12 w-full px-6 text-sm sm:w-auto"
             onClick={() => {
               setComingSoonOpen(true);
-              notifyInterest();
             }}
           >
             {t('create.cta', { credits })}
