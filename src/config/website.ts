@@ -33,7 +33,7 @@ export const websiteConfig: WebsiteConfig = {
     name: 'DeskPet.ai',
     title: 'DeskPet.ai',
     description:
-      "Play free desktop pets in your browser or download them for your desktop. Create your own from your pet's photo, then manage care, reminders, memories, expenses, and more—all in one place.",
+      "Play free desktop pets in your browser or download them for your desktop. Create your own desktop cat or desktop dog from your pet's photo.",
     images: {
       ogImage: '/og.png',
       logoLight: '/logo.png',

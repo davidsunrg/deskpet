@@ -4,7 +4,7 @@
     "description": "Turn your pet into a desktop companion—with care tracking, reminders, memories, expense tracking, and more.",
     "hero": {
       "title": "Turn Your Pet Into a Desktop Companion.",
-      "description": "Bring your pet to your browser or desktop, then manage memories, care, reminders, expenses, and more—all in one place.",
+      "description": "Bring a desktop pet, desktop cat, or desktop dog to your browser or desktop.",
       "tags": {
         "cat": "Cat",
         "dog": "Dog"
@@ -980,7 +980,7 @@
   "Metadata": {
     "name": "DeskPet.ai",
     "title": "DeskPet.ai",
-    "description": "Play free desktop pets in your browser or download them for your desktop. Create your own from your pet's photo, then manage care, reminders, memories, expenses, and more—all in one place."
+    "description": "Play free desktop pets in your browser or download them for your desktop. Create your own desktop cat or desktop dog from your pet's photo."
   },
   "AboutPage": {
     "title": "About",

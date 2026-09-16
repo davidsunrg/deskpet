@@ -14,9 +14,14 @@ export const Route = createFileRoute('/')({
     return { catalogPets, floatingPets };
   },
   head: () => {
-    const title = `Desktop Pet for Free – Play Online & Download | ${getDeskPetMessage('Metadata.title')}`;
+    const title = `Desktop Pet for Free – Desktop Cat & Desktop Dog | ${getDeskPetMessage('Metadata.title')}`;
     const description = getDeskPetMessage('Metadata.description');
-    return seo('/', { title, description });
+    return seo('/', {
+      title,
+      description,
+      keywords:
+        'desktop pet, desktop cat, desktop dog, free desktop pet, online desktop pet',
+    });
   },
   component: IndexPage,
 });
