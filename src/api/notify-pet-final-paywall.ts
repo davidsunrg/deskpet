@@ -46,7 +46,12 @@ export const notifyPetFinalPayClick = createServerFn({ method: 'POST' })
         `Breed: ${data.breed?.trim() || '(none)'}`,
       ].join('\n');
 
-      return notifyAdminContactMessage({ name, email, message });
+      return notifyAdminContactMessage({
+        subject: 'Paywall click',
+        name,
+        email,
+        message,
+      });
     } catch (error) {
       console.error('[pet-final-pay] unexpected error:', error);
       return { success: false as const };

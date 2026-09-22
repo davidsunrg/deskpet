@@ -21,6 +21,7 @@ export async function runOnCreateUserSideEffects(user: User): Promise<void> {
 
   try {
     await notifyAdminContactMessage({
+      subject: 'New user registration',
       name,
       email,
       message: [

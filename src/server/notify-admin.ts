@@ -37,8 +37,11 @@ export function getRequestCountryHint(): string {
 
 /**
  * Silent admin email via contactMessage. Never throws.
+ * `subject` is the inbox title (e.g. "New user registration") — not the
+ * generic contact-form subject.
  */
 export async function notifyAdminContactMessage(input: {
+  subject: string;
   name: string;
   email: string;
   message: string;
@@ -53,6 +56,7 @@ export async function notifyAdminContactMessage(input: {
     const result = await sendEmail({
       to: supportEmail,
       template: 'contactMessage',
+      subject: input.subject.trim(),
       context: {
         name: input.name,
         email: input.email,

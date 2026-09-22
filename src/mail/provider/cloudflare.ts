@@ -39,12 +39,12 @@ export class CloudflareProvider implements MailProvider {
   }
 
   async sendTemplate(params: SendTemplateParams): Promise<SendEmailResult> {
-    const { to, template, context } = params;
+    const { to, template, context, subject } = params;
     try {
       const mailTemplate = await getTemplate({ template, context });
       return this.sendRawEmail({
         to,
-        subject: mailTemplate.subject,
+        subject: subject ?? mailTemplate.subject,
         html: mailTemplate.html,
         text: mailTemplate.text,
       });

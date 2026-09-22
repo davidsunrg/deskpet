@@ -28,6 +28,8 @@ export interface SendTemplateParams {
   to: string;
   template: EmailTemplate;
   context: Record<string, unknown>;
+  /** Override the template's default subject when set. */
+  subject?: string;
 }
 
 export interface SendRawEmailParams {
