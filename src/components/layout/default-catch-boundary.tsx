@@ -1,6 +1,8 @@
 import { m } from '@/locale/paraglide/messages';
 import { Link } from '@tanstack/react-router';
 import type { ErrorComponentProps } from '@tanstack/react-router';
+import * as Sentry from '@sentry/tanstackstart-react';
+import { useEffect } from 'react';
 import { Logo } from '@/components/shared/logo';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,6 +11,10 @@ import { cn } from '@/lib/utils';
  * Layout and styling aligned with NotFound for consistency.
  */
 export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
   const message = error?.message ?? m.catch_boundary_description();
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 px-4">

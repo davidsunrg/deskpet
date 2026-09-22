@@ -27,6 +27,9 @@ export const clientEnv = createEnv({
     VITE_POSTHOG_KEY: z.string().optional(),
     VITE_POSTHOG_HOST: z.string().optional(),
 
+    // Error monitoring (Sentry) — public DSN is safe for the browser bundle
+    VITE_SENTRY_DSN: z.string().optional(),
+
     // Chatbot (Crisp Chat)
     VITE_CRISP_WEBSITE_ID: z.string().optional(),
   },

@@ -33,6 +33,9 @@ export const serverEnv = createEnv({
     DISCORD_WEBHOOK_URL: z.string().optional(),
     FEISHU_WEBHOOK_URL: z.string().optional(),
 
+    // Error monitoring (Sentry) — Worker secret or .env; same DSN as VITE_SENTRY_DSN
+    SENTRY_DSN: z.string().optional(),
+
     // Payment (Stripe)
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),

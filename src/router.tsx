@@ -1,7 +1,9 @@
+import * as Sentry from '@sentry/tanstackstart-react';
 import { createRouter } from '@tanstack/react-router';
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query';
 import { NuqsAdapter } from 'nuqs/adapters/tanstack-router';
 import * as TanstackQuery from './integrations/tanstack-query/root-provider';
+import { clientEnv } from '@/env/client';
 import { deLocalizeUrl, localizeUrl } from '@/locale/paraglide/runtime';
 import { routeTree } from './routeTree.gen';
 
@@ -44,6 +46,16 @@ export const getRouter = () => {
     router,
     queryClient: queryContext.queryClient,
   });
+
+  const sentryDsn = clientEnv.VITE_SENTRY_DSN?.trim();
+  if (!router.isServer && sentryDsn) {
+    Sentry.init({
+      dsn: sentryDsn,
+      environment: import.meta.env.PROD ? 'production' : 'development',
+      integrations: [Sentry.tanstackRouterBrowserTracingIntegration(router)],
+      tracesSampleRate: import.meta.env.PROD ? 0.2 : 1.0,
+    });
+  }
 
   return router;
 };

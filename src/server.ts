@@ -1,6 +1,8 @@
 // DO NOT DELETE THIS FILE!!!
 // This file is a good smoke test to make sure the custom server entry is working
 import handler from '@tanstack/react-start/server-entry';
+import * as Sentry from '@sentry/cloudflare';
+import { wrapFetchWithSentry } from '@sentry/tanstackstart-react';
 import { localeMiddleware } from '@/locale/middleware';
 import { serverEnv } from '@/env/server';
 import {
@@ -12,6 +14,7 @@ import {
 /**
  * TanStack Start server entry
  * https://github.com/backpine/tanstack-start-on-cloudflare/blob/main/src/server.ts
+ * Sentry: https://docs.sentry.io/platforms/javascript/guides/cloudflare/frameworks/tanstack-start/
  */
 console.log("[server-entry]: using custom server entry in 'src/server.ts'");
 
@@ -35,39 +38,71 @@ function corsHeaders(origin: string): Record<string, string> {
   };
 }
 
-export default {
-  async fetch(request: Request) {
-    const origin = request.headers.get('Origin');
+const startHandler = wrapFetchWithSentry(handler);
 
-    // Preflight from the extension: answer directly, don't hit the app handler.
-    if (
-      isTrustedExtensionOrigin(origin, trustedExtensionOrigins) &&
-      request.method === 'OPTIONS'
-    ) {
-      return new Response(null, { status: 204, headers: corsHeaders(origin) });
-    }
-
-    const response = await localeMiddleware(request, () =>
-      handler.fetch(request, {
-        context: {
-          fromFetch: true,
-        },
-      })
-    );
-
-    // Add CORS headers to extension responses (clone so headers stay mutable).
-    if (isTrustedExtensionOrigin(origin, trustedExtensionOrigins)) {
-      const headers = new Headers(response.headers);
-      for (const [key, value] of Object.entries(corsHeaders(origin))) {
-        headers.set(key, value);
-      }
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers,
-      });
-    }
-
-    return response;
-  },
+type WorkerEnv = {
+  SENTRY_DSN?: string;
 };
+
+function resolveSentryDsn(env: WorkerEnv): string | undefined {
+  const fromBinding = env.SENTRY_DSN?.trim();
+  if (fromBinding) return fromBinding;
+  return serverEnv.SENTRY_DSN?.trim() || undefined;
+}
+
+async function handleRequest(request: Request): Promise<Response> {
+  const origin = request.headers.get('Origin');
+
+  // Preflight from the extension: answer directly, don't hit the app handler.
+  if (
+    isTrustedExtensionOrigin(origin, trustedExtensionOrigins) &&
+    request.method === 'OPTIONS'
+  ) {
+    return new Response(null, { status: 204, headers: corsHeaders(origin) });
+  }
+
+  const response = await localeMiddleware(request, () =>
+    startHandler.fetch(request, {
+      context: {
+        fromFetch: true,
+      },
+    })
+  );
+
+  // Add CORS headers to extension responses (clone so headers stay mutable).
+  if (isTrustedExtensionOrigin(origin, trustedExtensionOrigins)) {
+    const headers = new Headers(response.headers);
+    for (const [key, value] of Object.entries(corsHeaders(origin))) {
+      headers.set(key, value);
+    }
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
+
+  return response;
+}
+
+export default Sentry.withSentry(
+  (env: WorkerEnv) => {
+    const dsn = resolveSentryDsn(env);
+    if (!dsn) {
+      return { dsn: '', enabled: false };
+    }
+
+    return {
+      dsn,
+      enabled: true,
+      environment: import.meta.env.PROD ? 'production' : 'development',
+      // Keep volume modest in production; full sample locally when DSN is set.
+      tracesSampleRate: import.meta.env.PROD ? 0.2 : 1.0,
+    };
+  },
+  {
+    async fetch(request) {
+      return handleRequest(request);
+    },
+  }
+);
