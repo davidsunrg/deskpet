@@ -85,6 +85,17 @@ export function DashboardPetDetail({
   const priceId = customizePlan?.prices[0]?.priceId ?? '';
 
   const handleJoinQueue = useCallback(async () => {
+    // Always notify on CTA click, even when checkout is misconfigured.
+    void notifyPetFinalPayClick({
+      data: {
+        petId: pet.id,
+        petName: pet.name,
+        species: pet.species,
+        breed: pet.breed,
+        checkoutAvailable: Boolean(priceId),
+      },
+    });
+
     if (!priceId) {
       toast.error('Checkout is unavailable. Please try again later.');
       return;
@@ -92,14 +103,6 @@ export function DashboardPetDetail({
 
     try {
       setCheckoutBusy(true);
-      void notifyPetFinalPayClick({
-        data: {
-          petId: pet.id,
-          petName: pet.name,
-          species: pet.species,
-          breed: pet.breed,
-        },
-      });
       posthog?.capture('checkout_started', {
         section: 'pet_final_step',
         plan_id: checkoutPlanId,

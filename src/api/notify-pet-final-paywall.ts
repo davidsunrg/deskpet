@@ -12,6 +12,7 @@ const notifyPetFinalPayClickSchema = z.object({
   petName: z.string().max(120).optional(),
   species: z.string().max(64).optional(),
   breed: z.string().max(120).optional(),
+  checkoutAvailable: z.boolean().optional(),
 });
 
 /** Silent admin notification when Final-tab pay CTA is clicked. */
@@ -27,11 +28,18 @@ export const notifyPetFinalPayClick = createServerFn({ method: 'POST' })
         session?.user?.email?.split('@')[0] ||
         'Dashboard user';
       const country = getRequestCountryHint();
+      const checkoutAvailable =
+        data.checkoutAvailable === undefined
+          ? 'unknown'
+          : data.checkoutAvailable
+            ? 'yes'
+            : 'no';
 
       const message = [
         'Final paywall pay CTA clicked.',
         `Email: ${email}`,
         `Country: ${country}`,
+        `Checkout available: ${checkoutAvailable}`,
         `Pet id: ${data.petId}`,
         `Pet name: ${data.petName?.trim() || '(none)'}`,
         `Species: ${data.species?.trim() || '(none)'}`,
