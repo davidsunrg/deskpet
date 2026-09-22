@@ -126,9 +126,19 @@ function patchPhoto(
   );
 }
 
-function wizardPhotosFromLocalDraft(): WizardPhoto[] {
-  const draft = readDraft();
-  if (!draft) return [];
+/** SSR-safe empty draft — never call createEmptyDraft() during render (new UUID). */
+const SSR_EMPTY_DRAFT: PetMakerLocalDraft = {
+  draftId: '',
+  petName: '',
+  species: '',
+  breed: '',
+  sex: '',
+  avatarKey: null,
+  photos: [],
+  creatorRecognition: null,
+};
+
+function wizardPhotosFromDraft(draft: PetMakerLocalDraft): WizardPhoto[] {
   // After refresh there is no blob; fall back to stored server preview URLs.
   return draft.photos.map((photo) => ({
     id: photo.localId,
@@ -190,60 +200,39 @@ export function useMarketingPetMaker(options?: {
   const posthog = usePostHog();
   const resumeCreateStartedRef = useRef(false);
 
-  const initialLocalDraft = readDraft() ?? createEmptyDraft();
-  const initialPhotos = wizardPhotosFromLocalDraft();
-  const initialPhotoKeys = initialPhotos
-    .filter((photo) => photo.status === 'ready' && photo.r2Key)
-    .map((photo) => photo.r2Key!);
-  const initialRecognition =
-    initialLocalDraft.creatorRecognition &&
-    mediaIdsMatch(
-      initialLocalDraft.creatorRecognition.mediaIds,
-      initialPhotoKeys
-    )
-      ? initialLocalDraft.creatorRecognition
-      : null;
-  const shouldResumeCreateOnMount =
-    options?.initialResumeCreate === true ||
-    readPendingPetMakerCreateAfterAuth();
-  const [draftId] = useState(() => ensureDraftId(initialLocalDraft).draftId);
+  // URL-only for first paint so SSR and hydrate match. sessionStorage is
+  // checked in the resume effect after the local draft is restored.
+  const shouldResumeCreateOnMount = options?.initialResumeCreate === true;
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const [draftId, setDraftId] = useState(SSR_EMPTY_DRAFT.draftId);
   const [step, setStep] = useState<MarketingPetMakerStep>(() =>
-    shouldResumeCreateOnMount
-      ? 'details'
-      : initialStepFromDraft(initialLocalDraft)
+    shouldResumeCreateOnMount ? 'details' : 'photos'
   );
-  const [photos, setPhotos] = useState<WizardPhoto[]>(() => initialPhotos);
+  const [photos, setPhotos] = useState<WizardPhoto[]>([]);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
   const [cropOpen, setCropOpen] = useState(false);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const [croppingAvatar, setCroppingAvatar] = useState(false);
-  const [petName, setPetName] = useState(() => initialLocalDraft.petName);
+  const [petName, setPetName] = useState(SSR_EMPTY_DRAFT.petName);
   const [species, setSpecies] = useState<PetSpeciesId | ''>(
-    () => initialLocalDraft.species
+    SSR_EMPTY_DRAFT.species
   );
-  const [breed, setBreed] = useState<PetBreedId | ''>(
-    () => initialLocalDraft.breed
-  );
-  const [sex, setSex] = useState<PetSex | ''>(() => initialLocalDraft.sex);
-  // URL flag (SSR) or sessionStorage pending — same Creating button as logged-in create.
+  const [breed, setBreed] = useState<PetBreedId | ''>(SSR_EMPTY_DRAFT.breed);
+  const [sex, setSex] = useState<PetSex | ''>(SSR_EMPTY_DRAFT.sex);
+  // URL flag (SSR) — same Creating button as logged-in create.
   const [creatingPet, setCreatingPet] = useState(shouldResumeCreateOnMount);
-  const [recognitionStatus, setRecognitionStatus] = useState<RecognitionStatus>(
-    () => (initialRecognition ? 'success' : 'idle')
-  );
+  const [recognitionStatus, setRecognitionStatus] =
+    useState<RecognitionStatus>('idle');
   const [recognitionData, setRecognitionData] =
-    useState<CreatorPetRecognitionData | null>(
-      () => initialRecognition?.result ?? null
-    );
+    useState<CreatorPetRecognitionData | null>(null);
   const [recognitionCache, setRecognitionCache] =
-    useState<CreatorRecognitionCache | null>(() => initialRecognition);
+    useState<CreatorRecognitionCache | null>(null);
   const [waitingForRecognition, setWaitingForRecognition] = useState(false);
   const [unsupportedRecognitionOpen, setUnsupportedRecognitionOpen] =
     useState(false);
   const recognitionGenerationRef = useRef(0);
-  const lastRecognizedMediaFingerprintRef = useRef<string | null>(
-    initialRecognition ? fingerprintMediaIds(initialRecognition.mediaIds) : null
-  );
+  const lastRecognizedMediaFingerprintRef = useRef<string | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const photosRef = useRef(photos);
   photosRef.current = photos;
@@ -264,31 +253,73 @@ export function useMarketingPetMaker(options?: {
     };
   }, []);
 
+  // localStorage is unavailable during SSR. Hydrate once on the client before
+  // any writeDraft / resume-create, or an empty SSR state would wipe the draft
+  // and fail validation with "Please enter a pet name."
   useEffect(() => {
-    writeDraft(
-      ensureDraftId({
-        draftId,
-        step,
-        petName,
-        species,
-        breed,
-        sex,
-        avatarKey: null,
-        photos: photos
-          .filter((photo) => photo.status === 'ready' && photo.r2Key)
-          .map((photo) => ({
-            localId: photo.id,
-            name: photo.name,
-            r2Key: photo.r2Key!,
-            thumbnailKey: photo.thumbnailKey ?? null,
-            previewUrl:
-              photo.previewUrl ??
-              `${window.location.origin}/api/storage/file?key=${encodeURIComponent(photo.r2Key!)}`,
-          })),
-        creatorRecognition: recognitionCache,
-      })
-    );
-  }, [breed, draftId, petName, photos, recognitionCache, sex, species, step]);
+    const draft = ensureDraftId(readDraft() ?? createEmptyDraft());
+    const restoredPhotos = wizardPhotosFromDraft(draft);
+    const restoredPhotoKeys = restoredPhotos
+      .filter((photo) => photo.status === 'ready' && photo.r2Key)
+      .map((photo) => photo.r2Key!);
+    const restoredRecognition =
+      draft.creatorRecognition &&
+      mediaIdsMatch(draft.creatorRecognition.mediaIds, restoredPhotoKeys)
+        ? draft.creatorRecognition
+        : null;
+
+    setDraftId(draft.draftId);
+    setPetName(draft.petName);
+    setSpecies(draft.species);
+    setBreed(draft.breed);
+    setSex(draft.sex);
+    setPhotos(restoredPhotos);
+    if (!shouldResumeCreateOnMount) {
+      setStep(initialStepFromDraft(draft));
+    }
+    setRecognitionCache(restoredRecognition);
+    setRecognitionData(restoredRecognition?.result ?? null);
+    setRecognitionStatus(restoredRecognition ? 'success' : 'idle');
+    lastRecognizedMediaFingerprintRef.current = restoredRecognition
+      ? fingerprintMediaIds(restoredRecognition.mediaIds)
+      : null;
+    setDraftHydrated(true);
+  }, [shouldResumeCreateOnMount]);
+
+  useEffect(() => {
+    if (!draftHydrated || !draftId) return;
+    writeDraft({
+      draftId,
+      step,
+      petName,
+      species,
+      breed,
+      sex,
+      avatarKey: null,
+      photos: photos
+        .filter((photo) => photo.status === 'ready' && photo.r2Key)
+        .map((photo) => ({
+          localId: photo.id,
+          name: photo.name,
+          r2Key: photo.r2Key!,
+          thumbnailKey: photo.thumbnailKey ?? null,
+          previewUrl:
+            photo.previewUrl ??
+            `${window.location.origin}/api/storage/file?key=${encodeURIComponent(photo.r2Key!)}`,
+        })),
+      creatorRecognition: recognitionCache,
+    });
+  }, [
+    breed,
+    draftHydrated,
+    draftId,
+    petName,
+    photos,
+    recognitionCache,
+    sex,
+    species,
+    step,
+  ]);
 
   const currentIndex = marketingPetMakerStepIndex(step);
   const readyPhotos = photos.filter((photo) => photo.status === 'ready');
@@ -905,7 +936,14 @@ export function useMarketingPetMaker(options?: {
     const shouldResume =
       options?.initialResumeCreate === true ||
       readPendingPetMakerCreateAfterAuth();
-    if (!shouldResume || authOpen || resumeCreateStartedRef.current) return;
+    if (
+      !shouldResume ||
+      !draftHydrated ||
+      authOpen ||
+      resumeCreateStartedRef.current
+    ) {
+      return;
+    }
     if (sessionPending) return;
     if (!isVerifiedSignedInUser(session?.user)) {
       clearPendingPetMakerCreateAfterAuth();
@@ -934,6 +972,7 @@ export function useMarketingPetMaker(options?: {
     })();
   }, [
     authOpen,
+    draftHydrated,
     options?.initialResumeCreate,
     session?.user,
     sessionPending,
