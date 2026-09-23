@@ -24,7 +24,7 @@ import { studioSections } from './studio-sections';
 
 const sectionIcons = {
   create: IconSparkles,
-  moments: IconPhoto,
+  timeline: IconPhoto,
   'ai-generation': IconSparkles,
   voice: IconMicrophone,
   care: IconCalendar,

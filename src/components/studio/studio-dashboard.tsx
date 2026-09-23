@@ -1,8 +1,8 @@
 import { ActionCards } from './action-cards';
 import { DesktopPetCard, RecentCreations } from './hero-section';
-import { MomentsCard } from './moments-card';
 import { MochisDayCard } from './right-column';
 import { StudioPageShell } from './studio-page-shell';
+import { TimelineCard } from './timeline-card';
 export function StudioDashboard() {
   return (
     <StudioPageShell>
@@ -12,7 +12,7 @@ export function StudioDashboard() {
           <DesktopPetCard />
           <RecentCreations />
         </div>
-        <MomentsCard />
+        <TimelineCard />
         <div className="studio-right-column">
           <MochisDayCard />
         </div>

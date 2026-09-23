@@ -10,11 +10,11 @@ import { Routes } from '@/lib/routes';
 
 const actions = [
   {
-    title: 'Add Moments',
-    description: 'Save a photo, note, or memory from today',
+    title: 'Add Entry',
+    description: 'Save a memory, health update, or milestone',
     icon: IconPhotoPlus,
-    tone: 'moments',
-    href: `${Routes.Studio}/moments`,
+    tone: 'timeline',
+    href: `${Routes.StudioTimeline}?add=entry`,
   },
   {
     title: 'Create Photo',

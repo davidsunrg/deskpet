@@ -3,11 +3,14 @@ import {
   IconClock,
   IconMovie,
   IconPhoto,
+  IconPlus,
   IconSparkles,
   IconUpload,
   IconX,
 } from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
+import { LocaleLink } from '@/lib/i18n/navigation';
+import { Routes } from '@/lib/routes';
 import { studioMedia, studioPet } from './studio-data';
 import type { StudioTemplate } from './template-data';
 
@@ -261,6 +264,13 @@ export function StudioGenerator({
             </span>
           </li>
         </ul>
+        <LocaleLink
+          href={`${Routes.StudioTimeline}?add=creation&kind=${kind}`}
+          className="studio-button studio-generator-timeline-action"
+        >
+          <IconPlus />
+          Add to Timeline
+        </LocaleLink>
       </div>
     </section>
   );

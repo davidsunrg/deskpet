@@ -11,6 +11,7 @@ export const Routes = {
   Contact: '/contact',
   Playground: '/playground',
   Studio: '/studio',
+  StudioTimeline: '/studio/timeline',
   Pets: '/pets',
   PetHub: '/p',
   Download: '/download',

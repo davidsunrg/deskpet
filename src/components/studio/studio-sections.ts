@@ -1,5 +1,5 @@
 export const studioSections = [
-  { slug: 'moments', title: 'Moments' },
+  { slug: 'timeline', title: 'Timeline' },
   { slug: 'create', title: 'Create' },
   { slug: 'gallery', title: 'Gallery' },
   { slug: 'ai-generation', title: 'AI Generation' },
