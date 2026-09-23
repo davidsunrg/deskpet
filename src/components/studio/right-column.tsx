@@ -1,14 +1,24 @@
 import {
   IconAdjustments,
+  IconCheck,
+  IconDots,
   IconHeartFilled,
+  IconLink,
   IconPaw,
+  IconPencil,
   IconPlayerPlayFilled,
 } from '@tabler/icons-react';
-import { StudioButton, StudioCardHeader } from './studio-card';
-import { studioMedia } from './studio-data';
+import { useState } from 'react';
+import {
+  StudioButton,
+  StudioCardHeader,
+  StudioIconButton,
+} from './studio-card';
+import { studioMedia, studioPet } from './studio-data';
+
 export function InteractivePetCard() {
   return (
-    <section className="studio-card studio-interactive">
+    <section className="studio-card studio-interactive studio-interactive-compact">
       <StudioCardHeader
         icon={<IconPaw />}
         title="Interactive DeskPet"
@@ -24,15 +34,13 @@ export function InteractivePetCard() {
         <p className="studio-handwriting">
           Woof!
           <br />
-          I'm always
-          <br />
-          here for you! <span>♥</span>
+          I'm always here for you! <span>♥</span>
         </p>
       </div>
       <div className="studio-interactive-actions">
         <StudioButton primary>
           <IconPlayerPlayFilled />
-          Play Animation
+          Play
         </StudioButton>
         <StudioButton>
           <IconAdjustments />
@@ -42,18 +50,69 @@ export function InteractivePetCard() {
     </section>
   );
 }
-export function MemorialCard() {
+
+export function PetProfileCard() {
+  const [status, setStatus] = useState('');
+
+  async function share() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setStatus('Link copied');
+    } catch {
+      setStatus('Unable to copy. Copy the address from your browser.');
+    }
+  }
+
   return (
-    <section className="studio-card studio-memorial">
-      <div className="studio-memorial-heading">
-        <span>
-          <IconHeartFilled />
-        </span>
-        <div>
-          <h2>Memorial Mode</h2>
-          <p>Keep their memory alive, forever.</p>
+    <section
+      className="studio-card studio-pet-profile"
+      aria-label="Pet profile"
+    >
+      <div className="studio-pet-profile-main">
+        <img
+          className="studio-pet-profile-avatar"
+          src={studioPet.avatar}
+          alt={studioPet.name}
+          width={80}
+          height={80}
+        />
+        <div className="studio-pet-profile-copy">
+          <div className="studio-pet-title">
+            <h2>{studioPet.name}</h2>
+            <StudioIconButton label="Edit profile">
+              <IconPencil size={16} />
+            </StudioIconButton>
+          </div>
+          <p className="studio-pet-profile-meta">
+            {studioPet.age}
+            <span> · </span>
+            Since {studioPet.since}
+          </p>
+          <p className="studio-pet-note">
+            {studioPet.note}
+            <IconHeartFilled />
+          </p>
         </div>
       </div>
+      <div className="studio-pet-profile-actions">
+        <div className="studio-share">
+          <StudioButton onClick={share}>
+            {status === 'Link copied' ? <IconCheck /> : <IconLink />}
+            Share {studioPet.name}
+          </StudioButton>
+          <output className="studio-share-status">{status}</output>
+        </div>
+        <StudioIconButton label="More actions">
+          <IconDots />
+        </StudioIconButton>
+      </div>
+    </section>
+  );
+}
+
+export function MemorialCard() {
+  return (
+    <section className="studio-card studio-memorial" aria-label="Memorial">
       <div className="studio-memorial-scene">
         <img
           src={studioMedia.memorial}

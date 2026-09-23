@@ -1,7 +1,11 @@
 import { ActionCards } from './action-cards';
 import { DesktopPetCard, RecentCreations } from './hero-section';
 import { MemoriesCard } from './memories-card';
-import { InteractivePetCard, MemorialCard } from './right-column';
+import {
+  InteractivePetCard,
+  MemorialCard,
+  PetProfileCard,
+} from './right-column';
 import { StudioPageShell } from './studio-page-shell';
 export function StudioDashboard() {
   return (
@@ -14,6 +18,7 @@ export function StudioDashboard() {
         </div>
         <MemoriesCard />
         <div className="studio-right-column">
+          <PetProfileCard />
           <InteractivePetCard />
           <MemorialCard />
         </div>
