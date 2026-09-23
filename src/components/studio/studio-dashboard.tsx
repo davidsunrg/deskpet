@@ -1,6 +1,6 @@
 import { ActionCards } from './action-cards';
 import { DesktopPetCard, RecentCreations } from './hero-section';
-import { MemoriesCard } from './memories-card';
+import { MomentsCard } from './moments-card';
 import {
   InteractivePetCard,
   MemorialCard,
@@ -16,7 +16,7 @@ export function StudioDashboard() {
           <DesktopPetCard />
           <RecentCreations />
         </div>
-        <MemoriesCard />
+        <MomentsCard />
         <div className="studio-right-column">
           <PetProfileCard />
           <InteractivePetCard />

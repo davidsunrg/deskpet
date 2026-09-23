@@ -50,7 +50,7 @@ export function PetHeader() {
           <p className="studio-handwriting">
             Same pet,
             <br />
-            More memories.
+            More moments.
             <br />
             Always with you.
           </p>

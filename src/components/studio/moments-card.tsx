@@ -11,7 +11,7 @@ const bars = [
   22, 18, 30, 12, 26, 16, 24, 20, 32, 14, 18, 22, 28, 16,
 ];
 
-type MemoryMedia = {
+type MomentMedia = {
   title: string;
   src?: string;
   kind?: 'video' | 'voice' | 'event';
@@ -38,7 +38,7 @@ const recentStatus = {
   ],
 };
 
-const memories = [
+const moments = [
   {
     date: 'Sep 05, 2026',
     title: "Mochi's bark",
@@ -59,8 +59,8 @@ const memories = [
   },
 ];
 
-function MemoryMediaPreview({ memory }: { memory: MemoryMedia }) {
-  if (memory.kind === 'event') {
+function MomentMediaPreview({ moment }: { moment: MomentMedia }) {
+  if (moment.kind === 'event') {
     return (
       <div className="studio-memory-thumb">
         <span className="studio-memory-heart">
@@ -70,7 +70,7 @@ function MemoryMediaPreview({ memory }: { memory: MemoryMedia }) {
     );
   }
 
-  if (memory.kind === 'voice') {
+  if (moment.kind === 'voice') {
     return (
       <div
         className="studio-memory-thumb studio-memory-thumb-voice"
@@ -94,13 +94,13 @@ function MemoryMediaPreview({ memory }: { memory: MemoryMedia }) {
     <div className="studio-memory-thumb">
       <div className="studio-memory-image">
         <img
-          src={memory.src}
-          alt={memory.title}
+          src={moment.src}
+          alt={moment.title}
           width={64}
           height={64}
           loading="lazy"
         />
-        {memory.kind === 'video' && (
+        {moment.kind === 'video' && (
           <span className="studio-video-duration">00:15</span>
         )}
       </div>
@@ -108,12 +108,12 @@ function MemoryMediaPreview({ memory }: { memory: MemoryMedia }) {
   );
 }
 
-export function MemoriesCard() {
+export function MomentsCard() {
   return (
-    <section id="memories" className="studio-card studio-memories">
+    <section id="moments" className="studio-card studio-moments">
       <StudioCardHeader
         icon={<IconPhoto />}
-        title="Memories"
+        title="Moments"
         action={<span className="studio-preview-label">Preview</span>}
       />
       <ol className="studio-timeline">
@@ -122,7 +122,7 @@ export function MemoriesCard() {
           <div className="studio-memory">
             <div className="studio-memory-strip">
               {recentStatus.media.map((item) => (
-                <MemoryMediaPreview key={item.title} memory={item} />
+                <MomentMediaPreview key={item.title} moment={item} />
               ))}
             </div>
             <div className="studio-memory-copy">
@@ -131,14 +131,14 @@ export function MemoriesCard() {
             </div>
           </div>
         </li>
-        {memories.map((memory) => (
-          <li key={memory.date}>
-            <time>{memory.date}</time>
+        {moments.map((moment) => (
+          <li key={moment.date}>
+            <time>{moment.date}</time>
             <div className="studio-memory">
-              <MemoryMediaPreview memory={memory} />
+              <MomentMediaPreview moment={moment} />
               <div className="studio-memory-copy">
-                <p>{memory.title}</p>
-                <small>{memory.subtitle}</small>
+                <p>{moment.title}</p>
+                <small>{moment.subtitle}</small>
               </div>
             </div>
           </li>

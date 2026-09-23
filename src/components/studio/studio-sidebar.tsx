@@ -20,7 +20,7 @@ import { studioSections } from './studio-sections';
 
 const sectionIcons = {
   create: IconSparkles,
-  memories: IconPhoto,
+  moments: IconPhoto,
   'ai-generation': IconSparkles,
   voice: IconMicrophone,
   chat: IconMessageCircle,

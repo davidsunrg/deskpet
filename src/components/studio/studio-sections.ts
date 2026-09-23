@@ -1,6 +1,6 @@
 export const studioSections = [
   { slug: 'create', title: 'Create' },
-  { slug: 'memories', title: 'Memories' },
+  { slug: 'moments', title: 'Moments' },
   { slug: 'ai-generation', title: 'AI Generation' },
   { slug: 'voice', title: 'Voice' },
   { slug: 'chat', title: 'Chat' },
