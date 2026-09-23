@@ -625,37 +625,6 @@
   transform: rotate(-8deg);
   text-shadow: 0 1px 6px #0007;
 }
-.studio-downloads {
-  position: absolute;
-  inset: auto 6% 3%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.studio-downloads > div {
-  display: flex;
-  gap: 8px;
-}
-.studio-downloads .studio-button {
-  opacity: 0.95;
-  min-width: 0;
-}
-.studio-downloads > div .studio-button {
-  flex: 1;
-  font-size: var(--studio-font-caption);
-  padding: 6px;
-  gap: 5px;
-}
-.studio-downloads > div svg {
-  width: 15px;
-  height: 15px;
-}
-.studio-download-note {
-  font-size: var(--studio-font-caption);
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 1px 3px #000;
-}
 .studio-creations {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

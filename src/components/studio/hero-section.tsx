@@ -1,10 +1,4 @@
-import {
-  IconBrandApple,
-  IconDownload,
-  IconLayoutGrid,
-  IconMovie,
-} from '@tabler/icons-react';
-import { StudioButton, StudioCardHeader } from './studio-card';
+import { StudioCardHeader } from './studio-card';
 import { studioMedia } from './studio-data';
 export function DesktopPetCard() {
   return (
@@ -20,24 +14,6 @@ export function DesktopPetCard() {
         <br />
         Desktop Pet
       </p>
-      <div className="studio-downloads">
-        <StudioButton primary>
-          <IconDownload />
-          Download for Windows
-        </StudioButton>
-        <div>
-          {[
-            { label: 'macOS', icon: IconBrandApple },
-            { label: 'GIF / MP4', icon: IconMovie },
-            { label: 'More formats', icon: IconLayoutGrid },
-          ].map(({ label, icon: Icon }) => (
-            <StudioButton key={label}>
-              <Icon />
-              {label}
-            </StudioButton>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
