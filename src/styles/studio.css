@@ -844,19 +844,17 @@
   }
 }
 .studio-pet-profile-main {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
+  min-width: 0;
+}
+.studio-pet-profile .studio-pet-title {
+  gap: 10px;
 }
 .studio-pet-profile-avatar {
-  width: 80px;
-  height: 80px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   object-fit: cover;
-  border-radius: var(--studio-radius-card);
-}
-.studio-pet-profile-copy {
-  min-width: 0;
+  border-radius: 10px;
 }
 .studio-pet-profile .studio-pet-title h2 {
   font-size: 22px;

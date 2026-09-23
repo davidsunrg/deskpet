@@ -69,30 +69,28 @@ export function PetProfileCard() {
       aria-label="Pet profile"
     >
       <div className="studio-pet-profile-main">
-        <img
-          className="studio-pet-profile-avatar"
-          src={studioPet.avatar}
-          alt={studioPet.name}
-          width={80}
-          height={80}
-        />
-        <div className="studio-pet-profile-copy">
-          <div className="studio-pet-title">
-            <h2>{studioPet.name}</h2>
-            <StudioIconButton label="Edit profile">
-              <IconPencil size={16} />
-            </StudioIconButton>
-          </div>
-          <p className="studio-pet-profile-meta">
-            {studioPet.age}
-            <span> · </span>
-            Since {studioPet.since}
-          </p>
-          <p className="studio-pet-note">
-            {studioPet.note}
-            <IconHeartFilled />
-          </p>
+        <div className="studio-pet-title">
+          <img
+            className="studio-pet-profile-avatar"
+            src={studioPet.avatar}
+            alt=""
+            width={36}
+            height={36}
+          />
+          <h2>{studioPet.name}</h2>
+          <StudioIconButton label="Edit profile">
+            <IconPencil size={16} />
+          </StudioIconButton>
         </div>
+        <p className="studio-pet-profile-meta">
+          {studioPet.age}
+          <span> · </span>
+          Since {studioPet.since}
+        </p>
+        <p className="studio-pet-note">
+          {studioPet.note}
+          <IconHeartFilled />
+        </p>
       </div>
       <div className="studio-pet-profile-actions">
         <div className="studio-share">
