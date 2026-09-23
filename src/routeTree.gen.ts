@@ -57,6 +57,7 @@ import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
 import { Route as StudioIndexRouteImport } from './routes/studio/index'
 import { Route as StudioSectionRouteImport } from './routes/studio/$section'
+import { Route as StudioPublicSiteRouteImport } from './routes/studio/public-site'
 import { Route as ToolsDesktopPetMakerRouteImport } from './routes/tools/desktop-pet-maker'
 import { Route as ToolsPetVideoMakerRouteImport } from './routes/tools/pet-video-maker'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -67,6 +68,9 @@ import { Route as BlogCategorySlugRouteImport } from './routes/blog/category.$sl
 import { Route as BlogPagePageRouteImport } from './routes/blog/page.$page'
 import { Route as DashboardPetsIndexRouteImport } from './routes/dashboard/pets/index'
 import { Route as DashboardPetsPetIdRouteImport } from './routes/dashboard/pets.$petId'
+import { Route as StudioPublicSiteIndexRouteImport } from './routes/studio/public-site/index'
+import { Route as StudioPublicSiteEditorRouteImport } from './routes/studio/public-site/editor'
+import { Route as StudioPublicSiteTemplatesRouteImport } from './routes/studio/public-site/templates'
 import { Route as ApiAuthExtensionGoogleRouteImport } from './routes/api/auth/extension/google'
 import { Route as BlogCategorySlugPagePageRouteImport } from './routes/blog/category.$slug.page.$page'
 
@@ -310,6 +314,11 @@ const StudioSectionRoute = StudioSectionRouteImport.update({
   path: '/$section',
   getParentRoute: () => StudioRoute,
 } as any)
+const StudioPublicSiteRoute = StudioPublicSiteRouteImport.update({
+  id: '/public-site',
+  path: '/public-site',
+  getParentRoute: () => StudioRoute,
+} as any)
 const ToolsDesktopPetMakerRoute = ToolsDesktopPetMakerRouteImport.update({
   id: '/tools/desktop-pet-maker',
   path: '/tools/desktop-pet-maker',
@@ -360,6 +369,22 @@ const DashboardPetsPetIdRoute = DashboardPetsPetIdRouteImport.update({
   path: '/$petId',
   getParentRoute: () => DashboardPetsRoute,
 } as any)
+const StudioPublicSiteIndexRoute = StudioPublicSiteIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioPublicSiteRoute,
+} as any)
+const StudioPublicSiteEditorRoute = StudioPublicSiteEditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => StudioPublicSiteRoute,
+} as any)
+const StudioPublicSiteTemplatesRoute =
+  StudioPublicSiteTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => StudioPublicSiteRoute,
+  } as any)
 const ApiAuthExtensionGoogleRoute = ApiAuthExtensionGoogleRouteImport.update({
   id: '/api/auth/extension/google',
   path: '/api/auth/extension/google',
@@ -415,6 +440,7 @@ export interface FileRoutesByFullPath {
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/studio/$section': typeof StudioSectionRoute
+  '/studio/public-site': typeof StudioPublicSiteRouteWithChildren
   '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
   '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin/': typeof AdminIndexRoute
@@ -430,7 +456,10 @@ export interface FileRoutesByFullPath {
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
   '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
+  '/studio/public-site/editor': typeof StudioPublicSiteEditorRoute
+  '/studio/public-site/templates': typeof StudioPublicSiteTemplatesRoute
   '/dashboard/pets/': typeof DashboardPetsIndexRoute
+  '/studio/public-site/': typeof StudioPublicSiteIndexRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
   '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
@@ -487,7 +516,10 @@ export interface FileRoutesByTo {
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
   '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
+  '/studio/public-site/editor': typeof StudioPublicSiteEditorRoute
+  '/studio/public-site/templates': typeof StudioPublicSiteTemplatesRoute
   '/dashboard/pets': typeof DashboardPetsIndexRoute
+  '/studio/public-site': typeof StudioPublicSiteIndexRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
   '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
@@ -535,6 +567,7 @@ export interface FileRoutesById {
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/studio/$section': typeof StudioSectionRoute
+  '/studio/public-site': typeof StudioPublicSiteRouteWithChildren
   '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
   '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin/': typeof AdminIndexRoute
@@ -550,7 +583,10 @@ export interface FileRoutesById {
   '/blog/category/$slug': typeof BlogCategorySlugRouteWithChildren
   '/blog/page/$page': typeof BlogPagePageRoute
   '/dashboard/pets/$petId': typeof DashboardPetsPetIdRoute
+  '/studio/public-site/editor': typeof StudioPublicSiteEditorRoute
+  '/studio/public-site/templates': typeof StudioPublicSiteTemplatesRoute
   '/dashboard/pets/': typeof DashboardPetsIndexRoute
+  '/studio/public-site/': typeof StudioPublicSiteIndexRoute
   '/api/auth/extension/google': typeof ApiAuthExtensionGoogleRoute
   '/blog/category/$slug/page/$page': typeof BlogCategorySlugPagePageRoute
 }
@@ -599,6 +635,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/settings/security'
     | '/studio/$section'
+    | '/studio/public-site'
     | '/tools/desktop-pet-maker'
     | '/tools/pet-video-maker'
     | '/admin/'
@@ -614,7 +651,10 @@ export interface FileRouteTypes {
     | '/blog/category/$slug'
     | '/blog/page/$page'
     | '/dashboard/pets/$petId'
+    | '/studio/public-site/editor'
+    | '/studio/public-site/templates'
     | '/dashboard/pets/'
+    | '/studio/public-site/'
     | '/api/auth/extension/google'
     | '/blog/category/$slug/page/$page'
   fileRoutesByTo: FileRoutesByTo
@@ -671,7 +711,10 @@ export interface FileRouteTypes {
     | '/blog/category/$slug'
     | '/blog/page/$page'
     | '/dashboard/pets/$petId'
+    | '/studio/public-site/editor'
+    | '/studio/public-site/templates'
     | '/dashboard/pets'
+    | '/studio/public-site'
     | '/api/auth/extension/google'
     | '/blog/category/$slug/page/$page'
   id:
@@ -718,6 +761,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/settings/security'
     | '/studio/$section'
+    | '/studio/public-site'
     | '/tools/desktop-pet-maker'
     | '/tools/pet-video-maker'
     | '/admin/'
@@ -733,7 +777,10 @@ export interface FileRouteTypes {
     | '/blog/category/$slug'
     | '/blog/page/$page'
     | '/dashboard/pets/$petId'
+    | '/studio/public-site/editor'
+    | '/studio/public-site/templates'
     | '/dashboard/pets/'
+    | '/studio/public-site/'
     | '/api/auth/extension/google'
     | '/blog/category/$slug/page/$page'
   fileRoutesById: FileRoutesById
@@ -1116,6 +1163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioSectionRouteImport
       parentRoute: typeof StudioRoute
     }
+    '/studio/public-site': {
+      id: '/studio/public-site'
+      path: '/public-site'
+      fullPath: '/studio/public-site'
+      preLoaderRoute: typeof StudioPublicSiteRouteImport
+      parentRoute: typeof StudioRoute
+    }
     '/tools/desktop-pet-maker': {
       id: '/tools/desktop-pet-maker'
       path: '/tools/desktop-pet-maker'
@@ -1185,6 +1239,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/pets/$petId'
       preLoaderRoute: typeof DashboardPetsPetIdRouteImport
       parentRoute: typeof DashboardPetsRoute
+    }
+    '/studio/public-site/': {
+      id: '/studio/public-site/'
+      path: '/'
+      fullPath: '/studio/public-site/'
+      preLoaderRoute: typeof StudioPublicSiteIndexRouteImport
+      parentRoute: typeof StudioPublicSiteRoute
+    }
+    '/studio/public-site/editor': {
+      id: '/studio/public-site/editor'
+      path: '/editor'
+      fullPath: '/studio/public-site/editor'
+      preLoaderRoute: typeof StudioPublicSiteEditorRouteImport
+      parentRoute: typeof StudioPublicSiteRoute
+    }
+    '/studio/public-site/templates': {
+      id: '/studio/public-site/templates'
+      path: '/templates'
+      fullPath: '/studio/public-site/templates'
+      preLoaderRoute: typeof StudioPublicSiteTemplatesRouteImport
+      parentRoute: typeof StudioPublicSiteRoute
     }
     '/api/auth/extension/google': {
       id: '/api/auth/extension/google'
@@ -1289,13 +1364,30 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
 
+interface StudioPublicSiteRouteChildren {
+  StudioPublicSiteEditorRoute: typeof StudioPublicSiteEditorRoute
+  StudioPublicSiteTemplatesRoute: typeof StudioPublicSiteTemplatesRoute
+  StudioPublicSiteIndexRoute: typeof StudioPublicSiteIndexRoute
+}
+
+const StudioPublicSiteRouteChildren: StudioPublicSiteRouteChildren = {
+  StudioPublicSiteEditorRoute: StudioPublicSiteEditorRoute,
+  StudioPublicSiteTemplatesRoute: StudioPublicSiteTemplatesRoute,
+  StudioPublicSiteIndexRoute: StudioPublicSiteIndexRoute,
+}
+
+const StudioPublicSiteRouteWithChildren =
+  StudioPublicSiteRoute._addFileChildren(StudioPublicSiteRouteChildren)
+
 interface StudioRouteChildren {
   StudioSectionRoute: typeof StudioSectionRoute
+  StudioPublicSiteRoute: typeof StudioPublicSiteRouteWithChildren
   StudioIndexRoute: typeof StudioIndexRoute
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
   StudioSectionRoute: StudioSectionRoute,
+  StudioPublicSiteRoute: StudioPublicSiteRouteWithChildren,
   StudioIndexRoute: StudioIndexRoute,
 }
 

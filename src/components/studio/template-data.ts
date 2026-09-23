@@ -1,4 +1,21 @@
 export type StudioTemplateKind = 'photo' | 'video' | 'album' | 'site';
+export type SiteTemplateCategory =
+  | 'Classic'
+  | 'Adventure'
+  | 'Playful'
+  | 'Memorial';
+export type SiteTemplatePalette =
+  | 'cream'
+  | 'ocean'
+  | 'forest'
+  | 'sunset'
+  | 'lilac';
+export type SiteTemplateLayout =
+  | 'editorial'
+  | 'gallery'
+  | 'split'
+  | 'immersive';
+export type SiteTemplateTypography = 'serif' | 'sans' | 'handwritten';
 
 export type StudioTemplate = {
   id: string;
@@ -8,6 +25,12 @@ export type StudioTemplate = {
   preview: string;
   badge?: string;
   prompt?: string;
+  site?: {
+    category: SiteTemplateCategory;
+    palette: SiteTemplatePalette;
+    layout: SiteTemplateLayout;
+    typography: SiteTemplateTypography;
+  };
   settings?: {
     aspectRatio?: '1:1' | '4:5' | '16:9';
     outputCount?: 1 | 2 | 4;
@@ -121,6 +144,12 @@ export const studioTemplates: StudioTemplate[] = [
     description: 'A warm timeline for everyday stories and milestones.',
     preview: '/studio/flowers.png',
     badge: 'Recommended',
+    site: {
+      category: 'Classic',
+      palette: 'cream',
+      layout: 'editorial',
+      typography: 'serif',
+    },
   },
   {
     id: 'site-gallery',
@@ -128,6 +157,12 @@ export const studioTemplates: StudioTemplate[] = [
     name: 'Gallery First',
     description: 'A visual homepage that puts photos center stage.',
     preview: '/studio/beach.png',
+    site: {
+      category: 'Playful',
+      palette: 'ocean',
+      layout: 'gallery',
+      typography: 'sans',
+    },
   },
   {
     id: 'site-keepsake',
@@ -135,6 +170,78 @@ export const studioTemplates: StudioTemplate[] = [
     name: 'Forever Loved',
     description: 'A quiet, thoughtful page for a lasting tribute.',
     preview: '/studio/memorial.png',
+    site: {
+      category: 'Memorial',
+      palette: 'lilac',
+      layout: 'editorial',
+      typography: 'serif',
+    },
+  },
+  {
+    id: 'site-trail-notes',
+    kind: 'site',
+    name: 'Trail Notes',
+    description: 'A bold field journal for walks, trips, and discoveries.',
+    preview: '/studio/hiking.png',
+    site: {
+      category: 'Adventure',
+      palette: 'forest',
+      layout: 'split',
+      typography: 'sans',
+    },
+  },
+  {
+    id: 'site-little-star',
+    kind: 'site',
+    name: 'Little Star',
+    description: 'Bright cards and playful details for a joyful personality.',
+    preview: '/studio/interactive.png',
+    badge: 'New',
+    site: {
+      category: 'Playful',
+      palette: 'sunset',
+      layout: 'gallery',
+      typography: 'handwritten',
+    },
+  },
+  {
+    id: 'site-sunday-paper',
+    kind: 'site',
+    name: 'Sunday Paper',
+    description: 'An understated editorial home for stories and portraits.',
+    preview: '/studio/portrait.png',
+    site: {
+      category: 'Classic',
+      palette: 'forest',
+      layout: 'editorial',
+      typography: 'serif',
+    },
+  },
+  {
+    id: 'site-wild-heart',
+    kind: 'site',
+    name: 'Wild Heart',
+    description: 'An immersive, photo-led layout made for big adventures.',
+    preview: '/studio/beach.png',
+    site: {
+      category: 'Adventure',
+      palette: 'sunset',
+      layout: 'immersive',
+      typography: 'sans',
+    },
+  },
+  {
+    id: 'site-memory-garden',
+    kind: 'site',
+    name: 'Memory Garden',
+    description: 'A gentle space for treasured moments and loving words.',
+    preview: '/studio/flowers.png',
+    site: {
+      category: 'Memorial',
+      palette: 'cream',
+      layout: 'split',
+      typography: 'serif',
+    },
   },
 ];
 

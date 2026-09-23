@@ -1,8 +1,10 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
   IconCalendar,
+  IconEdit,
   IconHeart,
   IconHome,
+  IconLayoutGrid,
   IconMicrophone,
   IconMovie,
   IconPhoto,
@@ -131,6 +133,7 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
   };
   const createHref = `${Routes.Studio}/create`;
   const isCreateActive = isNavActive(createHref, true);
+  const isPublicSiteActive = isNavActive(Routes.StudioPublicSite, false);
 
   return (
     <aside className="studio-sidebar">
@@ -181,6 +184,41 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
                 >
                   <IconMovie />
                   Video
+                </LocaleLink>
+              </div>
+            </div>
+          ) : item.slug === 'public-site' ? (
+            <div key={item.title} className="studio-nav-group">
+              <LocaleLink
+                href={Routes.StudioPublicSiteEditor}
+                className={cn(isPublicSiteActive && 'studio-nav-parent-active')}
+                onClick={onNavigate}
+              >
+                <item.icon />
+                {item.title}
+              </LocaleLink>
+              <div className="studio-nav-children">
+                <LocaleLink
+                  href={Routes.StudioPublicSiteEditor}
+                  className={cn(
+                    isNavActive(Routes.StudioPublicSiteEditor, true) &&
+                      'studio-nav-selected'
+                  )}
+                  onClick={onNavigate}
+                >
+                  <IconEdit />
+                  Editor
+                </LocaleLink>
+                <LocaleLink
+                  href={Routes.StudioPublicSiteTemplates}
+                  className={cn(
+                    isNavActive(Routes.StudioPublicSiteTemplates, true) &&
+                      'studio-nav-selected'
+                  )}
+                  onClick={onNavigate}
+                >
+                  <IconLayoutGrid />
+                  Templates
                 </LocaleLink>
               </div>
             </div>

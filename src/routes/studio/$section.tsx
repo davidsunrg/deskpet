@@ -4,7 +4,6 @@ import {
   StudioCreatePage,
   type CreateTemplateKind,
 } from '@/components/studio/create-page';
-import { StudioPublicSite } from '@/components/studio/public-site';
 import { StudioPageShell } from '@/components/studio/studio-page-shell';
 import { getStudioSection } from '@/components/studio/studio-sections';
 
@@ -37,10 +36,6 @@ function StudioSectionPage() {
     return (
       <StudioCreatePage key={type ?? 'photo'} initialKind={type ?? 'photo'} />
     );
-  }
-
-  if (sectionSlug === 'public-site') {
-    return <StudioPublicSite />;
   }
 
   return (

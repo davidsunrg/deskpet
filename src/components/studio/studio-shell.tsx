@@ -3,6 +3,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { IconX } from '@tabler/icons-react';
 import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState, type PropsWithChildren } from 'react';
+import { Routes } from '@/lib/routes';
 import { StudioHeader } from './studio-header';
 import { getStudioSection } from './studio-sections';
 import { StudioSidebar } from './studio-sidebar';
@@ -12,9 +13,34 @@ export function StudioShell({ children }: PropsWithChildren) {
   const pathname = useLocation({
     select: (location) => location.pathname,
   });
-  const sectionSlug = pathname?.split('/').filter(Boolean).at(-1);
+  const pathSegments = pathname?.split('/').filter(Boolean) ?? [];
+  const studioIndex = pathSegments.indexOf('studio');
+  const sectionSlug =
+    studioIndex >= 0 ? pathSegments[studioIndex + 1] : undefined;
+  const childSlug =
+    studioIndex >= 0 ? pathSegments[studioIndex + 2] : undefined;
   const section = sectionSlug ? getStudioSection(sectionSlug) : undefined;
-  const isHome = sectionSlug === 'studio';
+  const isHome = studioIndex >= 0 && !sectionSlug;
+  const breadcrumbs = section
+    ? [
+        {
+          label: section.title,
+          href: childSlug ? `${Routes.Studio}/${section.slug}` : undefined,
+        },
+        ...(childSlug
+          ? [
+              {
+                label:
+                  childSlug === 'editor'
+                    ? 'Editor'
+                    : childSlug === 'templates'
+                      ? 'Templates'
+                      : childSlug,
+              },
+            ]
+          : []),
+      ]
+    : undefined;
   useEffect(() => {
     if (pathname) setOpen(false);
   }, [pathname]);
@@ -36,7 +62,7 @@ export function StudioShell({ children }: PropsWithChildren) {
           <div className="studio-main">
             <div className="studio-main-inner">
               <StudioHeader
-                breadcrumb={section?.title}
+                breadcrumbs={breadcrumbs}
                 isHome={isHome}
                 onOpenMenu={() => setOpen(true)}
               />

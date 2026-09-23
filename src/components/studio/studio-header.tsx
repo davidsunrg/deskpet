@@ -1,4 +1,5 @@
 import { IconMenu2, IconShare } from '@tabler/icons-react';
+import { Fragment } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,18 +8,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import { PetHeader } from './pet-header';
 import { StudioIconButton } from './studio-card';
 
 export function StudioHeader({
-  breadcrumb,
+  breadcrumbs,
   isHome,
   onOpenMenu,
 }: {
-  breadcrumb?: string;
+  breadcrumbs?: Array<{ label: string; href?: string }>;
   isHome: boolean;
   onOpenMenu: () => void;
 }) {
@@ -43,9 +43,8 @@ export function StudioHeader({
         <StudioIconButton label="Open navigation" onClick={onOpenMenu}>
           <IconMenu2 />
         </StudioIconButton>
-        <Separator orientation="vertical" />
       </div>
-      {breadcrumb && (
+      {breadcrumbs && breadcrumbs.length > 0 && (
         <Breadcrumb className="studio-breadcrumb">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -53,16 +52,28 @@ export function StudioHeader({
                 <LocaleLink href={Routes.Studio}>Studio</LocaleLink>
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{breadcrumb}</BreadcrumbPage>
-            </BreadcrumbItem>
+            {breadcrumbs.map((breadcrumb) => (
+              <Fragment key={breadcrumb.label}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  {breadcrumb.href ? (
+                    <BreadcrumbLink asChild>
+                      <LocaleLink href={breadcrumb.href}>
+                        {breadcrumb.label}
+                      </LocaleLink>
+                    </BreadcrumbLink>
+                  ) : (
+                    <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
+                  )}
+                </BreadcrumbItem>
+              </Fragment>
+            ))}
           </BreadcrumbList>
         </Breadcrumb>
       )}
       <div className="studio-topbar-actions">
         <LocaleLink
-          href={`${Routes.Studio}/public-site`}
+          href={Routes.StudioPublicSiteEditor}
           className="studio-button studio-topbar-share"
         >
           <IconShare />
