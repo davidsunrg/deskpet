@@ -1,4 +1,4 @@
-import { IconMenu2, IconShare } from '@tabler/icons-react';
+import { IconMenu2 } from '@tabler/icons-react';
 import { Fragment } from 'react';
 import {
   Breadcrumb,
@@ -71,15 +71,6 @@ export function StudioHeader({
           </BreadcrumbList>
         </Breadcrumb>
       )}
-      <div className="studio-topbar-actions">
-        <LocaleLink
-          href={Routes.StudioPublicSiteEditor}
-          className="studio-button studio-topbar-share"
-        >
-          <IconShare />
-          <span>Public Site</span>
-        </LocaleLink>
-      </div>
     </header>
   );
 }
