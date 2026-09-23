@@ -1,4 +1,4 @@
-import { IconCheck, IconSparkles } from '@tabler/icons-react';
+import { IconCheck } from '@tabler/icons-react';
 import type { StudioTemplate } from './template-data';
 
 export function TemplateGallery({
@@ -46,27 +46,5 @@ export function TemplateGallery({
         );
       })}
     </div>
-  );
-}
-
-export function TemplateSelection({
-  template,
-  actionLabel,
-}: {
-  template: StudioTemplate;
-  actionLabel: string;
-}) {
-  return (
-    <aside className="studio-template-selection">
-      <div>
-        <small>Selected template</small>
-        <strong>{template.name}</strong>
-        <p>{template.description}</p>
-      </div>
-      <button type="button" className="studio-button studio-button-primary">
-        <IconSparkles />
-        {actionLabel}
-      </button>
-    </aside>
   );
 }

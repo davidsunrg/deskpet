@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { StudioGenerator } from './studio-generator';
 import { StudioPageShell } from './studio-page-shell';
-import { getTemplatesByKind, type StudioTemplateKind } from './template-data';
-import { TemplateGallery, TemplateSelection } from './template-gallery';
+import {
+  getTemplatesByKind,
+  type StudioTemplate,
+  type StudioTemplateKind,
+} from './template-data';
+import { TemplateGallery } from './template-gallery';
 
 export type CreateTemplateKind = Extract<StudioTemplateKind, 'photo' | 'video'>;
 
@@ -9,19 +14,16 @@ const createCategories: {
   kind: CreateTemplateKind;
   title: string;
   description: string;
-  actionLabel: string;
 }[] = [
   {
     kind: 'photo',
     title: 'Create a photo',
     description: 'Choose a style, then make it uniquely Mochi.',
-    actionLabel: 'Use photo template',
   },
   {
     kind: 'video',
     title: 'Create a video',
     description: 'Bring favorite moments to life with a short video.',
-    actionLabel: 'Use video template',
   },
 ];
 
@@ -31,12 +33,28 @@ export function StudioCreatePage({
   initialKind?: CreateTemplateKind;
 }) {
   const templates = getTemplatesByKind(initialKind);
-  const [selectedId, setSelectedId] = useState(templates[0]?.id ?? '');
+  const generatorRef = useRef<HTMLDivElement>(null);
+  const [selectedId, setSelectedId] = useState('');
+  const [appliedTemplate, setAppliedTemplate] = useState<
+    StudioTemplate | undefined
+  >();
+  const [applyVersion, setApplyVersion] = useState(0);
   const category =
     createCategories.find((item) => item.kind === initialKind) ??
     createCategories[0];
-  const selectedTemplate =
-    templates.find((template) => template.id === selectedId) ?? templates[0];
+
+  const applyTemplate = (template: StudioTemplate) => {
+    setSelectedId(template.id);
+    setAppliedTemplate(template);
+    setApplyVersion((current) => current + 1);
+    requestAnimationFrame(() => {
+      generatorRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+      generatorRef.current?.focus({ preventScroll: true });
+    });
+  };
 
   return (
     <StudioPageShell>
@@ -49,18 +67,33 @@ export function StudioCreatePage({
           </div>
         </header>
 
-        <TemplateGallery
-          templates={templates}
-          selectedId={selectedId}
-          onSelect={(template) => setSelectedId(template.id)}
-        />
-
-        {selectedTemplate && (
-          <TemplateSelection
-            template={selectedTemplate}
-            actionLabel={category.actionLabel}
+        <div
+          ref={generatorRef}
+          className="studio-generator-anchor"
+          tabIndex={-1}
+        >
+          <StudioGenerator
+            key={`${initialKind}-${appliedTemplate?.id ?? 'blank'}-${applyVersion}`}
+            kind={initialKind}
+            appliedTemplate={appliedTemplate}
           />
-        )}
+        </div>
+
+        <section className="studio-template-library">
+          <div className="studio-section-heading studio-template-library-heading">
+            <div>
+              <h2>Start from a template</h2>
+              <p>
+                Pick a style to apply its prompt and settings to the generator.
+              </p>
+            </div>
+          </div>
+          <TemplateGallery
+            templates={templates}
+            selectedId={selectedId}
+            onSelect={applyTemplate}
+          />
+        </section>
       </section>
     </StudioPageShell>
   );
