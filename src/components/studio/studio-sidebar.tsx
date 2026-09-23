@@ -28,9 +28,11 @@ const sectionIcons = {
   share: IconShare,
 };
 
+const hiddenSectionSlugs = new Set(['ai-generation', 'memorial', 'voice']);
+
 const items = [
   ...studioSections
-    .filter((section) => section.slug !== 'memorial')
+    .filter((section) => !hiddenSectionSlugs.has(section.slug))
     .map((section) => ({
       title: section.title,
       icon: sectionIcons[section.slug],
