@@ -827,6 +827,61 @@
   color: var(--studio-subtle);
   font-size: var(--studio-font-item-meta);
 }
+.studio-care-weight {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--studio-border);
+  border-radius: var(--studio-radius);
+  background: var(--studio-video-soft);
+}
+.studio-care-weight-copy {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.studio-care-weight-copy > div {
+  display: grid;
+}
+.studio-care-weight-copy small,
+.studio-care-weight-range {
+  color: var(--studio-subtle);
+  font-size: var(--studio-font-item-meta);
+}
+.studio-care-weight-copy strong {
+  margin-top: 2px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.studio-care-weight-copy > span {
+  color: var(--studio-video);
+  font-size: var(--studio-font-item-meta);
+  font-weight: 600;
+}
+.studio-care-weight svg {
+  display: block;
+  width: 100%;
+  height: 58px;
+  margin-top: 8px;
+  overflow: visible;
+}
+.studio-care-weight svg path {
+  fill: none;
+  stroke: var(--studio-video);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.studio-care-weight svg circle {
+  fill: var(--studio-surface);
+  stroke: var(--studio-video);
+  stroke-width: 3;
+}
+.studio-care-weight-range {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -2px;
+}
 .studio-care-section-heading {
   display: flex;
   align-items: center;

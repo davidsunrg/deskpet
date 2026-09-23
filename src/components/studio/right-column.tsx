@@ -39,6 +39,27 @@ export function MochisDayCard({ isNewUser = false }: { isNewUser?: boolean }) {
         </div>
       ) : (
         <>
+          <div className="studio-care-weight">
+            <div className="studio-care-weight-copy">
+              <div>
+                <small>Weight</small>
+                <strong>28.4 kg</strong>
+              </div>
+              <span>↓ 0.3 kg this month</span>
+            </div>
+            <svg
+              viewBox="0 0 240 64"
+              role="img"
+              aria-label="Mochi's weight decreased gradually from 28.7 to 28.4 kilograms this month"
+            >
+              <path d="M4 13 C28 15 40 20 62 19 S96 29 120 27 S152 34 176 37 S208 46 236 48" />
+              <circle cx="236" cy="48" r="4" />
+            </svg>
+            <div className="studio-care-weight-range">
+              <span>Sep 2</span>
+              <span>Sep 23</span>
+            </div>
+          </div>
           <div className="studio-care-section-heading">
             <div>
               <h3>Today</h3>
