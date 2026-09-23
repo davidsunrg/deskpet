@@ -1,13 +1,11 @@
 import { ActionCards } from './action-cards';
 import { DesktopPetCard, RecentCreations } from './hero-section';
 import { MemoriesCard } from './memories-card';
-import { PetHeader } from './pet-header';
 import { InteractivePetCard, MemorialCard } from './right-column';
 import { StudioPageShell } from './studio-page-shell';
 export function StudioDashboard() {
   return (
     <StudioPageShell>
-      <PetHeader />
       <ActionCards />
       <div className="studio-workspace">
         <div className="studio-left-column">

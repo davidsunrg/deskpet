@@ -42,6 +42,7 @@
   --studio-control-height: 40px;
   --studio-sidebar-width: 240px;
   --studio-content-max-width: 1360px;
+  --studio-shell-inset-top: 20px;
   color-scheme: light;
   color: var(--studio-text);
   font-family: var(--studio-font);
@@ -96,13 +97,14 @@
 .studio-main-inner {
   width: 100%;
   padding-inline: 24px;
+  padding-top: var(--studio-shell-inset-top);
 }
 .studio-sidebar {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
-  padding: 20px 20px 36px 8px;
+  padding: var(--studio-shell-inset-top) 20px 36px 8px;
 }
 .studio-pet-switcher {
   display: flex;
@@ -903,6 +905,9 @@
   }
   .studio-desktop-sidebar {
     display: none;
+  }
+  .studio-main-inner {
+    padding-top: 0;
   }
   .studio-topbar-menu {
     display: flex;
