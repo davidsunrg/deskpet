@@ -1,146 +1,101 @@
 import {
-  IconAdjustments,
+  IconBell,
+  IconCalendar,
   IconCheck,
   IconChevronRight,
-  IconDots,
-  IconHeartFilled,
-  IconLink,
-  IconPaw,
-  IconPencil,
-  IconPlayerPlayFilled,
+  IconClock,
+  IconPlus,
 } from '@tabler/icons-react';
-import { useState } from 'react';
-import {
-  StudioButton,
-  StudioCardHeader,
-  StudioIconButton,
-} from './studio-card';
-import { studioMedia, studioPet } from './studio-data';
+import { StudioButton, StudioCardHeader } from './studio-card';
 
-export function InteractivePetCard() {
+const careTasks = [
+  { icon: '🥣', title: 'Breakfast', time: '8:00 AM', complete: true },
+  { icon: '🪮', title: 'Morning brushing', time: '9:30 AM', complete: true },
+  { icon: '🐾', title: 'Evening walk', time: '6:00 PM', complete: false },
+] as const;
+
+export function MochisDayCard({ isNewUser = false }: { isNewUser?: boolean }) {
   return (
-    <section className="studio-card studio-interactive">
+    <section className="studio-card studio-care" aria-label="Mochi's day">
       <StudioCardHeader
-        icon={<IconPaw />}
-        title="Interactive DeskPet"
-        action={
-          <span className="studio-online-status">
-            <i />
-            Online
-          </span>
-        }
+        icon={<IconCalendar />}
+        title="Mochi's Day"
+        action={<time dateTime="2026-09-23">Sep 23</time>}
       />
-      <div className="studio-interactive-scene">
-        <img
-          src={studioMedia.interactive}
-          alt="A miniature Mochi sitting on a desk"
-          width={600}
-          height={400}
-        />
-        <p className="studio-handwriting">
-          Woof!
-          <br />
-          I'm always here for you! <span>♥</span>
-        </p>
-      </div>
-      <div className="studio-interactive-actions">
-        <StudioButton primary>
-          <IconPlayerPlayFilled />
-          Play Animation
-        </StudioButton>
-        <StudioButton>
-          <IconAdjustments />
-          Customize
-        </StudioButton>
-      </div>
-    </section>
-  );
-}
-
-export function PetProfileCard() {
-  const [status, setStatus] = useState('');
-
-  async function share() {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setStatus('Link copied');
-    } catch {
-      setStatus('Unable to copy. Copy the address from your browser.');
-    }
-  }
-
-  return (
-    <section
-      className="studio-card studio-pet-profile"
-      aria-label="Pet profile"
-    >
-      <div className="studio-pet-profile-main">
-        <div className="studio-pet-title">
-          <img
-            className="studio-pet-profile-avatar"
-            src={studioPet.avatar}
-            alt=""
-            width={36}
-            height={36}
-          />
-          <h2>{studioPet.name}</h2>
-          <StudioIconButton label="Edit profile">
-            <IconPencil size={16} />
-          </StudioIconButton>
-        </div>
-        <p className="studio-pet-profile-meta">
-          {studioPet.age}
-          <span> · </span>
-          Since {studioPet.since}
-        </p>
-        <p className="studio-pet-note">
-          {studioPet.note}
-          <IconHeartFilled />
-        </p>
-      </div>
-      <div className="studio-pet-profile-actions">
-        <div className="studio-share">
-          <StudioButton onClick={share}>
-            {status === 'Link copied' ? <IconCheck /> : <IconLink />}
-            Share {studioPet.name}
+      {isNewUser ? (
+        <div className="studio-care-empty">
+          <span>
+            <IconBell />
+          </span>
+          <h3>Never miss an important care task</h3>
+          <p>
+            Add Mochi's first reminder for meals, medicine, grooming, or vet
+            visits.
+          </p>
+          <StudioButton primary>
+            <IconPlus />
+            Add first reminder
           </StudioButton>
-          <output className="studio-share-status">{status}</output>
         </div>
-        <StudioIconButton label="More actions">
-          <IconDots />
-        </StudioIconButton>
-      </div>
-    </section>
-  );
-}
-
-export function MemorialCard() {
-  return (
-    <section className="studio-card studio-memorial" aria-label="Memorial">
-      <div className="studio-memorial-heading">
-        <span>
-          <IconHeartFilled />
-        </span>
-        <div>
-          <h2>Memorial Mode</h2>
-          <p>Keep their memory alive, forever.</p>
-        </div>
-        <IconChevronRight />
-      </div>
-      <div className="studio-memorial-scene">
-        <img
-          src={studioMedia.memorial}
-          alt=""
-          width={600}
-          height={300}
-          loading="lazy"
-        />
-        <p className="studio-handwriting">
-          Because
-          <br />
-          every moment matters.
-        </p>
-      </div>
+      ) : (
+        <>
+          <div className="studio-care-section-heading">
+            <div>
+              <h3>Today</h3>
+              <p>2 of 3 completed</p>
+            </div>
+            <span className="studio-care-progress" aria-hidden="true">
+              <i />
+            </span>
+          </div>
+          <ul className="studio-care-tasks">
+            {careTasks.map((task) => (
+              <li
+                key={task.title}
+                className={task.complete ? 'studio-care-task-complete' : ''}
+              >
+                <span className="studio-care-task-icon">{task.icon}</span>
+                <span>
+                  <strong>{task.title}</strong>
+                  <small>{task.time}</small>
+                </span>
+                <span className="studio-care-check">
+                  {task.complete ? <IconCheck /> : <IconClock />}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="studio-care-summary">
+            <div className="studio-care-summary-row">
+              <span className="studio-care-summary-icon studio-care-reminder-icon">
+                <IconBell />
+              </span>
+              <div>
+                <small>Next reminder</small>
+                <strong>Vet checkup</strong>
+                <p>Tomorrow · 10:00 AM</p>
+              </div>
+              <IconChevronRight />
+            </div>
+            <div className="studio-care-summary-row">
+              <span className="studio-care-summary-icon">🛁</span>
+              <div>
+                <small>Recent activity</small>
+                <strong>Grooming completed</strong>
+                <p>Sep 20 · Routine care</p>
+              </div>
+              <IconChevronRight />
+            </div>
+          </div>
+          <div className="studio-care-actions">
+            <StudioButton primary>
+              <IconPlus />
+              Add reminder
+            </StudioButton>
+            <StudioButton>View all</StudioButton>
+          </div>
+        </>
+      )}
     </section>
   );
 }
