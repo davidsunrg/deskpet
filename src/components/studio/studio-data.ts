@@ -13,5 +13,5 @@ export const studioMedia = {
   hiking: '/studio/hiking.png',
   flowers: '/studio/flowers.png',
   memorial: '/studio/memorial.png',
-  sketch: '/studio/sketch.png',
+  sketch: '/studio-sketch.png',
 };

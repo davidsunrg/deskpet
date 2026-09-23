@@ -430,6 +430,7 @@
 .studio-pet-decoration {
   display: flex;
   align-items: center;
+  height: 128px;
 }
 .studio-handwriting {
   font-family: var(--studio-font-note);
@@ -438,16 +439,15 @@
   line-height: 1.5;
 }
 .studio-pet-decoration p {
-  font-size: 16px;
+  font-size: 22px;
   transform: rotate(-9deg);
   text-align: center;
   white-space: nowrap;
 }
 .studio-pet-decoration img {
-  width: 240px;
+  width: 210px;
   height: 120px;
-  object-fit: cover;
-  object-position: center 48%;
+  object-fit: contain;
 }
 .studio-share {
   position: relative;
@@ -1024,11 +1024,11 @@
     height: 112px;
   }
   .studio-pet-decoration p {
-    font-size: 14px;
+    font-size: 20px;
   }
   .studio-pet-decoration img {
-    width: 210px;
-    height: 112px;
+    width: 189px;
+    height: 108px;
   }
   .studio-action {
     gap: 9px;
