@@ -31,7 +31,7 @@ export function PetHeader() {
         <div className="studio-pet-description">
           <div className="studio-pet-title">
             <h1>{studioPet.name}</h1>
-            <StudioIconButton label="Edit profile (coming soon)" disabled>
+            <StudioIconButton label="Edit profile">
               <IconPencil size={18} />
             </StudioIconButton>
           </div>
@@ -64,7 +64,7 @@ export function PetHeader() {
             </StudioButton>
             <output className="studio-share-status">{status}</output>
           </div>
-          <StudioIconButton label="More actions (coming soon)" disabled>
+          <StudioIconButton label="More actions">
             <IconDots />
           </StudioIconButton>
         </div>

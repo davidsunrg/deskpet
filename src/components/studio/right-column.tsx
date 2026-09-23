@@ -30,11 +30,11 @@ export function InteractivePetCard() {
         </p>
       </div>
       <div className="studio-interactive-actions">
-        <StudioButton primary disabled title="Coming soon">
+        <StudioButton primary>
           <IconPlayerPlayFilled />
           Play Animation
         </StudioButton>
-        <StudioButton disabled title="Coming soon">
+        <StudioButton>
           <IconAdjustments />
           Customize
         </StudioButton>
@@ -52,7 +52,6 @@ export function MemorialCard() {
         <div>
           <h2>Memorial Mode</h2>
           <p>Keep their memory alive, forever.</p>
-          <small>Coming soon</small>
         </div>
       </div>
       <div className="studio-memorial-scene">

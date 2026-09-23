@@ -180,6 +180,14 @@
 .studio-navigation a:hover {
   background: var(--studio-selected);
 }
+.studio-navigation a.studio-nav-selected {
+  background: var(--studio-selected);
+  color: var(--studio-text);
+  font-weight: 650;
+}
+.studio-navigation a.studio-nav-selected svg {
+  color: var(--studio-text);
+}
 .studio-nav-divider {
   border-top: 1px solid var(--studio-border);
   margin-top: 14px;
@@ -457,6 +465,12 @@
   border-radius: var(--studio-radius-card);
   background: var(--studio-tone-soft);
   min-height: 100px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.studio-action:hover {
+  filter: brightness(0.98);
 }
 .studio-action-icon {
   width: 62px;

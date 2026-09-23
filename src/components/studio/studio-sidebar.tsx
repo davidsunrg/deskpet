@@ -11,8 +11,11 @@ import {
   IconShare,
   IconSparkles,
 } from '@tabler/icons-react';
+import { useRouterState } from '@tanstack/react-router';
+import { getLocale, localizeHref } from '@/lib/locale';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
+import { cn } from '@/utils/cn';
 import { studioPet } from './studio-data';
 import { studioSections } from './studio-sections';
 
@@ -35,6 +38,15 @@ const items = [
   })),
   { title: 'Settings', icon: IconSettings, href: Routes.SettingsProfile },
 ];
+
+function normalizePath(path: string) {
+  return path.replace(/\/$/, '') || '/';
+}
+
+function hrefToPath(href: string) {
+  const pathname = href.split('?')[0]?.split('#')[0] || '/';
+  return normalizePath(localizeHref(pathname, { locale: getLocale() }));
+}
 
 function PetSwitcher({ onNavigate }: { onNavigate?: () => void }) {
   return (
@@ -100,13 +112,25 @@ function PetSwitcher({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname =
+    useRouterState({ select: (state) => state.location.pathname }) ?? '';
+  const currentPath = normalizePath(pathname);
+
+  const isNavActive = (href: string, exact = true) => {
+    const target = hrefToPath(href);
+    if (exact) return currentPath === target;
+    return currentPath === target || currentPath.startsWith(`${target}/`);
+  };
+
   return (
     <aside className="studio-sidebar">
       <PetSwitcher onNavigate={onNavigate} />
       <nav aria-label="Studio navigation" className="studio-navigation">
         <LocaleLink
           href={Routes.Studio}
-          activeOptions={{ exact: true }}
+          className={cn(
+            isNavActive(Routes.Studio, true) && 'studio-nav-selected'
+          )}
           onClick={onNavigate}
         >
           <IconHome />
@@ -117,7 +141,14 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
             key={item.title}
             className={index === 6 ? 'studio-nav-divider' : undefined}
           >
-            <LocaleLink href={item.href} onClick={onNavigate}>
+            <LocaleLink
+              href={item.href}
+              className={cn(
+                isNavActive(item.href, item.href !== Routes.SettingsProfile) &&
+                  'studio-nav-selected'
+              )}
+              onClick={onNavigate}
+            >
               <item.icon />
               {item.title}
             </LocaleLink>

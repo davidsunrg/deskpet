@@ -21,7 +21,7 @@ export function DesktopPetCard() {
         Desktop Pet
       </p>
       <div className="studio-downloads">
-        <StudioButton primary disabled title="Coming soon">
+        <StudioButton primary>
           <IconDownload />
           Download for Windows
         </StudioButton>
@@ -31,13 +31,12 @@ export function DesktopPetCard() {
             { label: 'GIF / MP4', icon: IconMovie },
             { label: 'More formats', icon: IconLayoutGrid },
           ].map(({ label, icon: Icon }) => (
-            <StudioButton key={label} disabled title="Coming soon">
+            <StudioButton key={label}>
               <Icon />
               {label}
             </StudioButton>
           ))}
         </div>
-        <span className="studio-download-note">Downloads coming soon</span>
       </div>
     </section>
   );
