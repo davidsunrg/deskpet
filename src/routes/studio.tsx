@@ -8,7 +8,7 @@ export const Route = createFileRoute('/studio')({
     seo('/studio', {
       title: `Studio | ${websiteConfig.metadata?.name}`,
       description:
-        'Your pet dashboard — create images and videos, record voice, chat, and keep every memory.',
+        'Your pet dashboard — create images and videos, record voice, and keep every memory.',
     }),
   component: StudioLayout,
 });

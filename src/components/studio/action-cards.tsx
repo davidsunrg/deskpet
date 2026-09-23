@@ -1,6 +1,5 @@
 import {
   IconChevronRight,
-  IconMessageCircle,
   IconMicrophone,
   IconPhoto,
   IconPlayerPlayFilled,
@@ -29,13 +28,6 @@ const actions = [
     icon: IconMicrophone,
     tone: 'voice',
     href: `${Routes.Studio}/voice`,
-  },
-  {
-    title: 'Chat with Mochi',
-    description: 'Talk, play, and get to know Mochi',
-    icon: IconMessageCircle,
-    tone: 'chat',
-    href: `${Routes.Studio}/chat`,
   },
 ];
 export function ActionCards() {

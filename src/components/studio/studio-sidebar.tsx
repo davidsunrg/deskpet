@@ -2,7 +2,6 @@ import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
   IconCalendar,
   IconHome,
-  IconMessageCircle,
   IconMicrophone,
   IconPhoto,
   IconPlus,
@@ -27,7 +26,6 @@ const sectionIcons = {
   moments: IconPhoto,
   'ai-generation': IconSparkles,
   voice: IconMicrophone,
-  chat: IconMessageCircle,
   care: IconCalendar,
   gallery: IconPhoto,
   share: IconShare,
