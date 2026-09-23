@@ -66,7 +66,7 @@ export function StudioHeader({
           className="studio-button studio-topbar-share"
         >
           <IconShare />
-          <span>Share</span>
+          <span>Pet Page</span>
         </LocaleLink>
       </div>
     </header>

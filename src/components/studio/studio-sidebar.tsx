@@ -1,14 +1,15 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
   IconCalendar,
+  IconHeart,
   IconHome,
   IconMicrophone,
   IconPhoto,
   IconPlus,
   IconSelector,
   IconSettings,
-  IconShare,
   IconSparkles,
+  IconWorld,
 } from '@tabler/icons-react';
 import { useRouterState } from '@tanstack/react-router';
 import { authClient } from '@/auth/client';
@@ -28,15 +29,11 @@ const sectionIcons = {
   voice: IconMicrophone,
   care: IconCalendar,
   gallery: IconPhoto,
-  share: IconShare,
+  memorial: IconHeart,
+  share: IconWorld,
 };
 
-const hiddenSectionSlugs = new Set([
-  'ai-generation',
-  'memorial',
-  'share',
-  'voice',
-]);
+const hiddenSectionSlugs = new Set(['ai-generation', 'memorial', 'voice']);
 
 const sectionItems = studioSections
   .filter((section) => !hiddenSectionSlugs.has(section.slug))

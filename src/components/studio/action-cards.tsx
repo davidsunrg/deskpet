@@ -21,14 +21,14 @@ const actions = [
     description: 'Generate new photos of Mochi in any style',
     icon: IconPhoto,
     tone: 'image',
-    href: `${Routes.Studio}/create`,
+    href: `${Routes.Studio}/create?type=photo`,
   },
   {
     title: 'Create Video',
     description: 'Turn moments into short videos',
     icon: IconPlayerPlayFilled,
     tone: 'video',
-    href: `${Routes.Studio}/create`,
+    href: `${Routes.Studio}/create?type=video`,
   },
   {
     title: 'Record Voice',
