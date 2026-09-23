@@ -1,5 +1,6 @@
 import {
   IconCheck,
+  IconDots,
   IconHeartFilled,
   IconLink,
   IconPencil,
@@ -19,47 +20,54 @@ export function PetHeader() {
   }
   return (
     <section className="studio-pet-header" aria-label="Pet profile">
-      <img
-        className="studio-pet-avatar"
-        src={studioPet.avatar}
-        alt={studioPet.name}
-        width={170}
-        height={170}
-      />
-      <div className="studio-pet-description">
-        <div className="studio-pet-title">
-          <h1>{studioPet.name}</h1>
-          <StudioIconButton label="Edit profile (coming soon)" disabled>
-            <IconPencil size={18} />
+      <div className="studio-pet-identity">
+        <img
+          className="studio-pet-avatar"
+          src={studioPet.avatar}
+          alt={studioPet.name}
+          width={120}
+          height={120}
+        />
+        <div className="studio-pet-description">
+          <div className="studio-pet-title">
+            <h1>{studioPet.name}</h1>
+            <StudioIconButton label="Edit profile (coming soon)" disabled>
+              <IconPencil size={18} />
+            </StudioIconButton>
+          </div>
+          <p>
+            {studioPet.age}
+            <span> · </span>Since {studioPet.since}
+          </p>
+          <p className="studio-pet-note">
+            {studioPet.note}
+            <IconHeartFilled />
+          </p>
+        </div>
+      </div>
+      <div className="studio-pet-header-right">
+        <div className="studio-pet-decoration" aria-hidden="true">
+          <p className="studio-handwriting">
+            Same pet,
+            <br />
+            More memories.
+            <br />
+            Always with you.
+          </p>
+          <img src={studioMedia.sketch} alt="" />
+        </div>
+        <div className="studio-pet-actions">
+          <div className="studio-share">
+            <StudioButton onClick={share}>
+              {status === 'Link copied' ? <IconCheck /> : <IconLink />}Share{' '}
+              {studioPet.name}
+            </StudioButton>
+            <output className="studio-share-status">{status}</output>
+          </div>
+          <StudioIconButton label="More actions (coming soon)" disabled>
+            <IconDots />
           </StudioIconButton>
         </div>
-        <p>
-          {studioPet.breed}
-          <span> · </span>
-          {studioPet.age}
-          <span> · </span>Since {studioPet.since}
-        </p>
-        <p className="studio-pet-note">
-          {studioPet.note}
-          <IconHeartFilled />
-        </p>
-      </div>
-      <div className="studio-pet-decoration" aria-hidden="true">
-        <p className="studio-handwriting">
-          Same pet,
-          <br />
-          More memories.
-          <br />
-          Always with you.
-        </p>
-        <img src={studioMedia.sketch} alt="" />
-      </div>
-      <div className="studio-share">
-        <StudioButton onClick={share}>
-          {status === 'Link copied' ? <IconCheck /> : <IconLink />}Share{' '}
-          {studioPet.name}
-        </StudioButton>
-        <span role="status">{status}</span>
       </div>
     </section>
   );

@@ -1,61 +1,49 @@
-import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { IconMenu2 } from '@tabler/icons-react';
 import {
-  IconBell,
-  IconChevronDown,
-  IconMenu2,
-  IconSearch,
-  IconUser,
-} from '@tabler/icons-react';
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import { StudioIconButton } from './studio-card';
-export function StudioHeader({ onOpenMenu }: { onOpenMenu: () => void }) {
+
+export function StudioHeader({
+  breadcrumb,
+  onOpenMenu,
+}: {
+  breadcrumb?: string;
+  onOpenMenu: () => void;
+}) {
   return (
-    <header className="studio-topbar">
-      <div className="studio-mobile-trigger">
+    <header
+      className={`studio-topbar${breadcrumb ? '' : ' studio-topbar-home'}`}
+    >
+      <div className="studio-topbar-menu">
         <StudioIconButton label="Open navigation" onClick={onOpenMenu}>
           <IconMenu2 />
         </StudioIconButton>
+        <Separator orientation="vertical" />
       </div>
-      <div className="studio-topbar-actions">
-        <StudioIconButton label="Search (coming soon)" disabled>
-          <IconSearch />
-        </StudioIconButton>
-        <StudioIconButton label="Notifications (coming soon)" disabled>
-          <IconBell />
-        </StudioIconButton>
-        <Dropdown.Root>
-          <Dropdown.Trigger
-            className="studio-account"
-            aria-label="Account menu"
-          >
-            <span>
-              <IconUser size={20} />
-            </span>
-            <IconChevronDown size={16} />
-          </Dropdown.Trigger>
-          <Dropdown.Portal>
-            <Dropdown.Content
-              data-studio-theme="light"
-              className="studio-menu"
-              align="end"
-              sideOffset={8}
-            >
-              <Dropdown.Label className="studio-menu-label">
-                Your account
-              </Dropdown.Label>
-              <Dropdown.Item asChild>
-                <LocaleLink href={Routes.SettingsProfile}>
-                  Profile settings
-                </LocaleLink>
-              </Dropdown.Item>
-              <Dropdown.Item asChild>
-                <LocaleLink href={Routes.Dashboard}>Dashboard</LocaleLink>
-              </Dropdown.Item>
-            </Dropdown.Content>
-          </Dropdown.Portal>
-        </Dropdown.Root>
-      </div>
+      {breadcrumb && (
+        <Breadcrumb className="studio-breadcrumb">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <LocaleLink href={Routes.Studio}>Studio</LocaleLink>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{breadcrumb}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      )}
     </header>
   );
 }

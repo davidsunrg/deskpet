@@ -47,42 +47,53 @@ const memories = [
 const bars = [10, 18, 12, 26, 20, 32, 14, 24, 18, 30, 10, 22, 28, 16, 24, 12];
 export function MemoriesCard() {
   return (
-    <section className="studio-card studio-memories">
-      <StudioCardHeader icon={<IconPhoto />} title="Memories" />
+    <section id="memories" className="studio-card studio-memories">
+      <StudioCardHeader
+        icon={<IconPhoto />}
+        title="Memories"
+        action={<span className="studio-preview-label">Preview</span>}
+      />
       <ol className="studio-timeline">
         {memories.map((memory) => (
           <li key={memory.date}>
             <time>{memory.date}</time>
             <div className="studio-memory">
               {memory.kind === 'event' ? (
-                <span className="studio-memory-heart">
-                  <IconHeartFilled />
-                </span>
+                <div className="studio-memory-thumb">
+                  <span className="studio-memory-heart">
+                    <IconHeartFilled />
+                  </span>
+                </div>
               ) : memory.kind === 'voice' ? (
                 <div
-                  className="studio-wave"
+                  className="studio-memory-thumb"
+                  role="img"
                   aria-label="Voice recording preview"
                 >
-                  <IconPlayerPlayFilled />
-                  <span>
-                    {bars.map((height, index) => (
-                      <i key={`bar-${index}`} style={{ height }} />
-                    ))}
-                  </span>
-                  <small>00:24</small>
+                  <div className="studio-wave">
+                    <IconPlayerPlayFilled />
+                    <span>
+                      {bars.map((height, index) => (
+                        <i key={`bar-${index}`} style={{ height }} />
+                      ))}
+                    </span>
+                    <small>00:24</small>
+                  </div>
                 </div>
               ) : (
-                <div className="studio-memory-image">
-                  <img
-                    src={memory.src}
-                    alt={memory.title}
-                    width={124}
-                    height={72}
-                    loading="lazy"
-                  />
-                  {memory.kind === 'video' && (
-                    <span className="studio-video-duration">00:15</span>
-                  )}
+                <div className="studio-memory-thumb">
+                  <div className="studio-memory-image">
+                    <img
+                      src={memory.src}
+                      alt={memory.title}
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                    />
+                    {memory.kind === 'video' && (
+                      <span className="studio-video-duration">00:15</span>
+                    )}
+                  </div>
                 </div>
               )}
               <div>

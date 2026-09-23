@@ -1,12 +1,12 @@
+import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
-  IconChevronRight,
-  IconCrown,
   IconHeart,
   IconHome,
   IconMessageCircle,
   IconMicrophone,
-  IconPaw,
   IconPhoto,
+  IconPlus,
+  IconSelector,
   IconSettings,
   IconShare,
   IconSparkles,
@@ -14,87 +14,116 @@ import {
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import { studioPet } from './studio-data';
+import { studioSections } from './studio-sections';
+
+const sectionIcons = {
+  create: IconSparkles,
+  memories: IconPhoto,
+  'ai-generation': IconSparkles,
+  voice: IconMicrophone,
+  chat: IconMessageCircle,
+  memorial: IconHeart,
+  gallery: IconPhoto,
+  share: IconShare,
+};
+
 const items = [
-  { title: 'Create', icon: IconSparkles, href: Routes.DesktopPetCreator },
-  { title: 'Memories', icon: IconPhoto },
-  { title: 'AI Generation', icon: IconSparkles },
-  { title: 'Voice', icon: IconMicrophone },
-  { title: 'Chat', icon: IconMessageCircle },
-  { title: 'Memorial', icon: IconHeart },
-  { title: 'Gallery', icon: IconPhoto },
-  { title: 'Share', icon: IconShare },
+  ...studioSections.map((section) => ({
+    title: section.title,
+    icon: sectionIcons[section.slug],
+    href: `${Routes.Studio}/${section.slug}`,
+  })),
   { title: 'Settings', icon: IconSettings, href: Routes.SettingsProfile },
 ];
+
+function PetSwitcher({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <Dropdown.Root>
+      <Dropdown.Trigger className="studio-pet-switcher">
+        <img
+          src={studioPet.avatar}
+          alt={studioPet.name}
+          width={40}
+          height={40}
+        />
+        <span>
+          <strong>{studioPet.name}</strong>
+          <small>{studioPet.age}</small>
+        </span>
+        <IconSelector />
+      </Dropdown.Trigger>
+      <Dropdown.Portal>
+        <Dropdown.Content
+          data-studio-theme="light"
+          className="studio-menu studio-pet-switcher-menu"
+          align="start"
+          sideOffset={6}
+        >
+          <Dropdown.Label className="studio-menu-label">
+            Current pet
+          </Dropdown.Label>
+          <Dropdown.Item asChild>
+            <LocaleLink
+              href={Routes.Studio}
+              className="studio-pet-menu-item"
+              onClick={onNavigate}
+            >
+              <img src={studioPet.avatar} alt="" width={28} height={28} />
+              <span>{studioPet.name}</span>
+            </LocaleLink>
+          </Dropdown.Item>
+          <Dropdown.Separator className="studio-menu-separator" />
+          <Dropdown.Item asChild>
+            <LocaleLink
+              href={Routes.Pets}
+              className="studio-pet-menu-item"
+              onClick={onNavigate}
+            >
+              <IconSettings />
+              <span>Manage pets</span>
+            </LocaleLink>
+          </Dropdown.Item>
+          <Dropdown.Item asChild>
+            <LocaleLink
+              href={Routes.DesktopPetCreator}
+              className="studio-pet-menu-item"
+              onClick={onNavigate}
+            >
+              <IconPlus />
+              <span>Add pet</span>
+            </LocaleLink>
+          </Dropdown.Item>
+        </Dropdown.Content>
+      </Dropdown.Portal>
+    </Dropdown.Root>
+  );
+}
+
 export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <aside className="studio-sidebar">
-      <LocaleLink
-        href={Routes.Root}
-        className="studio-brand"
-        onClick={onNavigate}
-      >
-        <IconPaw />
-        DeskPet
-      </LocaleLink>
-      <p className="studio-brand-note">
-        A happier life with your pet.
-        <br />
-        Always, together.
-      </p>
+      <PetSwitcher onNavigate={onNavigate} />
       <nav aria-label="Studio navigation" className="studio-navigation">
-        <LocaleLink href={Routes.Studio} onClick={onNavigate}>
-          <IconHome />
-          Home
-        </LocaleLink>
-        <LocaleLink href={Routes.Pets} onClick={onNavigate}>
-          <IconPaw />
-          My Pets
-        </LocaleLink>
         <LocaleLink
           href={Routes.Studio}
-          className="studio-selected"
-          aria-current="page"
+          activeOptions={{ exact: true }}
           onClick={onNavigate}
         >
-          <img src={studioPet.avatar} alt="" width={40} height={40} />
-          {studioPet.name}
-          <IconChevronRight className="studio-push" />
+          <IconHome />
+          Home
         </LocaleLink>
         {items.map((item, index) => (
           <div
             key={item.title}
             className={index === 6 ? 'studio-nav-divider' : undefined}
           >
-            {item.href ? (
-              <LocaleLink href={item.href} onClick={onNavigate}>
-                <item.icon />
-                {item.title}
-              </LocaleLink>
-            ) : (
-              <button type="button" disabled title="Coming soon">
-                <item.icon />
-                {item.title}
-                <span className="studio-sr-only"> (coming soon)</span>
-              </button>
-            )}
+            <LocaleLink href={item.href} onClick={onNavigate}>
+              <item.icon />
+              {item.title}
+            </LocaleLink>
           </div>
         ))}
       </nav>
-      <LocaleLink
-        href={Routes.Pricing}
-        className="studio-upgrade"
-        onClick={onNavigate}
-      >
-        <IconCrown />
-        <span>
-          <strong>Upgrade to Pro</strong>
-          <small>
-            More creations,
-            <br />
-            more memories.
-          </small>
-        </span>
-      </LocaleLink>
     </aside>
   );
 }

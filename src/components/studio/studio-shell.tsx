@@ -1,15 +1,19 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { IconX } from '@tabler/icons-react';
+import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState, type PropsWithChildren } from 'react';
-import { useLocalePathname, LocaleLink } from '@/lib/i18n/navigation';
-import { Routes } from '@/lib/routes';
 import { StudioHeader } from './studio-header';
+import { getStudioSection } from './studio-sections';
 import { StudioSidebar } from './studio-sidebar';
 import '@/styles/studio.css';
 export function StudioShell({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false);
-  const pathname = useLocalePathname();
+  const pathname = useLocation({
+    select: (location) => location.pathname,
+  });
+  const sectionSlug = pathname?.split('/').filter(Boolean).at(-1);
+  const section = sectionSlug ? getStudioSection(sectionSlug) : undefined;
   useEffect(() => {
     if (pathname) setOpen(false);
   }, [pathname]);
@@ -29,22 +33,15 @@ export function StudioShell({ children }: PropsWithChildren) {
             <StudioSidebar />
           </div>
           <div className="studio-main">
-            <StudioHeader onOpenMenu={() => setOpen(true)} />
-            {children}
+            <div className="studio-main-inner">
+              <StudioHeader
+                breadcrumb={section?.title}
+                onOpenMenu={() => setOpen(true)}
+              />
+              {children}
+            </div>
           </div>
         </div>
-        <footer className="studio-footer">
-          <LocaleLink href={Routes.Root}>DeskPet</LocaleLink>
-          <span>A lifetime of love, in a digital home.</span>
-          <nav aria-label="Studio footer">
-            <LocaleLink href={Routes.About}>About</LocaleLink>
-            <LocaleLink href={Routes.Blog}>Blog</LocaleLink>
-            <LocaleLink href={Routes.Contact}>Help & Contact</LocaleLink>
-          </nav>
-          <span className="studio-handwriting">
-            Good pets make a brighter world.
-          </span>
-        </footer>
         <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Portal>
             <Dialog.Overlay
