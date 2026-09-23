@@ -498,7 +498,7 @@
 }
 .studio-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--studio-space);
 }
 .studio-tone-image {
@@ -516,7 +516,8 @@
   --studio-tone-soft: var(--studio-voice-soft);
   --studio-tone-icon: var(--studio-voice-icon);
 }
-.studio-tone-chat {
+.studio-tone-chat,
+.studio-tone-moments {
   --studio-tone: var(--studio-chat);
   --studio-tone-soft: var(--studio-chat-soft);
   --studio-tone-icon: var(--studio-chat-icon);

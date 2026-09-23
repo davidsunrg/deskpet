@@ -2,6 +2,7 @@ import {
   IconChevronRight,
   IconMicrophone,
   IconPhoto,
+  IconPhotoPlus,
   IconPlayerPlayFilled,
 } from '@tabler/icons-react';
 import { LocaleLink } from '@/lib/i18n/navigation';
@@ -9,7 +10,14 @@ import { Routes } from '@/lib/routes';
 
 const actions = [
   {
-    title: 'Create Image',
+    title: 'Add Moments',
+    description: 'Save a photo, note, or memory from today',
+    icon: IconPhotoPlus,
+    tone: 'moments',
+    href: `${Routes.Studio}/moments`,
+  },
+  {
+    title: 'Create Photo',
     description: 'Generate new photos of Mochi in any style',
     icon: IconPhoto,
     tone: 'image',
