@@ -11,6 +11,8 @@ import {
   IconSparkles,
 } from '@tabler/icons-react';
 import { useRouterState } from '@tanstack/react-router';
+import { authClient } from '@/auth/client';
+import { UserButton } from '@/components/shared/user-button';
 import { getLocale, localizeHref } from '@/lib/locale';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
@@ -119,6 +121,7 @@ function PetSwitcher({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const { data: session } = authClient.useSession();
   const pathname =
     useRouterState({ select: (state) => state.location.pathname }) ?? '';
   const currentPath = normalizePath(pathname);
@@ -159,6 +162,15 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
           </div>
         ))}
       </nav>
+      {session?.user && (
+        <div className="studio-sidebar-user">
+          <UserButton user={session.user} />
+          <span>
+            <strong>{session.user.name}</strong>
+            <small>{session.user.email}</small>
+          </span>
+        </div>
+      )}
     </aside>
   );
 }

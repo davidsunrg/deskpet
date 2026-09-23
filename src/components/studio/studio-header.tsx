@@ -1,6 +1,4 @@
 import { IconMenu2, IconShare } from '@tabler/icons-react';
-import { authClient } from '@/auth/client';
-import { UserButton } from '@/components/shared/user-button';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,21 +10,35 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
+import { PetHeader } from './pet-header';
 import { StudioIconButton } from './studio-card';
 
 export function StudioHeader({
   breadcrumb,
+  isHome,
   onOpenMenu,
 }: {
   breadcrumb?: string;
+  isHome: boolean;
   onOpenMenu: () => void;
 }) {
-  const { data: session } = authClient.useSession();
+  if (isHome) {
+    return (
+      <header className="studio-home-header">
+        <div className="studio-home-toolbar">
+          <div className="studio-topbar-menu">
+            <StudioIconButton label="Open navigation" onClick={onOpenMenu}>
+              <IconMenu2 />
+            </StudioIconButton>
+          </div>
+        </div>
+        <PetHeader />
+      </header>
+    );
+  }
 
   return (
-    <header
-      className={`studio-topbar${breadcrumb ? '' : ' studio-topbar-home'}`}
-    >
+    <header className="studio-topbar">
       <div className="studio-topbar-menu">
         <StudioIconButton label="Open navigation" onClick={onOpenMenu}>
           <IconMenu2 />
@@ -56,7 +68,6 @@ export function StudioHeader({
           <IconShare />
           <span>Share</span>
         </LocaleLink>
-        {session?.user && <UserButton user={session.user} />}
       </div>
     </header>
   );

@@ -1,6 +1,7 @@
 import {
   IconAdjustments,
   IconCheck,
+  IconChevronRight,
   IconDots,
   IconHeartFilled,
   IconLink,
@@ -18,11 +19,16 @@ import { studioMedia, studioPet } from './studio-data';
 
 export function InteractivePetCard() {
   return (
-    <section className="studio-card studio-interactive studio-interactive-compact">
+    <section className="studio-card studio-interactive">
       <StudioCardHeader
         icon={<IconPaw />}
         title="Interactive DeskPet"
-        action={<span className="studio-preview-label">Preview</span>}
+        action={
+          <span className="studio-online-status">
+            <i />
+            Online
+          </span>
+        }
       />
       <div className="studio-interactive-scene">
         <img
@@ -40,7 +46,7 @@ export function InteractivePetCard() {
       <div className="studio-interactive-actions">
         <StudioButton primary>
           <IconPlayerPlayFilled />
-          Play
+          Play Animation
         </StudioButton>
         <StudioButton>
           <IconAdjustments />
@@ -111,6 +117,16 @@ export function PetProfileCard() {
 export function MemorialCard() {
   return (
     <section className="studio-card studio-memorial" aria-label="Memorial">
+      <div className="studio-memorial-heading">
+        <span>
+          <IconHeartFilled />
+        </span>
+        <div>
+          <h2>Memorial Mode</h2>
+          <p>Keep their memory alive, forever.</p>
+        </div>
+        <IconChevronRight />
+      </div>
       <div className="studio-memorial-scene">
         <img
           src={studioMedia.memorial}

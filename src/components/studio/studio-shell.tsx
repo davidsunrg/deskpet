@@ -14,8 +14,7 @@ export function StudioShell({ children }: PropsWithChildren) {
   });
   const sectionSlug = pathname?.split('/').filter(Boolean).at(-1);
   const section = sectionSlug ? getStudioSection(sectionSlug) : undefined;
-  const breadcrumb =
-    section?.title ?? (sectionSlug === 'studio' ? 'Home' : undefined);
+  const isHome = sectionSlug === 'studio';
   useEffect(() => {
     if (pathname) setOpen(false);
   }, [pathname]);
@@ -37,7 +36,8 @@ export function StudioShell({ children }: PropsWithChildren) {
           <div className="studio-main">
             <div className="studio-main-inner">
               <StudioHeader
-                breadcrumb={breadcrumb}
+                breadcrumb={section?.title}
+                isHome={isHome}
                 onOpenMenu={() => setOpen(true)}
               />
               {children}

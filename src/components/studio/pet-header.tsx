@@ -1,12 +1,6 @@
-import {
-  IconCheck,
-  IconDots,
-  IconHeartFilled,
-  IconLink,
-  IconPencil,
-} from '@tabler/icons-react';
+import { IconCheck, IconHeartFilled, IconLink } from '@tabler/icons-react';
 import { useState } from 'react';
-import { StudioButton, StudioIconButton } from './studio-card';
+import { StudioButton } from './studio-card';
 import { studioMedia, studioPet } from './studio-data';
 export function PetHeader() {
   const [status, setStatus] = useState('');
@@ -31,9 +25,13 @@ export function PetHeader() {
         <div className="studio-pet-description">
           <div className="studio-pet-title">
             <h1>{studioPet.name}</h1>
-            <StudioIconButton label="Edit profile">
-              <IconPencil size={18} />
-            </StudioIconButton>
+            <div className="studio-share">
+              <StudioButton onClick={share}>
+                {status === 'Link copied' ? <IconCheck /> : <IconLink />}
+                Share {studioPet.name}
+              </StudioButton>
+              <output className="studio-share-status">{status}</output>
+            </div>
           </div>
           <p>
             {studioPet.age}
@@ -55,18 +53,6 @@ export function PetHeader() {
             Always with you.
           </p>
           <img src={studioMedia.sketch} alt="" />
-        </div>
-        <div className="studio-pet-actions">
-          <div className="studio-share">
-            <StudioButton onClick={share}>
-              {status === 'Link copied' ? <IconCheck /> : <IconLink />}Share{' '}
-              {studioPet.name}
-            </StudioButton>
-            <output className="studio-share-status">{status}</output>
-          </div>
-          <StudioIconButton label="More actions">
-            <IconDots />
-          </StudioIconButton>
         </div>
       </div>
     </section>

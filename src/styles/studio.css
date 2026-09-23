@@ -188,6 +188,33 @@
 .studio-navigation a.studio-nav-selected svg {
   color: var(--studio-text);
 }
+.studio-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin-top: auto;
+  padding: 16px 10px 0;
+  border-top: 1px solid var(--studio-border);
+}
+.studio-sidebar-user > span {
+  display: grid;
+  min-width: 0;
+  line-height: 1.35;
+}
+.studio-sidebar-user strong,
+.studio-sidebar-user small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.studio-sidebar-user strong {
+  font-size: 13px;
+}
+.studio-sidebar-user small {
+  color: var(--studio-subtle);
+  font-size: 11px;
+}
 .studio-nav-divider {
   border-top: 1px solid var(--studio-border);
   margin-top: 14px;
@@ -199,9 +226,6 @@
   gap: 12px;
   height: 56px;
   padding: 0 12px;
-}
-.studio-topbar-home {
-  display: none;
 }
 .studio-topbar-menu {
   display: none;
@@ -239,6 +263,27 @@
 }
 .studio-topbar-actions > button {
   border-radius: 999px;
+}
+.studio-home-header {
+  position: relative;
+  margin-bottom: var(--studio-space);
+}
+.studio-home-header .studio-pet-header {
+  padding-top: 0;
+  padding-inline: 0;
+}
+.studio-home-toolbar {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.studio-home-toolbar .studio-topbar-menu {
+  margin-right: auto;
 }
 .studio-icon-button {
   display: inline-flex;
@@ -399,15 +444,10 @@
   white-space: nowrap;
 }
 .studio-pet-decoration img {
-  width: 96px;
-  height: 82px;
-  object-fit: contain;
-}
-.studio-pet-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
+  width: 240px;
+  height: 120px;
+  object-fit: cover;
+  object-position: center 48%;
 }
 .studio-share {
   position: relative;
@@ -783,6 +823,19 @@
   color: var(--studio-subtle);
   font-size: var(--studio-font-item-meta);
 }
+.studio-online-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--studio-subtle);
+  font-size: var(--studio-font-item-meta);
+}
+.studio-online-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+}
 .studio-interactive-scene {
   position: relative;
 }
@@ -820,44 +873,6 @@
 }
 .studio-interactive-actions svg {
   width: 15px;
-}
-.studio-interactive-compact.studio-card {
-  padding: 12px;
-}
-.studio-interactive-compact .studio-card-heading {
-  margin-bottom: 10px;
-}
-.studio-interactive-compact .studio-card-heading h2 {
-  font-size: 15px;
-  gap: 6px;
-}
-.studio-interactive-compact .studio-interactive-scene > img {
-  aspect-ratio: 1.45;
-  max-height: 132px;
-}
-.studio-interactive-compact .studio-interactive-scene p {
-  top: 8%;
-  right: 2%;
-  padding: 8px 10px;
-  font-size: 10px;
-  line-height: 1.35;
-}
-.studio-interactive-compact .studio-interactive-actions {
-  margin-top: 8px;
-  gap: 6px;
-}
-.studio-interactive-compact .studio-interactive-actions .studio-button {
-  padding: 6px 8px;
-  font-size: 12px;
-  border-radius: 20px;
-}
-@media (min-width: 1280px) {
-  .studio-right-column {
-    align-self: stretch;
-  }
-  .studio-right-column .studio-interactive-compact {
-    margin-block: auto;
-  }
 }
 .studio-pet-profile-main {
   min-width: 0;
@@ -904,6 +919,44 @@
 }
 .studio-pet-profile-actions .studio-button {
   width: 100%;
+}
+.studio-memorial-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.studio-memorial-heading > span {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--studio-image-soft);
+  color: var(--studio-image);
+}
+.studio-memorial-heading > span svg {
+  width: 22px;
+  height: 22px;
+}
+.studio-memorial-heading > div {
+  min-width: 0;
+}
+.studio-memorial-heading h2 {
+  font-size: var(--studio-font-title);
+  font-weight: 650;
+}
+.studio-memorial-heading p {
+  color: var(--studio-muted);
+  font-size: var(--studio-font-item-title);
+  font-weight: 500;
+}
+.studio-memorial-heading > svg {
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  color: var(--studio-subtle);
 }
 .studio-memorial-scene {
   position: relative;
@@ -974,8 +1027,8 @@
     font-size: 14px;
   }
   .studio-pet-decoration img {
-    width: 78px;
-    height: 70px;
+    width: 210px;
+    height: 112px;
   }
   .studio-action {
     gap: 9px;
@@ -1012,8 +1065,8 @@
   .studio-topbar-menu {
     display: flex;
   }
-  .studio-topbar-home {
-    display: flex;
+  .studio-home-header .studio-pet-header {
+    padding-top: 56px;
   }
   .studio-pet-decoration {
     display: none;
@@ -1077,9 +1130,6 @@
   .studio-pet-header-right {
     width: 100%;
     align-items: stretch;
-  }
-  .studio-pet-actions {
-    justify-content: flex-end;
   }
   .studio-share {
     padding-bottom: 12px;
