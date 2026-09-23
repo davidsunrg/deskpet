@@ -1,11 +1,11 @@
 export const studioSections = [
   { slug: 'moments', title: 'Moments' },
   { slug: 'create', title: 'Create' },
+  { slug: 'gallery', title: 'Gallery' },
   { slug: 'ai-generation', title: 'AI Generation' },
   { slug: 'voice', title: 'Voice' },
   { slug: 'chat', title: 'Chat' },
   { slug: 'memorial', title: 'Memorial' },
-  { slug: 'gallery', title: 'Gallery' },
   { slug: 'share', title: 'Share' },
 ] as const;
 

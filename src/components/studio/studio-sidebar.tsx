@@ -142,7 +142,7 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
           <div
             key={item.title}
             className={
-              item.title === 'Gallery' ? 'studio-nav-divider' : undefined
+              item.title === 'Share' ? 'studio-nav-divider' : undefined
             }
           >
             <LocaleLink
