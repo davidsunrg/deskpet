@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { StudioButton } from './studio-card';
 import { studioMedia, studioPet } from './studio-data';
 export function PetHeader() {
-  const [status, setStatus] = useState('');
+  const [copied, setCopied] = useState(false);
   async function share() {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      setStatus('Link copied');
-    } catch {
-      setStatus('Unable to copy. Copy the address from your browser.');
+      setCopied(true);
+    } catch (error) {
+      console.error('Unable to copy the Studio link.', error);
     }
   }
   return (
@@ -27,10 +27,9 @@ export function PetHeader() {
             <h1>{studioPet.name}</h1>
             <div className="studio-share">
               <StudioButton onClick={share}>
-                {status === 'Link copied' ? <IconCheck /> : <IconLink />}
+                {copied ? <IconCheck /> : <IconLink />}
                 <span>Share {studioPet.name}</span>
               </StudioButton>
-              <output className="studio-share-status">{status}</output>
             </div>
           </div>
           <p>

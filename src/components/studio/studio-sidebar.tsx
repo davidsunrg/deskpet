@@ -12,7 +12,8 @@ import {
 } from '@tabler/icons-react';
 import { useRouterState } from '@tanstack/react-router';
 import { authClient } from '@/auth/client';
-import { UserButton } from '@/components/shared/user-button';
+import { UserAccountMenu } from '@/components/shared/user-account-menu';
+import { UserAvatar } from '@/components/shared/user-avatar';
 import { getLocale, localizeHref } from '@/lib/locale';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
@@ -163,13 +164,25 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
       {session?.user && (
-        <div className="studio-sidebar-user">
-          <UserButton user={session.user} />
-          <span>
-            <strong>{session.user.name}</strong>
-            <small>{session.user.email}</small>
-          </span>
-        </div>
+        <UserAccountMenu
+          user={session.user}
+          side={onNavigate ? 'top' : 'right'}
+          contentClassName="z-[110]"
+          trigger={
+            <button type="button" className="studio-sidebar-user">
+              <UserAvatar
+                name={session.user.name ?? null}
+                image={session.user.image ?? null}
+                className="size-8 border"
+              />
+              <span>
+                <strong>{session.user.name}</strong>
+                <small>{session.user.email}</small>
+              </span>
+              <IconSelector />
+            </button>
+          }
+        />
       )}
     </aside>
   );
