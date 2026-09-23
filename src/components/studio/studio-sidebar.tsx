@@ -48,12 +48,6 @@ const sectionItems = studioSections
     href: `${Routes.Studio}/${section.slug}`,
   }));
 
-const settingsItem = {
-  title: 'Settings',
-  icon: IconSettings,
-  href: Routes.SettingsProfile,
-};
-
 function normalizePath(path: string) {
   return path.replace(/\/$/, '') || '/';
 }
@@ -138,10 +132,6 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
     return currentPath === target || currentPath.startsWith(`${target}/`);
   };
 
-  const settingsRoot = hrefToPath(Routes.Settings);
-  const isSettingsActive =
-    currentPath === settingsRoot || currentPath.startsWith(`${settingsRoot}/`);
-
   return (
     <aside className="studio-sidebar">
       <PetSwitcher onNavigate={onNavigate} />
@@ -170,19 +160,6 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
             </LocaleLink>
           </div>
         ))}
-      </nav>
-      <nav
-        aria-label="Settings"
-        className="studio-navigation studio-nav-divider"
-      >
-        <LocaleLink
-          href={settingsItem.href}
-          className={cn(isSettingsActive && 'studio-nav-selected')}
-          onClick={onNavigate}
-        >
-          <settingsItem.icon />
-          {settingsItem.title}
-        </LocaleLink>
       </nav>
       {session?.user && (
         <UserAccountMenu
