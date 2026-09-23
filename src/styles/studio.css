@@ -787,6 +787,10 @@
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
 }
 .studio-wave > span {
   display: flex;

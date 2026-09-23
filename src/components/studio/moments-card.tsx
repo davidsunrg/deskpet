@@ -1,8 +1,10 @@
 import {
   IconHeartFilled,
   IconPhoto,
+  IconPlayerPauseFilled,
   IconPlayerPlayFilled,
 } from '@tabler/icons-react';
+import { useRef, useState } from 'react';
 import { StudioCardHeader } from './studio-card';
 import { studioMedia } from './studio-data';
 
@@ -59,6 +61,75 @@ const moments = [
   },
 ];
 
+function formatTime(value: number) {
+  const seconds = Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+function VoiceMomentPreview() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  async function togglePlayback() {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch {
+        setIsPlaying(false);
+      }
+    } else {
+      audio.pause();
+    }
+  }
+
+  return (
+    <div className="studio-memory-thumb studio-memory-thumb-voice">
+      <audio
+        ref={audioRef}
+        src="/studio/bark.mp3"
+        preload="metadata"
+        onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+        onTimeUpdate={(event) =>
+          setCurrentTime(event.currentTarget.currentTime)
+        }
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => {
+          setIsPlaying(false);
+          setCurrentTime(0);
+        }}
+      >
+        <track
+          kind="captions"
+          src="/bark.vtt"
+          srcLang="en"
+          label="English"
+          default
+        />
+      </audio>
+      <button
+        type="button"
+        className="studio-wave studio-wave-memory"
+        onClick={togglePlayback}
+        aria-label={isPlaying ? "Pause Mochi's bark" : "Play Mochi's bark"}
+      >
+        {isPlaying ? <IconPlayerPauseFilled /> : <IconPlayerPlayFilled />}
+        <span aria-hidden="true">
+          {bars.map((height, index) => (
+            <i key={`bar-${index}`} style={{ height }} />
+          ))}
+        </span>
+        <small>{formatTime(isPlaying ? currentTime : duration)}</small>
+      </button>
+    </div>
+  );
+}
+
 function MomentMediaPreview({ moment }: { moment: MomentMedia }) {
   if (moment.kind === 'event') {
     return (
@@ -71,23 +142,7 @@ function MomentMediaPreview({ moment }: { moment: MomentMedia }) {
   }
 
   if (moment.kind === 'voice') {
-    return (
-      <div
-        className="studio-memory-thumb studio-memory-thumb-voice"
-        role="img"
-        aria-label="Voice recording preview"
-      >
-        <div className="studio-wave studio-wave-memory">
-          <IconPlayerPlayFilled />
-          <span>
-            {bars.map((height, index) => (
-              <i key={`bar-${index}`} style={{ height }} />
-            ))}
-          </span>
-          <small>00:24</small>
-        </div>
-      </div>
-    );
+    return <VoiceMomentPreview />;
   }
 
   return (
