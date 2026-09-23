@@ -4,7 +4,7 @@ import {
   StudioCreatePage,
   type CreateTemplateKind,
 } from '@/components/studio/create-page';
-import { StudioPetPage } from '@/components/studio/pet-page';
+import { StudioPublicSite } from '@/components/studio/public-site';
 import { StudioPageShell } from '@/components/studio/studio-page-shell';
 import { getStudioSection } from '@/components/studio/studio-sections';
 
@@ -39,8 +39,8 @@ function StudioSectionPage() {
     );
   }
 
-  if (sectionSlug === 'share') {
-    return <StudioPetPage />;
+  if (sectionSlug === 'public-site') {
+    return <StudioPublicSite />;
   }
 
   return (

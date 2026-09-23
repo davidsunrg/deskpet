@@ -4,6 +4,7 @@ import {
   IconHeart,
   IconHome,
   IconMicrophone,
+  IconMovie,
   IconPhoto,
   IconPlus,
   IconSelector,
@@ -30,7 +31,7 @@ const sectionIcons = {
   care: IconCalendar,
   gallery: IconPhoto,
   memorial: IconHeart,
-  share: IconWorld,
+  'public-site': IconWorld,
 };
 
 const hiddenSectionSlugs = new Set(['ai-generation', 'memorial', 'voice']);
@@ -38,6 +39,7 @@ const hiddenSectionSlugs = new Set(['ai-generation', 'memorial', 'voice']);
 const sectionItems = studioSections
   .filter((section) => !hiddenSectionSlugs.has(section.slug))
   .map((section) => ({
+    slug: section.slug,
     title: section.title,
     icon: sectionIcons[section.slug],
     href: `${Routes.Studio}/${section.slug}`,
@@ -117,15 +119,18 @@ function PetSwitcher({ onNavigate }: { onNavigate?: () => void }) {
 
 export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { data: session } = authClient.useSession();
-  const pathname =
-    useRouterState({ select: (state) => state.location.pathname }) ?? '';
-  const currentPath = normalizePath(pathname);
+  const location = useRouterState({ select: (state) => state.location });
+  const currentPath = normalizePath(location.pathname ?? '');
+  const search = location.search as Record<string, unknown>;
+  const currentCreateType = search.type === 'video' ? 'video' : 'photo';
 
   const isNavActive = (href: string, exact = true) => {
     const target = hrefToPath(href);
     if (exact) return currentPath === target;
     return currentPath === target || currentPath.startsWith(`${target}/`);
   };
+  const createHref = `${Routes.Studio}/create`;
+  const isCreateActive = isNavActive(createHref, true);
 
   return (
     <aside className="studio-sidebar">
@@ -141,20 +146,59 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
           <IconHome />
           Home
         </LocaleLink>
-        {sectionItems.map((item) => (
-          <div key={item.title}>
-            <LocaleLink
-              href={item.href}
-              className={cn(
-                isNavActive(item.href, true) && 'studio-nav-selected'
-              )}
-              onClick={onNavigate}
-            >
-              <item.icon />
-              {item.title}
-            </LocaleLink>
-          </div>
-        ))}
+        {sectionItems.map((item) =>
+          item.slug === 'create' ? (
+            <div key={item.title} className="studio-nav-group">
+              <LocaleLink
+                href={`${item.href}?type=photo`}
+                className={cn(isCreateActive && 'studio-nav-parent-active')}
+                onClick={onNavigate}
+              >
+                <item.icon />
+                {item.title}
+              </LocaleLink>
+              <div className="studio-nav-children">
+                <LocaleLink
+                  href={`${item.href}?type=photo`}
+                  className={cn(
+                    isCreateActive &&
+                      currentCreateType === 'photo' &&
+                      'studio-nav-selected'
+                  )}
+                  onClick={onNavigate}
+                >
+                  <IconPhoto />
+                  Photo
+                </LocaleLink>
+                <LocaleLink
+                  href={`${item.href}?type=video`}
+                  className={cn(
+                    isCreateActive &&
+                      currentCreateType === 'video' &&
+                      'studio-nav-selected'
+                  )}
+                  onClick={onNavigate}
+                >
+                  <IconMovie />
+                  Video
+                </LocaleLink>
+              </div>
+            </div>
+          ) : (
+            <div key={item.title}>
+              <LocaleLink
+                href={item.href}
+                className={cn(
+                  isNavActive(item.href, true) && 'studio-nav-selected'
+                )}
+                onClick={onNavigate}
+              >
+                <item.icon />
+                {item.title}
+              </LocaleLink>
+            </div>
+          )
+        )}
       </nav>
       {session?.user && (
         <UserAccountMenu

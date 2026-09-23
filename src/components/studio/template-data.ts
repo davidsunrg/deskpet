@@ -1,4 +1,4 @@
-export type StudioTemplateKind = 'photo' | 'video' | 'album' | 'page';
+export type StudioTemplateKind = 'photo' | 'video' | 'album' | 'site';
 
 export type StudioTemplate = {
   id: string;
@@ -77,23 +77,23 @@ export const studioTemplates: StudioTemplate[] = [
     preview: '/studio/portrait.png',
   },
   {
-    id: 'page-journal',
-    kind: 'page',
+    id: 'site-journal',
+    kind: 'site',
     name: 'Daily Journal',
     description: 'A warm timeline for everyday stories and milestones.',
     preview: '/studio/flowers.png',
     badge: 'Recommended',
   },
   {
-    id: 'page-gallery',
-    kind: 'page',
+    id: 'site-gallery',
+    kind: 'site',
     name: 'Gallery First',
     description: 'A visual homepage that puts photos center stage.',
     preview: '/studio/beach.png',
   },
   {
-    id: 'page-keepsake',
-    kind: 'page',
+    id: 'site-keepsake',
+    kind: 'site',
     name: 'Forever Loved',
     description: 'A quiet, thoughtful page for a lasting tribute.',
     preview: '/studio/memorial.png',

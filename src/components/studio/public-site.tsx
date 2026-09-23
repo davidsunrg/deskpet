@@ -11,28 +11,28 @@ import { StudioPageShell } from './studio-page-shell';
 import { getTemplatesByKind } from './template-data';
 import { TemplateGallery } from './template-gallery';
 
-const pageTemplates = getTemplatesByKind('page');
+const siteTemplates = getTemplatesByKind('site');
 
-export function StudioPetPage() {
-  const [selectedId, setSelectedId] = useState(pageTemplates[0]?.id ?? '');
+export function StudioPublicSite() {
+  const [selectedId, setSelectedId] = useState(siteTemplates[0]?.id ?? '');
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const selectedTemplate =
-    pageTemplates.find((template) => template.id === selectedId) ??
-    pageTemplates[0];
+    siteTemplates.find((template) => template.id === selectedId) ??
+    siteTemplates[0];
 
   return (
     <StudioPageShell>
       <section className="studio-template-page">
-        <header className="studio-template-page-heading studio-page-heading">
+        <header className="studio-template-page-heading studio-site-heading">
           <div>
-            <p>Pet Page</p>
-            <h1>Make Mochi's page feel like home</h1>
+            <p>Public Site</p>
+            <h1>Make Mochi's public site feel like home</h1>
             <span>
               Choose a template, personalize the story, and share it with the
               people who care.
             </span>
           </div>
-          <div className="studio-page-heading-actions">
+          <div className="studio-site-heading-actions">
             <button type="button" className="studio-button">
               <IconPencil />
               Customize
@@ -42,29 +42,29 @@ export function StudioPetPage() {
               className="studio-button studio-button-primary"
             >
               <IconWorld />
-              Publish page
+              Publish site
             </button>
           </div>
         </header>
 
-        <div className="studio-page-builder">
+        <div className="studio-site-builder">
           <div>
             <div className="studio-section-heading">
               <div>
-                <h2>Choose a page template</h2>
+                <h2>Choose a site template</h2>
                 <p>Your content stays the same when you switch templates.</p>
               </div>
             </div>
             <TemplateGallery
-              templates={pageTemplates}
+              templates={siteTemplates}
               selectedId={selectedId}
               onSelect={(template) => setSelectedId(template.id)}
             />
           </div>
 
           {selectedTemplate && (
-            <aside className="studio-page-preview-panel">
-              <div className="studio-page-preview-toolbar">
+            <aside className="studio-site-preview-panel">
+              <div className="studio-site-preview-toolbar">
                 <div>
                   <button
                     type="button"
@@ -87,8 +87,8 @@ export function StudioPetPage() {
                   <IconExternalLink />
                 </button>
               </div>
-              <div className="studio-page-preview-stage">
-                <div className="studio-page-preview" data-device={device}>
+              <div className="studio-site-preview-stage">
+                <div className="studio-site-preview" data-device={device}>
                   <img src={selectedTemplate.preview} alt="" />
                   <div>
                     <img src={studioPet.avatar} alt="" />
@@ -99,7 +99,7 @@ export function StudioPetPage() {
                   </div>
                 </div>
               </div>
-              <div className="studio-page-preview-meta">
+              <div className="studio-site-preview-meta">
                 <div>
                   <small>Previewing</small>
                   <strong>{selectedTemplate.name}</strong>

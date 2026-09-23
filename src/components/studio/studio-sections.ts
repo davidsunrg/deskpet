@@ -6,7 +6,7 @@ export const studioSections = [
   { slug: 'voice', title: 'Voice' },
   { slug: 'care', title: 'Care' },
   { slug: 'memorial', title: 'Memorial' },
-  { slug: 'share', title: 'Pet Page' },
+  { slug: 'public-site', title: 'Public Site' },
 ] as const;
 
 export function getStudioSection(slug: string) {

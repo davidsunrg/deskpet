@@ -62,11 +62,11 @@ export function StudioHeader({
       )}
       <div className="studio-topbar-actions">
         <LocaleLink
-          href={`${Routes.Studio}/share`}
+          href={`${Routes.Studio}/public-site`}
           className="studio-button studio-topbar-share"
         >
           <IconShare />
-          <span>Pet Page</span>
+          <span>Public Site</span>
         </LocaleLink>
       </div>
     </header>
