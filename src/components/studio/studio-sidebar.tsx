@@ -1,6 +1,5 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
-  IconHeart,
   IconHome,
   IconMessageCircle,
   IconMicrophone,
@@ -25,17 +24,18 @@ const sectionIcons = {
   'ai-generation': IconSparkles,
   voice: IconMicrophone,
   chat: IconMessageCircle,
-  memorial: IconHeart,
   gallery: IconPhoto,
   share: IconShare,
 };
 
 const items = [
-  ...studioSections.map((section) => ({
-    title: section.title,
-    icon: sectionIcons[section.slug],
-    href: `${Routes.Studio}/${section.slug}`,
-  })),
+  ...studioSections
+    .filter((section) => section.slug !== 'memorial')
+    .map((section) => ({
+      title: section.title,
+      icon: sectionIcons[section.slug],
+      href: `${Routes.Studio}/${section.slug}`,
+    })),
   { title: 'Settings', icon: IconSettings, href: Routes.SettingsProfile },
 ];
 
@@ -136,10 +136,12 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
           <IconHome />
           Home
         </LocaleLink>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <div
             key={item.title}
-            className={index === 6 ? 'studio-nav-divider' : undefined}
+            className={
+              item.title === 'Gallery' ? 'studio-nav-divider' : undefined
+            }
           >
             <LocaleLink
               href={item.href}
