@@ -6,6 +6,8 @@ import {
   IconClock,
   IconPlus,
 } from '@tabler/icons-react';
+import { LocaleLink } from '@/lib/i18n/navigation';
+import { Routes } from '@/lib/routes';
 import { StudioButton, StudioCardHeader } from './studio-card';
 
 const careTasks = [
@@ -14,7 +16,13 @@ const careTasks = [
   { icon: '🐾', title: 'Evening walk', time: '6:00 PM', complete: false },
 ] as const;
 
-export function MochisDayCard({ isNewUser = false }: { isNewUser?: boolean }) {
+export function MochisDayCard({
+  isNewUser = false,
+  showViewAll = true,
+}: {
+  isNewUser?: boolean;
+  showViewAll?: boolean;
+}) {
   return (
     <section className="studio-card studio-care" aria-label="Mochi's day">
       <StudioCardHeader
@@ -113,7 +121,14 @@ export function MochisDayCard({ isNewUser = false }: { isNewUser?: boolean }) {
               <IconPlus />
               Add reminder
             </StudioButton>
-            <StudioButton>View all</StudioButton>
+            {showViewAll ? (
+              <LocaleLink
+                href={`${Routes.Studio}/care`}
+                className="studio-button"
+              >
+                View all
+              </LocaleLink>
+            ) : null}
           </div>
         </>
       )}

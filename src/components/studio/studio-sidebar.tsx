@@ -1,5 +1,6 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
+  IconCalendar,
   IconHome,
   IconMessageCircle,
   IconMicrophone,
@@ -27,6 +28,7 @@ const sectionIcons = {
   'ai-generation': IconSparkles,
   voice: IconMicrophone,
   chat: IconMessageCircle,
+  care: IconCalendar,
   gallery: IconPhoto,
   share: IconShare,
 };
@@ -38,16 +40,19 @@ const hiddenSectionSlugs = new Set([
   'voice',
 ]);
 
-const items = [
-  ...studioSections
-    .filter((section) => !hiddenSectionSlugs.has(section.slug))
-    .map((section) => ({
-      title: section.title,
-      icon: sectionIcons[section.slug],
-      href: `${Routes.Studio}/${section.slug}`,
-    })),
-  { title: 'Settings', icon: IconSettings, href: Routes.SettingsProfile },
-];
+const sectionItems = studioSections
+  .filter((section) => !hiddenSectionSlugs.has(section.slug))
+  .map((section) => ({
+    title: section.title,
+    icon: sectionIcons[section.slug],
+    href: `${Routes.Studio}/${section.slug}`,
+  }));
+
+const settingsItem = {
+  title: 'Settings',
+  icon: IconSettings,
+  href: Routes.SettingsProfile,
+};
 
 function normalizePath(path: string) {
   return path.replace(/\/$/, '') || '/';
@@ -133,6 +138,10 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
     return currentPath === target || currentPath.startsWith(`${target}/`);
   };
 
+  const settingsRoot = hrefToPath(Routes.Settings);
+  const isSettingsActive =
+    currentPath === settingsRoot || currentPath.startsWith(`${settingsRoot}/`);
+
   return (
     <aside className="studio-sidebar">
       <PetSwitcher onNavigate={onNavigate} />
@@ -147,13 +156,12 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
           <IconHome />
           Home
         </LocaleLink>
-        {items.map((item) => (
+        {sectionItems.map((item) => (
           <div key={item.title}>
             <LocaleLink
               href={item.href}
               className={cn(
-                isNavActive(item.href, item.href !== Routes.SettingsProfile) &&
-                  'studio-nav-selected'
+                isNavActive(item.href, true) && 'studio-nav-selected'
               )}
               onClick={onNavigate}
             >
@@ -162,6 +170,19 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
             </LocaleLink>
           </div>
         ))}
+      </nav>
+      <nav
+        aria-label="Settings"
+        className="studio-navigation studio-nav-divider"
+      >
+        <LocaleLink
+          href={settingsItem.href}
+          className={cn(isSettingsActive && 'studio-nav-selected')}
+          onClick={onNavigate}
+        >
+          <settingsItem.icon />
+          {settingsItem.title}
+        </LocaleLink>
       </nav>
       {session?.user && (
         <UserAccountMenu

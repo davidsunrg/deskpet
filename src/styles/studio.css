@@ -386,6 +386,9 @@
   color: var(--studio-subtle);
   font-size: 16px;
 }
+.studio-care-page {
+  max-width: 480px;
+}
 .studio-pet-header {
   position: relative;
   display: flex;
