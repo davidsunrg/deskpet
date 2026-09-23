@@ -1,20 +1,6 @@
-import {
-  IconCrown,
-  IconHeart,
-  IconHome,
-  IconLogout,
-  IconMessageCircle,
-  IconMicrophone,
-  IconPhoto,
-  IconPlus,
-  IconSelector,
-  IconSettings,
-  IconSettings2,
-  IconShare,
-  IconSparkles,
-  IconUser,
-} from '@tabler/icons-react';
-import { useState } from 'react';
+'use client';
+
+import { UserAvatar } from '@/components/shared/user-avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,44 +14,31 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
-
-const navItemClass =
-  'flex items-center gap-3 rounded-xl px-3 py-2 text-[13px] font-medium text-[#6f655c] transition-colors hover:bg-white hover:text-[#2b2622]';
-
-function NavItem({
-  icon,
-  label,
-  active,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
-  onClick?: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        navItemClass,
-        active &&
-          'bg-white text-[#2b2622] shadow-[0_1px_3px_rgba(43,38,34,0.06)]'
-      )}
-    >
-      {icon}
-      <span>{label}</span>
-    </button>
-  );
-}
-
-function NavDivider() {
-  return <div className="my-3 h-px bg-[#eee7dc]" />;
-}
+import { Routes } from '@/lib/routes';
+import {
+  IconHeart,
+  IconHome,
+  IconLogout,
+  IconMessageCircle,
+  IconMicrophone,
+  IconPhoto,
+  IconPlus,
+  IconSelector,
+  IconSettings,
+  IconSettings2,
+  IconShare,
+  IconSparkles,
+} from '@tabler/icons-react';
+import { Link } from '@tanstack/react-router';
+import { useState } from 'react';
 
 type Pet = {
   name: string;
@@ -91,198 +64,152 @@ const pets: Pet[] = [
   },
 ];
 
+/** Team-switcher style pet picker (sidebar-07 pattern, dashboard tokens). */
 function PetSwitcher() {
   const { isMobile } = useSidebar();
   const [activePet, setActivePet] = useState<Pet>(pets[0]);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className="flex w-full items-center gap-2.5 rounded-2xl bg-white p-2.5 text-left shadow-[0_1px_4px_rgba(43,38,34,0.08)] ring-1 ring-[#f0eae0] transition-colors hover:bg-[#fdfaf5] data-[state=open]:ring-[#e4dccc]"
-        >
-          <img
-            src={activePet.avatar}
-            alt={activePet.name}
-            className="size-9 shrink-0 rounded-xl object-cover"
-          />
-          <span className="grid min-w-0 flex-1 leading-tight">
-            <span className="truncate text-[14px] font-bold text-[#2b2622]">
-              {activePet.name}
-            </span>
-            <span className="truncate text-[11px] text-[#a2978b]">
-              {activePet.breed}
-            </span>
-          </span>
-          <IconSelector className="size-4 shrink-0 text-[#b3a89b]" />
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-xl"
-        align="start"
-        side={isMobile ? 'bottom' : 'right'}
-        sideOffset={4}
-      >
-        <DropdownMenuLabel className="text-xs text-[#a2978b]">
-          My Pets
-        </DropdownMenuLabel>
-        {pets.map((pet, index) => (
-          <DropdownMenuItem
-            key={pet.name}
-            onClick={() => setActivePet(pet)}
-            className="gap-2 p-2"
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <img
+                src={activePet.avatar}
+                alt={activePet.name}
+                className="size-8 shrink-0 rounded-lg border object-cover"
+              />
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{activePet.name}</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {activePet.breed}
+                </span>
+              </div>
+              <IconSelector className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            align="start"
+            side={isMobile ? 'bottom' : 'right'}
+            sideOffset={4}
           >
-            <img
-              src={pet.avatar}
-              alt={pet.name}
-              className="size-6 shrink-0 rounded-md object-cover"
-            />
-            <span className="truncate">{pet.name}</span>
-            <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="gap-2 p-2">
-          <div className="flex size-6 items-center justify-center rounded-md border border-[#e9e2d6] bg-transparent">
-            <IconPlus className="size-4" />
-          </div>
-          <div className="font-medium text-[#a2978b]">Add pet</div>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              My Pets
+            </DropdownMenuLabel>
+            {pets.map((pet, index) => (
+              <DropdownMenuItem
+                key={pet.name}
+                onClick={() => setActivePet(pet)}
+                className="gap-2 p-2"
+              >
+                <img
+                  src={pet.avatar}
+                  alt={pet.name}
+                  className="size-6 shrink-0 rounded-md border object-cover"
+                />
+                <span className="truncate">{pet.name}</span>
+                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2 p-2">
+              <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                <IconPlus className="size-4" />
+              </div>
+              <div className="font-medium text-muted-foreground">Add pet</div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }
 
-export function StudioSidebar() {
+const navItems = [
+  { title: 'Home', icon: IconHome, href: Routes.Studio, active: true },
+  { title: 'Create', icon: IconSparkles, href: '#' },
+  { title: 'Memories', icon: IconPhoto, href: '#' },
+  { title: 'AI Generation', icon: IconSparkles, href: '#' },
+  { title: 'Voice', icon: IconMicrophone, href: '#' },
+  { title: 'Chat', icon: IconMessageCircle, href: '#' },
+  { title: 'Memorial', icon: IconHeart, href: '#' },
+  { title: 'Gallery', icon: IconPhoto, href: '#' },
+  { title: 'Share', icon: IconShare, href: '#' },
+  { title: 'Settings', icon: IconSettings, href: '#' },
+];
+
+function StudioSidebarMain() {
   const { isMobile, setOpenMobile } = useSidebar();
-  const closeOnMobile = () => {
+  const closeMobileSidebar = () => {
     if (isMobile) setOpenMobile(false);
   };
 
   return (
-    <Sidebar collapsible="offcanvas" className="border-r-0">
-      <SidebarHeader className="px-5 pt-6 pb-0">
-        <PetSwitcher />
-      </SidebarHeader>
+    <SidebarGroup>
+      <SidebarGroupContent className="flex flex-col gap-0.5">
+        <SidebarMenu>
+          {navItems.map((item) => (
+            <SidebarMenuItem key={item.title} className="py-1">
+              <SidebarMenuButton asChild isActive={item.active}>
+                <Link to={item.href} onClick={closeMobileSidebar}>
+                  <item.icon className="size-4 shrink-0" />
+                  <span className="truncate font-medium text-sm">
+                    {item.title}
+                  </span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
 
-      <SidebarContent className="gap-0 px-5 pt-6">
-        <nav className="flex flex-col gap-1">
-          <NavItem
-            icon={<IconHome className="size-[18px]" strokeWidth={1.8} />}
-            label="Home"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={<IconSparkles className="size-[18px]" strokeWidth={1.8} />}
-            label="Create"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={<IconPhoto className="size-[18px]" strokeWidth={1.8} />}
-            label="Memories"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={<IconSparkles className="size-[18px]" strokeWidth={1.8} />}
-            label="AI Generation"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={<IconMicrophone className="size-[18px]" strokeWidth={1.8} />}
-            label="Voice"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={
-              <IconMessageCircle className="size-[18px]" strokeWidth={1.8} />
-            }
-            label="Chat"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={<IconHeart className="size-[18px]" strokeWidth={1.8} />}
-            label="Memorial"
-            onClick={closeOnMobile}
-          />
-        </nav>
+/** Static placeholder user block mirroring `SidebarUser` (no auth on /studio). */
+function StudioUser() {
+  const { isMobile } = useSidebar();
 
-        <NavDivider />
-
-        <nav className="flex flex-col gap-1">
-          <NavItem
-            icon={<IconPhoto className="size-[18px]" strokeWidth={1.8} />}
-            label="Gallery"
-            onClick={closeOnMobile}
-          />
-          <NavItem
-            icon={<IconShare className="size-[18px]" strokeWidth={1.8} />}
-            label="Share"
-            onClick={closeOnMobile}
-          />
-        </nav>
-
-        <NavDivider />
-
-        <nav className="flex flex-col gap-1">
-          <NavItem
-            icon={<IconSettings className="size-[18px]" strokeWidth={1.8} />}
-            label="Settings"
-            onClick={closeOnMobile}
-          />
-        </nav>
-      </SidebarContent>
-
-      <SidebarFooter className="px-5 pt-4 pb-6">
-        <div className="rounded-2xl bg-gradient-to-br from-[#f4f0ff] to-[#e7dfff] p-4">
-          <div className="flex items-center gap-2">
-            <IconCrown className="size-4 text-[#f2a03d]" />
-            <span className="text-[13px] font-bold text-[#2b2622]">
-              Upgrade to Pro
-            </span>
-          </div>
-          <p className="mt-1.5 text-[11px] leading-snug text-[#8b7f9c]">
-            More creations, more memories.
-          </p>
-        </div>
-
-        {/* User */}
+  return (
+    <SidebarMenu className="border-t pt-4">
+      <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className="mt-3 flex w-full items-center gap-2.5 rounded-2xl bg-white p-2.5 text-left shadow-[0_1px_4px_rgba(43,38,34,0.08)] ring-1 ring-[#f0eae0] transition-colors hover:bg-[#fdfaF5] data-[state=open]:ring-[#e4dccc]"
+            <SidebarMenuButton
+              size="lg"
+              className="bg-sidebar-accent/60 text-sidebar-accent-foreground hover:bg-sidebar-accent data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <img
-                src="https://placehold.co/72x72/e8d5c4/7a5c3f?text=D"
-                alt="Daniel"
-                className="size-8 shrink-0 rounded-full object-cover"
+              <UserAvatar
+                name="Daniel"
+                image="https://placehold.co/72x72/e8d5c4/7a5c3f?text=D"
+                className="size-8 border"
               />
-              <span className="grid min-w-0 flex-1 leading-tight">
-                <span className="truncate text-[13px] font-semibold text-[#2b2622]">
-                  Daniel
-                </span>
-                <span className="truncate text-[11px] text-[#a2978b]">
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">Daniel</span>
+                <span className="truncate text-xs text-muted-foreground">
                   daniel@deskpet.app
                 </span>
-              </span>
-              <IconSelector className="size-4 shrink-0 text-[#b3a89b]" />
-            </button>
+              </div>
+              <IconSelector className="ml-auto size-4" />
+            </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
           >
-            <DropdownMenuItem>
-              <IconUser className="mr-2 size-4" />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IconSettings2 className="mr-2 size-4" />
-              Settings
-            </DropdownMenuItem>
+            <Link to={Routes.SettingsProfile} className="block">
+              <DropdownMenuItem>
+                <IconSettings2 className="mr-2 size-4" />
+                Settings
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <IconLogout className="mr-2 size-4" />
@@ -290,6 +217,24 @@ export function StudioSidebar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}
+
+export function StudioSidebar() {
+  return (
+    <Sidebar collapsible="offcanvas" className="border-r-0">
+      <SidebarHeader className="gap-[10px] px-[18px] pt-[18px] pb-2">
+        <PetSwitcher />
+      </SidebarHeader>
+
+      <SidebarContent className="px-[18px] pt-0">
+        <StudioSidebarMain />
+      </SidebarContent>
+
+      <SidebarFooter className="mt-auto gap-[10px] px-[18px] pb-[22px]">
+        <StudioUser />
       </SidebarFooter>
     </Sidebar>
   );

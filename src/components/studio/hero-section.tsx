@@ -1,13 +1,18 @@
+import { Button } from '@/components/ui/button';
+import { CtaButton } from '@/components/ui/cta-button';
 import {
   IconBrandApple,
-  IconChevronDown,
-  IconChevronRight,
   IconDownload,
-  IconHeartFilled,
   IconLayoutGrid,
   IconMovie,
+  IconPhoto,
 } from '@tabler/icons-react';
-import { handStyle } from './pet-header';
+import {
+  StudioCardHeader,
+  studioCardClass,
+  studioSoftButtonClass,
+  studioSoftCardClass,
+} from './studio-card';
 
 const creations = [
   {
@@ -24,72 +29,38 @@ const creations = [
   },
 ];
 
+const formats = [
+  { label: 'macOS', icon: IconBrandApple },
+  { label: 'GIF / MP4', icon: IconMovie },
+  { label: 'More formats', icon: IconLayoutGrid },
+];
+
 export function DesktopPetCard() {
   return (
-    <section className="overflow-hidden rounded-[26px] bg-white shadow-[0_2px_12px_rgba(43,38,34,0.05)]">
-      {/* Image */}
-      <div className="relative">
-        <img
-          src="https://placehold.co/760x560/f5e3c8/8a6b3f?text=Desktop+Pet"
-          alt="Mochi as a desktop pet"
-          className="aspect-[19/14] w-full object-cover"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-        <p
-          className="absolute top-4 right-5 rotate-[-5deg] text-[20px] leading-[1.1] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.35)]"
-          style={handStyle}
-        >
-          Your custom
-          <br />
-          Desktop Pet
-        </p>
-        <IconHeartFilled className="absolute top-[74px] right-6 size-4 rotate-6 text-[#ff8fa8] drop-shadow" />
-
-        {/* Download bar */}
-        <div className="absolute inset-x-4 bottom-4">
-          <div className="flex items-center overflow-hidden rounded-2xl bg-[#241f1b]/95 shadow-lg backdrop-blur">
-            <button
+    <section className={`${studioCardClass} overflow-hidden`}>
+      <img
+        src="https://placehold.co/760x560/f5e3c8/8a6b3f?text=Desktop+Pet"
+        alt="Mochi as a desktop pet"
+        className="aspect-[19/14] w-full border-b-2 border-deskpet-ink object-cover"
+      />
+      <div className="flex flex-col gap-3 p-4">
+        <CtaButton className="w-full">
+          <IconDownload className="size-4" />
+          Download for Windows
+        </CtaButton>
+        <div className="flex flex-wrap gap-2">
+          {formats.map((format) => (
+            <Button
+              key={format.label}
               type="button"
-              className="flex flex-1 items-center justify-center gap-2 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-white/5"
+              variant="outline"
+              className={`${studioSoftButtonClass} min-w-[96px] flex-1 gap-1.5`}
             >
-              <IconDownload className="size-4" strokeWidth={2.2} />
-              Download for Windows
-            </button>
-            <span className="h-6 w-px bg-white/15" />
-            <button
-              type="button"
-              aria-label="Choose platform"
-              className="px-3.5 py-3 text-white transition-colors hover:bg-white/5"
-            >
-              <IconChevronDown className="size-4" strokeWidth={2.2} />
-            </button>
-          </div>
+              <format.icon className="size-3.5" />
+              {format.label}
+            </Button>
+          ))}
         </div>
-      </div>
-
-      {/* Format chips */}
-      <div className="flex flex-wrap items-center gap-2.5 p-4 pt-3.5">
-        <button
-          type="button"
-          className="flex min-w-[96px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#faf7f1] px-3 py-2.5 text-[12px] font-medium whitespace-nowrap text-[#5c5248] ring-1 ring-[#f0eadd] transition-colors hover:bg-[#f4efe6]"
-        >
-          <IconBrandApple className="size-4" strokeWidth={1.8} />
-          macOS
-        </button>
-        <button
-          type="button"
-          className="flex min-w-[96px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#faf7f1] px-3 py-2.5 text-[12px] font-medium whitespace-nowrap text-[#5c5248] ring-1 ring-[#f0eadd] transition-colors hover:bg-[#f4efe6]"
-        >
-          <IconMovie className="size-4" strokeWidth={1.8} />
-          GIF / MP4
-        </button>
-        <button
-          type="button"
-          className="flex min-w-[96px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#faf7f1] px-3 py-2.5 text-[12px] font-medium whitespace-nowrap text-[#5c5248] ring-1 ring-[#f0eadd] transition-colors hover:bg-[#f4efe6]"
-        >
-          <IconLayoutGrid className="size-4" strokeWidth={1.8} />
-          More formats
-        </button>
       </div>
     </section>
   );
@@ -97,26 +68,21 @@ export function DesktopPetCard() {
 
 export function RecentCreations() {
   return (
-    <section className="rounded-[26px] bg-white p-5 shadow-[0_2px_12px_rgba(43,38,34,0.05)]">
-      <div className="flex items-center justify-between">
-        <h2 className="text-[15px] font-bold text-[#2b2622]">
-          Recent Creations
-        </h2>
-        <button
-          type="button"
-          className="flex items-center gap-1 text-[12px] font-medium text-[#a2978b] transition-colors hover:text-[#2b2622]"
-        >
-          See all
-          <IconChevronRight className="size-3.5" strokeWidth={2.2} />
-        </button>
-      </div>
-      <div className="mt-4 grid grid-cols-3 gap-3">
+    <section className={`${studioSoftCardClass} p-5`}>
+      <StudioCardHeader
+        icon={<IconPhoto className="size-[18px] text-deskpet-ink" />}
+        accent="bg-deskpet-lavender"
+        title="Recent Creations"
+        description="Your latest generated memories"
+        action="See all"
+      />
+      <div className="grid grid-cols-3 gap-3">
         {creations.map((item) => (
           <img
             key={item.alt}
             src={item.src}
             alt={item.alt}
-            className="aspect-square w-full rounded-2xl object-cover"
+            className="aspect-square w-full rounded-xl border-2 border-deskpet-ink/10 object-cover"
           />
         ))}
       </div>

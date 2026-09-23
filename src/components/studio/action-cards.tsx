@@ -5,35 +5,32 @@ import {
   IconPhoto,
   IconPlayerPlayFilled,
 } from '@tabler/icons-react';
+import { studioSoftCardClass } from './studio-card';
 
 const actions = [
   {
     title: 'Create Image',
     description: 'Generate new photos of Mochi in any style',
     icon: IconPhoto,
-    chip: 'bg-[#f1ebff] text-[#7c5cf0]',
-    card: 'bg-[#faf8ff]',
+    accent: 'bg-deskpet-lavender',
   },
   {
     title: 'Create Video',
     description: 'Turn moments into short videos',
     icon: IconPlayerPlayFilled,
-    chip: 'bg-[#dff7ec] text-[#18a957]',
-    card: 'bg-[#f6fdf9]',
+    accent: 'bg-deskpet-mint-soft',
   },
   {
     title: 'Record Voice',
     description: "Save Mochi's voice and special sounds",
     icon: IconMicrophone,
-    chip: 'bg-[#ffeadd] text-[#f2701d]',
-    card: 'bg-[#fffaF6]',
+    accent: 'bg-deskpet-cream',
   },
   {
     title: 'Chat with Mochi',
     description: 'Talk, play, and get to know Mochi',
     icon: IconMessageCircle,
-    chip: 'bg-[#e3f0ff] text-[#3b82f6]',
-    card: 'bg-[#f7fbff]',
+    accent: 'bg-deskpet-sky/40',
   },
 ];
 
@@ -44,25 +41,22 @@ export function ActionCards() {
         <button
           key={action.title}
           type="button"
-          className={`flex items-center gap-3.5 rounded-[22px] ${action.card} p-4 text-left shadow-[0_1px_6px_rgba(43,38,34,0.04)] ring-1 ring-[#f2ede4] transition-shadow hover:shadow-[0_4px_14px_rgba(43,38,34,0.08)]`}
+          className={`${studioSoftCardClass} flex items-center gap-3.5 p-4 text-left transition-transform hover:-translate-y-0.5`}
         >
           <span
-            className={`flex size-11 shrink-0 items-center justify-center rounded-full ${action.chip}`}
+            className={`grid size-10 shrink-0 place-items-center rounded-xl border-2 border-deskpet-ink ${action.accent}`}
           >
-            <action.icon className="size-5" strokeWidth={2} />
+            <action.icon className="size-[18px] text-deskpet-ink" />
           </span>
           <span className="min-w-0">
-            <span className="block text-[13.5px] font-bold text-[#2b2622]">
+            <span className="block text-sm font-black tracking-tight text-deskpet-ink">
               {action.title}
             </span>
-            <span className="mt-0.5 block text-[11px] leading-snug text-[#a2978b]">
+            <span className="mt-0.5 block text-[11px] leading-snug text-deskpet-muted">
               {action.description}
             </span>
           </span>
-          <IconChevronRight
-            className="ml-auto size-4 shrink-0 text-[#c9bfb2]"
-            strokeWidth={2}
-          />
+          <IconChevronRight className="ml-auto size-4 shrink-0 text-deskpet-muted" />
         </button>
       ))}
     </div>
