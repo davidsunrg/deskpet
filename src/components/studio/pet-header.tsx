@@ -28,7 +28,7 @@ export function PetHeader() {
             <div className="studio-share">
               <StudioButton onClick={share}>
                 {status === 'Link copied' ? <IconCheck /> : <IconLink />}
-                Share {studioPet.name}
+                <span>Share {studioPet.name}</span>
               </StudioButton>
               <output className="studio-share-status">{status}</output>
             </div>
