@@ -1,4 +1,6 @@
-import { IconMenu2 } from '@tabler/icons-react';
+import { IconMenu2, IconShare } from '@tabler/icons-react';
+import { authClient } from '@/auth/client';
+import { UserButton } from '@/components/shared/user-button';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +21,8 @@ export function StudioHeader({
   breadcrumb?: string;
   onOpenMenu: () => void;
 }) {
+  const { data: session } = authClient.useSession();
+
   return (
     <header
       className={`studio-topbar${breadcrumb ? '' : ' studio-topbar-home'}`}
@@ -44,6 +48,16 @@ export function StudioHeader({
           </BreadcrumbList>
         </Breadcrumb>
       )}
+      <div className="studio-topbar-actions">
+        <LocaleLink
+          href={`${Routes.Studio}/share`}
+          className="studio-button studio-topbar-share"
+        >
+          <IconShare />
+          <span>Share</span>
+        </LocaleLink>
+        {session?.user && <UserButton user={session.user} />}
+      </div>
     </header>
   );
 }

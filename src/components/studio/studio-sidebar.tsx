@@ -28,7 +28,12 @@ const sectionIcons = {
   share: IconShare,
 };
 
-const hiddenSectionSlugs = new Set(['ai-generation', 'memorial', 'voice']);
+const hiddenSectionSlugs = new Set([
+  'ai-generation',
+  'memorial',
+  'share',
+  'voice',
+]);
 
 const items = [
   ...studioSections
@@ -139,12 +144,7 @@ export function StudioSidebar({ onNavigate }: { onNavigate?: () => void }) {
           Home
         </LocaleLink>
         {items.map((item) => (
-          <div
-            key={item.title}
-            className={
-              item.title === 'Share' ? 'studio-nav-divider' : undefined
-            }
-          >
+          <div key={item.title}>
             <LocaleLink
               href={item.href}
               className={cn(

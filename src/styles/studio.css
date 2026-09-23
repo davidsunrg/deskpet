@@ -199,7 +199,6 @@
   gap: 12px;
   height: 56px;
   padding: 0 12px;
-  border-bottom: 1px solid var(--studio-border);
 }
 .studio-topbar-home {
   display: none;
@@ -223,6 +222,23 @@
 .studio-breadcrumb [data-slot="breadcrumb-page"] {
   color: var(--studio-text);
   font-weight: 500;
+}
+.studio-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.studio-topbar-share {
+  min-height: 34px;
+  padding: 6px 11px;
+}
+.studio-topbar-share svg {
+  width: 16px;
+  height: 16px;
+}
+.studio-topbar-actions > button {
+  border-radius: 999px;
 }
 .studio-icon-button {
   display: inline-flex;
@@ -1021,6 +1037,13 @@
 @media (max-width: 767px) {
   .studio-root {
     padding-inline: 16px;
+  }
+  .studio-topbar-share {
+    width: 34px;
+    padding: 0;
+  }
+  .studio-topbar-share span {
+    display: none;
   }
   .studio-main-inner {
     padding-inline: 0;
