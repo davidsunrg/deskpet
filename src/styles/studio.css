@@ -1658,7 +1658,7 @@
   .studio-template-tabs {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .studio-template-tabs button {
     justify-content: center;

@@ -9,7 +9,7 @@ import { StudioPageShell } from '@/components/studio/studio-page-shell';
 import { getStudioSection } from '@/components/studio/studio-sections';
 
 function parseCreateType(type: unknown): CreateTemplateKind | undefined {
-  if (type === 'photo' || type === 'video' || type === 'album') return type;
+  if (type === 'photo' || type === 'video') return type;
   return undefined;
 }
 

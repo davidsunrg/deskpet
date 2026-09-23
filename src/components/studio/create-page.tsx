@@ -1,14 +1,10 @@
-import {
-  IconBook2,
-  IconPhoto,
-  IconPlayerPlayFilled,
-} from '@tabler/icons-react';
+import { IconPhoto, IconPlayerPlayFilled } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { StudioPageShell } from './studio-page-shell';
 import { getTemplatesByKind, type StudioTemplateKind } from './template-data';
 import { TemplateGallery, TemplateSelection } from './template-gallery';
 
-export type CreateTemplateKind = Exclude<StudioTemplateKind, 'page'>;
+export type CreateTemplateKind = Extract<StudioTemplateKind, 'photo' | 'video'>;
 
 const createCategories: {
   kind: CreateTemplateKind;
@@ -33,14 +29,6 @@ const createCategories: {
     description: 'Bring favorite moments to life with a short video.',
     actionLabel: 'Use video template',
     icon: IconPlayerPlayFilled,
-  },
-  {
-    kind: 'album',
-    label: 'Memorial Album',
-    title: 'Create a memorial album',
-    description: 'Gather the moments that tell your story together.',
-    actionLabel: 'Use album template',
-    icon: IconBook2,
   },
 ];
 
