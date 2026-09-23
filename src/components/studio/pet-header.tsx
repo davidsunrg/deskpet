@@ -1,53 +1,65 @@
-import { Button } from '@/components/ui/button';
 import {
-  IconDots,
+  IconCheck,
   IconHeartFilled,
   IconLink,
   IconPencil,
 } from '@tabler/icons-react';
-import { studioCardClass, studioSoftButtonClass } from './studio-card';
-
+import { useState } from 'react';
+import { StudioButton, StudioIconButton } from './studio-card';
+import { studioMedia, studioPet } from './studio-data';
 export function PetHeader() {
+  const [status, setStatus] = useState('');
+  async function share() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setStatus('Link copied');
+    } catch {
+      setStatus('Unable to copy. Copy the address from your browser.');
+    }
+  }
   return (
-    <section className={`${studioCardClass} p-5 sm:p-6`}>
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
-        <div className="flex min-w-0 items-center gap-4 sm:gap-5">
-          <img
-            src="https://placehold.co/240x240/f2d8b3/8a6b3f?text=Mochi"
-            alt="Mochi"
-            className="size-[72px] shrink-0 rounded-2xl border-2 border-deskpet-ink object-cover sm:size-[88px]"
-          />
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-black tracking-tight text-deskpet-ink">
-                Mochi
-              </h1>
-              <IconPencil className="size-4 text-deskpet-muted" />
-            </div>
-            <p className="mt-1 text-[13px] font-semibold text-deskpet-muted">
-              Golden Retriever · 3 years old · Since 2023.06.12
-            </p>
-            <p className="mt-2 flex items-center gap-1.5 text-[13px] text-deskpet-muted">
-              My sunshine. Thank you for being in my life.
-              <IconHeartFilled className="size-3.5 shrink-0 text-deskpet-pink" />
-            </p>
-          </div>
+    <section className="studio-pet-header" aria-label="Pet profile">
+      <img
+        className="studio-pet-avatar"
+        src={studioPet.avatar}
+        alt={studioPet.name}
+        width={170}
+        height={170}
+      />
+      <div className="studio-pet-description">
+        <div className="studio-pet-title">
+          <h1>{studioPet.name}</h1>
+          <StudioIconButton label="Edit profile (coming soon)" disabled>
+            <IconPencil size={18} />
+          </StudioIconButton>
         </div>
-
-        <div className="flex items-center gap-2 sm:ml-auto">
-          <Button variant="outline" className={studioSoftButtonClass}>
-            <IconLink className="size-3.5" />
-            Share Mochi
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="More options"
-            className={`${studioSoftButtonClass} px-2.5`}
-          >
-            <IconDots className="size-4" />
-          </Button>
-        </div>
+        <p>
+          {studioPet.breed}
+          <span> · </span>
+          {studioPet.age}
+          <span> · </span>Since {studioPet.since}
+        </p>
+        <p className="studio-pet-note">
+          {studioPet.note}
+          <IconHeartFilled />
+        </p>
+      </div>
+      <div className="studio-pet-decoration" aria-hidden="true">
+        <p className="studio-handwriting">
+          Same pet,
+          <br />
+          More memories.
+          <br />
+          Always with you.
+        </p>
+        <img src={studioMedia.sketch} alt="" />
+      </div>
+      <div className="studio-share">
+        <StudioButton onClick={share}>
+          {status === 'Link copied' ? <IconCheck /> : <IconLink />}Share{' '}
+          {studioPet.name}
+        </StudioButton>
+        <span role="status">{status}</span>
       </div>
     </section>
   );

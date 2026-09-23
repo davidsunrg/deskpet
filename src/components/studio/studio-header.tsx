@@ -1,82 +1,60 @@
-import { LocaleSwitcher } from '@/components/layout/locale-switcher';
-import { ModeSwitcher } from '@/components/theme/mode-switcher';
+import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { websiteConfig } from '@/config/website';
-import { Link } from '@tanstack/react-router';
-import type { ReactNode } from 'react';
-import React from 'react';
-
-export interface StudioBreadcrumbItem {
-  label: string;
-  href?: string;
-  isCurrentPage?: boolean;
-}
-
-interface StudioHeaderProps {
-  breadcrumbs: StudioBreadcrumbItem[];
-  actions?: ReactNode;
-}
-
-/**
- * Copy of `DashboardHeader` for the studio section.
- */
-export function StudioHeader({ breadcrumbs, actions }: StudioHeaderProps) {
-  const showModeSwitch = websiteConfig.ui?.mode?.enableSwitch ?? false;
-
+  IconBell,
+  IconChevronDown,
+  IconMenu2,
+  IconSearch,
+  IconUser,
+} from '@tabler/icons-react';
+import { LocaleLink } from '@/lib/i18n/navigation';
+import { Routes } from '@/lib/routes';
+import { StudioIconButton } from './studio-card';
+export function StudioHeader({ onOpenMenu }: { onOpenMenu: () => void }) {
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-      <div className="flex w-full min-w-0 items-center gap-2 px-4 lg:px-6">
-        <SidebarTrigger className="-ml-1 shrink-0" />
-        <Separator
-          orientation="vertical"
-          className="mx-2 h-4 data-vertical:self-auto"
-        />
-
-        <Breadcrumb className="min-w-0 flex-1">
-          <BreadcrumbList className="text-base font-medium">
-            {breadcrumbs.map((item, index) => (
-              <React.Fragment key={`breadcrumb-${index}`}>
-                {index > 0 && (
-                  <BreadcrumbSeparator
-                    key={`sep-${index}`}
-                    className="hidden md:block"
-                  />
-                )}
-                <BreadcrumbItem
-                  key={`item-${index}`}
-                  className={
-                    index < breadcrumbs.length - 1 ? 'hidden md:block' : ''
-                  }
-                >
-                  {item.isCurrentPage ? (
-                    <BreadcrumbPage>{item.label}</BreadcrumbPage>
-                  ) : item.href ? (
-                    <BreadcrumbLink asChild>
-                      <Link to={item.href}>{item.label}</Link>
-                    </BreadcrumbLink>
-                  ) : (
-                    item.label
-                  )}
-                </BreadcrumbItem>
-              </React.Fragment>
-            ))}
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        <div className="ml-auto flex shrink-0 items-center gap-3 pl-4">
-          {actions}
-          <LocaleSwitcher />
-          {showModeSwitch && <ModeSwitcher />}
-        </div>
+    <header className="studio-topbar">
+      <div className="studio-mobile-trigger">
+        <StudioIconButton label="Open navigation" onClick={onOpenMenu}>
+          <IconMenu2 />
+        </StudioIconButton>
+      </div>
+      <div className="studio-topbar-actions">
+        <StudioIconButton label="Search (coming soon)" disabled>
+          <IconSearch />
+        </StudioIconButton>
+        <StudioIconButton label="Notifications (coming soon)" disabled>
+          <IconBell />
+        </StudioIconButton>
+        <Dropdown.Root>
+          <Dropdown.Trigger
+            className="studio-account"
+            aria-label="Account menu"
+          >
+            <span>
+              <IconUser size={20} />
+            </span>
+            <IconChevronDown size={16} />
+          </Dropdown.Trigger>
+          <Dropdown.Portal>
+            <Dropdown.Content
+              data-studio-theme="light"
+              className="studio-menu"
+              align="end"
+              sideOffset={8}
+            >
+              <Dropdown.Label className="studio-menu-label">
+                Your account
+              </Dropdown.Label>
+              <Dropdown.Item asChild>
+                <LocaleLink href={Routes.SettingsProfile}>
+                  Profile settings
+                </LocaleLink>
+              </Dropdown.Item>
+              <Dropdown.Item asChild>
+                <LocaleLink href={Routes.Dashboard}>Dashboard</LocaleLink>
+              </Dropdown.Item>
+            </Dropdown.Content>
+          </Dropdown.Portal>
+        </Dropdown.Root>
       </div>
     </header>
   );

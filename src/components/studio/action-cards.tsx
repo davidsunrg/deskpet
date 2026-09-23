@@ -5,58 +5,52 @@ import {
   IconPhoto,
   IconPlayerPlayFilled,
 } from '@tabler/icons-react';
-import { studioSoftCardClass } from './studio-card';
-
 const actions = [
   {
     title: 'Create Image',
     description: 'Generate new photos of Mochi in any style',
     icon: IconPhoto,
-    accent: 'bg-deskpet-lavender',
+    tone: 'image',
   },
   {
     title: 'Create Video',
     description: 'Turn moments into short videos',
     icon: IconPlayerPlayFilled,
-    accent: 'bg-deskpet-mint-soft',
+    tone: 'video',
   },
   {
     title: 'Record Voice',
     description: "Save Mochi's voice and special sounds",
     icon: IconMicrophone,
-    accent: 'bg-deskpet-cream',
+    tone: 'voice',
   },
   {
     title: 'Chat with Mochi',
     description: 'Talk, play, and get to know Mochi',
     icon: IconMessageCircle,
-    accent: 'bg-deskpet-sky/40',
+    tone: 'chat',
   },
 ];
-
 export function ActionCards() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="studio-actions">
       {actions.map((action) => (
         <button
           key={action.title}
           type="button"
-          className={`${studioSoftCardClass} flex items-center gap-3.5 p-4 text-left transition-transform hover:-translate-y-0.5`}
+          disabled
+          title="Coming soon"
+          className={`studio-action studio-tone-${action.tone}`}
         >
-          <span
-            className={`grid size-10 shrink-0 place-items-center rounded-xl border-2 border-deskpet-ink ${action.accent}`}
-          >
-            <action.icon className="size-[18px] text-deskpet-ink" />
+          <span className="studio-action-icon">
+            <action.icon />
           </span>
-          <span className="min-w-0">
-            <span className="block text-sm font-black tracking-tight text-deskpet-ink">
-              {action.title}
-            </span>
-            <span className="mt-0.5 block text-[11px] leading-snug text-deskpet-muted">
-              {action.description}
-            </span>
+          <span>
+            <strong>{action.title}</strong>
+            <small>{action.description}</small>
+            <span className="studio-unavailable">Coming soon</span>
           </span>
-          <IconChevronRight className="ml-auto size-4 shrink-0 text-deskpet-muted" />
+          <IconChevronRight className="studio-action-arrow" />
         </button>
       ))}
     </div>
