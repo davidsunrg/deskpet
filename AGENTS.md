@@ -30,6 +30,13 @@ pnpm email:dev              # React Email preview on port 3333
 pnpm cf-typegen             # Generate Cloudflare Worker types (also runs on postinstall)
 ```
 
+## Agent workflow
+
+- **Do not run `pnpm dev`** (or start Vite/Wrangler dev servers in the background) unless the user explicitly asks you to start the dev server.
+- Assume the user runs local dev themselves when they want to click through the UI.
+- Prefer non-server verification: `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm build`, and reading or editing code.
+- Do not use browser automation or `curl` against `localhost:3000` as a substitute for starting dev; if manual UI verification is needed, tell the user what to open after they start dev, or rely on tests/build output.
+
 ## Architecture
 
 ### Request Flow

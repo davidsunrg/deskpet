@@ -13,6 +13,7 @@ import type { PublicPetProfile } from '@/pets/public-pet-profile';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import {
   ArrowRightIcon,
+  BookOpenIcon,
   Gamepad2Icon,
   HeartIcon,
   ImageIcon,
@@ -21,7 +22,11 @@ import {
   PawPrintIcon,
   PlayIcon,
   SmartphoneIcon,
+  SparklesIcon,
 } from 'lucide-react';
+
+const COPPER_PLAYGROUND_DEMO_HREF = '/demo/puppy/';
+const COPPER_MEMORY_BOOK_DEMO_HREF = '/demo/memory-book/';
 
 type PublicPetProfilePageProps = {
   profile: PublicPetProfile;
@@ -47,6 +52,44 @@ const MEDIA_FRAME_CLASS =
 
 const MEDIA_WASH_CLASS =
   'absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(255,255,255,0.85),transparent_25%),radial-gradient(circle_at_25%_85%,rgba(255,142,116,0.22),transparent_32%)]';
+
+function DemoExperienceLink({
+  href,
+  title,
+  description,
+  icon: Icon,
+  testId,
+}: {
+  href: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  testId: string;
+}) {
+  return (
+    <a
+      href={href}
+      data-testid={testId}
+      className="mt-5 flex flex-col gap-3 rounded-[24px] border border-[#f1dfd4] bg-[#fff5ed] p-5 transition hover:border-[#ff6f61]/35 hover:bg-[#fff0e8] sm:flex-row sm:items-center sm:justify-between sm:p-6"
+    >
+      <div className="flex min-w-0 items-start gap-4">
+        <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#ff6f61]/12 text-[#ff6f61]">
+          <Icon aria-hidden="true" className="size-6" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-lg font-bold text-[#43271f] [font-family:'Kalam',cursive] md:text-xl">
+            {title}
+          </p>
+          <p className="mt-1 text-sm leading-6 text-[#80665d]">{description}</p>
+        </div>
+      </div>
+      <span className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-full bg-[#ff6f61] px-5 py-2.5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(238,101,88,0.22)] sm:self-center">
+        Open
+        <ArrowRightIcon aria-hidden="true" className="size-4" />
+      </span>
+    </a>
+  );
+}
 
 function SectionHeading({
   title,
@@ -162,6 +205,13 @@ export function PublicPetProfilePage({
               name={profile.name}
               playgroundPet={playgroundPet}
             />
+            <DemoExperienceLink
+              href={COPPER_PLAYGROUND_DEMO_HREF}
+              title={`Enter ${profile.name}'s Playground`}
+              description="A full-screen interactive scene with its own videos and environments."
+              icon={SparklesIcon}
+              testId="public-pet-profile-playground-demo-link"
+            />
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-wallpapers">
@@ -190,6 +240,13 @@ export function PublicPetProfilePage({
                 <MomentCard key={label} label={label} />
               ))}
             </div>
+            <DemoExperienceLink
+              href={COPPER_MEMORY_BOOK_DEMO_HREF}
+              title={`Open ${profile.name}'s Memory Book`}
+              description="Flip through a handcrafted album made just for this companion."
+              icon={BookOpenIcon}
+              testId="public-pet-profile-memory-book-demo-link"
+            />
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-about">
