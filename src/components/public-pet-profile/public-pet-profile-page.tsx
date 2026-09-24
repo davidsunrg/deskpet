@@ -175,7 +175,7 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
       data-testid="public-pet-profile"
     >
       <section
-        className="relative min-h-[560px] overflow-hidden px-5 pb-16 pt-5 sm:px-8 md:min-h-[620px] md:px-12"
+        className="relative min-h-[560px] overflow-hidden px-5 pb-8 pt-5 sm:px-8 md:min-h-[620px] md:px-12"
         data-testid="public-pet-profile-hero"
       >
         <img
@@ -234,11 +234,11 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
         <HeroBannerWave />
       </section>
 
-      <div className="relative z-10 bg-white px-5 pb-12 pt-4 sm:px-8 md:px-12">
+      <div className="relative z-20 -mt-6 bg-white px-5 pb-12 pt-2 sm:-mt-8 sm:px-8 sm:pt-3 md:-mt-10 md:px-12 md:pt-4">
         <div className="mx-auto max-w-7xl">
           <section
             id="desktop-pet"
-            className="scroll-mt-24 pt-2 pb-4"
+            className="scroll-mt-24 pb-4"
             data-testid="public-pet-profile-desktop-pet"
           >
             <SectionHeading
