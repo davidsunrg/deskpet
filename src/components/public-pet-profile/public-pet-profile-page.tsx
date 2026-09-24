@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
 import type { PublicPetProfile } from '@/pets/public-pet-profile';
-import type { PlaygroundPet } from '@/utils/playground-pet';
 import {
   ArrowRightIcon,
   BookOpenIcon,
@@ -30,7 +29,6 @@ const COPPER_MEMORY_BOOK_DEMO_HREF = '/demo/memory-book/';
 
 type PublicPetProfilePageProps = {
   profile: PublicPetProfile;
-  playgroundPet: PlaygroundPet | null;
 };
 
 const MOMENT_PLACEHOLDERS = [
@@ -145,10 +143,7 @@ function WallpaperCard({ label, live }: { label: string; live: boolean }) {
   );
 }
 
-export function PublicPetProfilePage({
-  profile,
-  playgroundPet,
-}: PublicPetProfilePageProps) {
+export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
   return (
     <article
       className="min-h-screen overflow-hidden bg-[#fffaf6] text-[#43271f] [font-family:'Nunito',sans-serif]"
@@ -220,14 +215,11 @@ export function PublicPetProfilePage({
             className="scroll-mt-24 py-5"
             data-testid="public-pet-profile-desktop-pet"
           >
-            <SectionHeading
-              title={`Play with ${profile.name}`}
-              icon={Gamepad2Icon}
-            />
-            <ProfilePlayCard
-              name={profile.name}
-              playgroundPet={playgroundPet}
-            />
+            <SectionHeading title="Desktop Pet" icon={Gamepad2Icon} />
+            <p className="mb-5 max-w-2xl text-base leading-7 text-[#80665d]">
+              {profile.desktopPetIntro}
+            </p>
+            <ProfilePlayCard profile={profile} />
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-wallpapers">

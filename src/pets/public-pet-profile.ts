@@ -5,6 +5,12 @@ export type PublicPetProfile = {
   age: string;
   description: string;
   bannerSrc: string;
+  /** Shown under the Desktop Pet heading. */
+  desktopPetIntro: string;
+  /** Three animated clip stills (GIF/WebP/PNG) for the play section. */
+  playClipSrcs?: readonly [string, string, string];
+  /** `?pet=` key for Open Playground. */
+  playgroundPetKey?: string;
   traits: readonly string[];
   about: string;
   stats: readonly {
@@ -21,6 +27,9 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: '/sites/copper/banner.png',
+    desktopPetIntro:
+      'Meet Copper on your desktop. A playful companion who is always by your side.',
+    playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
     about:
       'Copper is happiest close to the people he loves. Whether he is exploring outside, settling in for a quiet afternoon, or keeping you company on the desktop, he brings warm and playful energy everywhere he goes.',
@@ -40,6 +49,14 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: '/sites/laika/banner.png',
+    desktopPetIntro:
+      'Meet Laika on your desktop. A playful companion who is always by your side.',
+    playClipSrcs: [
+      '/sites/laika/clips/clip-1.png',
+      '/sites/laika/clips/clip-2.png',
+      '/sites/laika/clips/clip-3.png',
+    ],
+    playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
     about:
       'Laika is happiest close to the people she loves. Whether she is exploring outside, settling in for a quiet afternoon, or keeping you company on the desktop, she brings warm and playful energy everywhere she goes.',
