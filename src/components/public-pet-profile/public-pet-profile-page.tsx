@@ -22,10 +22,8 @@ import {
   PawPrintIcon,
   PlayIcon,
   SmartphoneIcon,
-  SparklesIcon,
 } from 'lucide-react';
 
-const COPPER_PLAYGROUND_DEMO_HREF = '/demo/puppy/';
 const COPPER_MEMORY_BOOK_DEMO_HREF = '/demo/memory-book/';
 
 type PublicPetProfilePageProps = {
@@ -204,13 +202,6 @@ export function PublicPetProfilePage({
             <ProfilePlayCard
               name={profile.name}
               playgroundPet={playgroundPet}
-            />
-            <DemoExperienceLink
-              href={COPPER_PLAYGROUND_DEMO_HREF}
-              title={`Enter ${profile.name}'s Playground`}
-              description="A full-screen interactive scene with its own videos and environments."
-              icon={SparklesIcon}
-              testId="public-pet-profile-playground-demo-link"
             />
           </section>
 
