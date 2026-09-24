@@ -102,11 +102,11 @@ export function ProfilePlayCard({ profile }: ProfilePlayCardProps) {
       ariaLabel={`Play with ${profile.name}`}
     >
       <div
-        className="relative z-10 flex flex-col gap-4 px-4 py-2 sm:px-5 sm:py-2.5 lg:flex-row lg:items-center lg:gap-6"
+        className="relative z-10 flex flex-col gap-4 px-4 py-2 sm:px-5 sm:py-2.5 lg:flex-row lg:items-center lg:gap-6 max-lg:content-start"
         data-testid="public-pet-profile-play-card"
       >
         <div
-          className="grid flex-1 grid-cols-3 gap-2 sm:gap-3"
+          className="grid w-full grid-cols-3 gap-2 sm:gap-3 lg:flex-1"
           data-testid="public-pet-profile-play-clips"
         >
           {GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_LABELS.map((label, index) => (
