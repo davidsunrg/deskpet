@@ -319,45 +319,24 @@ export function PublicPetProfilePage({
 
           <section className="py-8" data-testid="public-pet-profile-about">
             <SectionHeading title={`About ${profile.name}`} icon={HeartIcon} />
-            <div className="grid gap-6 rounded-[28px] border border-[#f1dfd4] bg-[#fff5ed] p-6 md:grid-cols-[180px_1fr] md:p-8">
-              <div className="grid min-h-44 place-items-center rounded-full border-2 border-dashed border-[#d9b7a5] bg-white/70 text-center text-[#9a6d5f]">
-                <div>
-                  <ImageIcon className="mx-auto size-8" />
-                  <span className="mt-2 block text-xs font-bold">
-                    Portrait placeholder
-                  </span>
+            <div className="flex flex-col items-center gap-5 rounded-[24px] border border-[#f1dfd4] bg-[#fff5ed] p-5 sm:flex-row sm:p-6">
+              <img
+                src={profile.bannerSrc}
+                alt={`${profile.name} portrait`}
+                className="size-20 shrink-0 rounded-full border-4 border-white object-cover object-[70%_center] shadow-sm"
+              />
+              <dl className="grid w-full gap-3 border-t border-[#ead8ce] pt-5 text-sm sm:border-l sm:border-t-0 sm:py-1 sm:pl-6">
+                <div className="grid grid-cols-[92px_1fr] gap-3">
+                  <dt className="font-bold text-[#4f332a]">Age</dt>
+                  <dd className="text-[#80665d]">{profile.age}</dd>
                 </div>
-              </div>
-              <div>
-                <p className="text-sm font-medium leading-6 text-[#75594f]">
-                  {profile.about}
-                </p>
-                <dl className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-                  {profile.stats.map(({ label, value }) => (
-                    <div
-                      key={label}
-                      className="grid grid-cols-[100px_1fr] gap-3"
-                    >
-                      <dt className="text-xs font-bold text-[#4f332a]">
-                        {label}
-                      </dt>
-                      <dd className="text-xs font-medium text-[#80665d]">
-                        {value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {profile.traits.map((trait) => (
-                    <span
-                      key={trait}
-                      className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#79584d] shadow-sm"
-                    >
-                      {trait}
-                    </span>
-                  ))}
+                <div className="grid grid-cols-[92px_1fr] gap-3">
+                  <dt className="font-bold text-[#4f332a]">Personality</dt>
+                  <dd className="text-[#80665d]">
+                    {profile.traits.join(' · ')}
+                  </dd>
                 </div>
-              </div>
+              </dl>
             </div>
           </section>
         </div>
