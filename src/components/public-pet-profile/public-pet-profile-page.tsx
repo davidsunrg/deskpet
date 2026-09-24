@@ -149,7 +149,7 @@ function WallpaperCard({ label, live }: { label: string; live: boolean }) {
 export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
   return (
     <article
-      className="min-h-screen overflow-hidden bg-[#fffcf9] text-[#43271f] [font-family:'Nunito',sans-serif]"
+      className="min-h-screen overflow-hidden bg-white text-[#43271f] [font-family:'Nunito',sans-serif]"
       data-testid="public-pet-profile"
     >
       <section
@@ -211,7 +211,7 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
         </div>
       </section>
 
-      <div className="bg-[#fffcf9] px-5 pb-12 pt-10 sm:px-8 md:px-12">
+      <div className="bg-white px-5 pb-12 pt-10 sm:px-8 md:px-12">
         <div className="mx-auto max-w-7xl">
           <section
             id="desktop-pet"
@@ -287,7 +287,7 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
       </div>
 
       <footer
-        className="relative overflow-hidden bg-[#fffcf9] px-6 py-12 md:px-12"
+        className="relative overflow-hidden bg-white px-6 py-12 md:px-12"
         data-testid="public-pet-profile-promo"
       >
         <PawPrintIcon className="absolute -bottom-3 left-8 size-20 rotate-[-18deg] fill-[#f8bea1]/50 text-[#f8bea1]/50" />

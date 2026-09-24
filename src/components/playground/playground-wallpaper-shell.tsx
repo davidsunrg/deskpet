@@ -10,6 +10,10 @@ type PlaygroundWallpaperShellProps = {
   className?: string;
   /** Override section aria-label. */
   ariaLabel?: string;
+  /** Shrink-wrap height (embeds on marketing / profile pages). */
+  fitContent?: boolean;
+  /** Overrides `.playground-root` layout constraints for narrow embeds. */
+  playgroundMode?: 'default' | 'profile-play';
 };
 
 const STAGE_HEIGHT = '32rem';
@@ -24,6 +28,8 @@ export function PlaygroundWallpaperShell({
   rootRef,
   className,
   ariaLabel = 'Pets playground',
+  fitContent = false,
+  playgroundMode = 'default',
 }: PlaygroundWallpaperShellProps) {
   const wallpaper = getWallpaper(wallpaperId);
 
@@ -31,13 +37,20 @@ export function PlaygroundWallpaperShell({
     <div className={cn('w-full', className)}>
       <section
         ref={rootRef as Ref<HTMLElement>}
-        className="playground-root relative isolate w-full overflow-hidden"
+        className={cn(
+          'playground-root relative isolate w-full overflow-hidden',
+          fitContent && 'min-w-0'
+        )}
         data-wallpaper-id={wallpaper.id}
+        data-playground-mode={
+          playgroundMode === 'default' ? undefined : playgroundMode
+        }
         style={
           {
             ...wallpaper.vars,
-            minHeight: STAGE_HEIGHT,
-            height: STAGE_HEIGHT,
+            ...(fitContent
+              ? { minHeight: 0, height: 'auto' }
+              : { minHeight: STAGE_HEIGHT, height: STAGE_HEIGHT }),
             minWidth: 0,
             color: 'var(--foreground, #102149)',
             background: `

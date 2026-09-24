@@ -1,5 +1,7 @@
 'use client';
 
+import { PlaygroundWallpaperShell } from '@/components/playground/playground-wallpaper-shell';
+import { DEFAULT_WALLPAPER_ID } from '@/components/playground/wallpapers';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes, playgroundRoute } from '@/lib/routes';
 import type { PublicPetProfile } from '@/pets/public-pet-profile';
@@ -43,7 +45,7 @@ function PlayClip({ src, label }: { src?: string; label: string }) {
         )
       ) : (
         <div
-          className="grid size-full place-items-center bg-[#fff0e8]/40 px-2 text-center text-[#9a6d5f]"
+          className="grid size-full place-items-center bg-white/5 px-2 text-center text-neutral-400"
           role="img"
           aria-label={`${label} clip placeholder`}
         >
@@ -76,7 +78,7 @@ function PlayActionButton({
       className={
         isPrimary
           ? 'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#ff6f61] px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(238,101,88,0.22)] transition hover:bg-[#ec5d52]'
-          : 'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#43271f]/15 bg-white px-5 text-sm font-bold text-[#43271f] transition hover:border-[#ff6f61]/35 hover:bg-[#fff5ed]'
+          : 'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-white/20 bg-white/10 px-5 text-sm font-bold text-white transition hover:border-white/35 hover:bg-white/15'
       }
     >
       <Icon aria-hidden="true" className="size-4 shrink-0" />
@@ -92,11 +94,17 @@ export function ProfilePlayCard({ profile }: ProfilePlayCardProps) {
   });
 
   return (
-    <div
-      className="rounded-[28px] bg-[#fff5ed] px-4 py-2 sm:px-5 sm:py-2.5"
-      data-testid="public-pet-profile-play-card"
+    <PlaygroundWallpaperShell
+      wallpaperId={DEFAULT_WALLPAPER_ID}
+      fitContent
+      playgroundMode="profile-play"
+      className="overflow-hidden rounded-[28px] shadow-[0_10px_28px_rgba(15,28,46,0.2)]"
+      ariaLabel={`Play with ${profile.name}`}
     >
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
+      <div
+        className="relative z-10 flex flex-col gap-4 px-4 py-2 sm:px-5 sm:py-2.5 lg:flex-row lg:items-center lg:gap-6"
+        data-testid="public-pet-profile-play-card"
+      >
         <div
           className="grid flex-1 grid-cols-3 gap-2 sm:gap-3"
           data-testid="public-pet-profile-play-clips"
@@ -128,6 +136,6 @@ export function ProfilePlayCard({ profile }: ProfilePlayCardProps) {
           />
         </div>
       </div>
-    </div>
+    </PlaygroundWallpaperShell>
   );
 }

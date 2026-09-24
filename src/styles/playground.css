@@ -306,6 +306,12 @@
   background: transparent;
 }
 
+.playground-root[data-playground-mode="profile-play"] {
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+}
+
 .playground-root[data-playground-mode="hero-preview"] .desktop-shell,
 .playground-root[data-playground-mode="hero-preview"] .desktop-shell-hero {
   position: relative;
