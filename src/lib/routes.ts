@@ -10,8 +10,6 @@ export const Routes = {
   About: '/about',
   Contact: '/contact',
   Playground: '/playground',
-  Studio: '/studio',
-  StudioTimeline: '/studio/timeline',
   Pets: '/pets',
   PetHub: '/p',
   Download: '/download',

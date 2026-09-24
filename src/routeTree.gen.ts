@@ -23,7 +23,6 @@ import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as StudioRouteImport } from './routes/studio'
 import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
 import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
 import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
@@ -55,8 +54,6 @@ import { Route as SettingsNotificationsRouteImport } from './routes/settings/not
 import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
-import { Route as StudioIndexRouteImport } from './routes/studio/index'
-import { Route as StudioSectionRouteImport } from './routes/studio/$section'
 import { Route as ToolsDesktopPetMakerRouteImport } from './routes/tools/desktop-pet-maker'
 import { Route as ToolsPetVideoMakerRouteImport } from './routes/tools/pet-video-maker'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -138,11 +135,6 @@ const SettingsRoute = SettingsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudioRoute = StudioRouteImport.update({
-  id: '/studio',
-  path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const legalsCookieRoute = legalsCookieRouteImport.update({
@@ -300,16 +292,6 @@ const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
   path: '/security',
   getParentRoute: () => SettingsRoute,
 } as any)
-const StudioIndexRoute = StudioIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudioRoute,
-} as any)
-const StudioSectionRoute = StudioSectionRouteImport.update({
-  id: '/$section',
-  path: '/$section',
-  getParentRoute: () => StudioRoute,
-} as any)
 const ToolsDesktopPetMakerRoute = ToolsDesktopPetMakerRouteImport.update({
   id: '/tools/desktop-pet-maker',
   path: '/tools/desktop-pet-maker',
@@ -387,7 +369,6 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/studio': typeof StudioRouteWithChildren
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
@@ -414,7 +395,6 @@ export interface FileRoutesByFullPath {
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
-  '/studio/$section': typeof StudioSectionRoute
   '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
   '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin/': typeof AdminIndexRoute
@@ -422,7 +402,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/p/': typeof PIndexRoute
   '/settings/': typeof SettingsIndexRoute
-  '/studio/': typeof StudioIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/storage/upload': typeof ApiStorageUploadRoute
@@ -471,7 +450,6 @@ export interface FileRoutesByTo {
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
-  '/studio/$section': typeof StudioSectionRoute
   '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
   '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin': typeof AdminIndexRoute
@@ -479,7 +457,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/p': typeof PIndexRoute
   '/settings': typeof SettingsIndexRoute
-  '/studio': typeof StudioIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/storage/upload': typeof ApiStorageUploadRoute
@@ -507,7 +484,6 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/studio': typeof StudioRouteWithChildren
   '/(legals)/cookie': typeof legalsCookieRoute
   '/(legals)/privacy': typeof legalsPrivacyRoute
   '/(legals)/terms': typeof legalsTermsRoute
@@ -534,7 +510,6 @@ export interface FileRoutesById {
   '/settings/payment': typeof SettingsPaymentRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/settings/security': typeof SettingsSecurityRoute
-  '/studio/$section': typeof StudioSectionRoute
   '/tools/desktop-pet-maker': typeof ToolsDesktopPetMakerRoute
   '/tools/pet-video-maker': typeof ToolsPetVideoMakerRoute
   '/admin/': typeof AdminIndexRoute
@@ -542,7 +517,6 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/p/': typeof PIndexRoute
   '/settings/': typeof SettingsIndexRoute
-  '/studio/': typeof StudioIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/storage/upload': typeof ApiStorageUploadRoute
@@ -571,7 +545,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/settings'
     | '/sitemap.xml'
-    | '/studio'
     | '/cookie'
     | '/privacy'
     | '/terms'
@@ -598,7 +571,6 @@ export interface FileRouteTypes {
     | '/settings/payment'
     | '/settings/profile'
     | '/settings/security'
-    | '/studio/$section'
     | '/tools/desktop-pet-maker'
     | '/tools/pet-video-maker'
     | '/admin/'
@@ -606,7 +578,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/p/'
     | '/settings/'
-    | '/studio/'
     | '/api/auth/$'
     | '/api/storage/file'
     | '/api/storage/upload'
@@ -655,7 +626,6 @@ export interface FileRouteTypes {
     | '/settings/payment'
     | '/settings/profile'
     | '/settings/security'
-    | '/studio/$section'
     | '/tools/desktop-pet-maker'
     | '/tools/pet-video-maker'
     | '/admin'
@@ -663,7 +633,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/p'
     | '/settings'
-    | '/studio'
     | '/api/auth/$'
     | '/api/storage/file'
     | '/api/storage/upload'
@@ -690,7 +659,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/settings'
     | '/sitemap.xml'
-    | '/studio'
     | '/(legals)/cookie'
     | '/(legals)/privacy'
     | '/(legals)/terms'
@@ -717,7 +685,6 @@ export interface FileRouteTypes {
     | '/settings/payment'
     | '/settings/profile'
     | '/settings/security'
-    | '/studio/$section'
     | '/tools/desktop-pet-maker'
     | '/tools/pet-video-maker'
     | '/admin/'
@@ -725,7 +692,6 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/p/'
     | '/settings/'
-    | '/studio/'
     | '/api/auth/$'
     | '/api/storage/file'
     | '/api/storage/upload'
@@ -753,7 +719,6 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  StudioRoute: typeof StudioRouteWithChildren
   legalsCookieRoute: typeof legalsCookieRoute
   legalsPrivacyRoute: typeof legalsPrivacyRoute
   legalsTermsRoute: typeof legalsTermsRoute
@@ -876,13 +841,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/studio': {
-      id: '/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof StudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(legals)/cookie': {
@@ -1102,20 +1060,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsSecurityRouteImport
       parentRoute: typeof SettingsRoute
     }
-    '/studio/': {
-      id: '/studio/'
-      path: '/'
-      fullPath: '/studio/'
-      preLoaderRoute: typeof StudioIndexRouteImport
-      parentRoute: typeof StudioRoute
-    }
-    '/studio/$section': {
-      id: '/studio/$section'
-      path: '/$section'
-      fullPath: '/studio/$section'
-      preLoaderRoute: typeof StudioSectionRouteImport
-      parentRoute: typeof StudioRoute
-    }
     '/tools/desktop-pet-maker': {
       id: '/tools/desktop-pet-maker'
       path: '/tools/desktop-pet-maker'
@@ -1289,19 +1233,6 @@ const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
   SettingsRouteChildren,
 )
 
-interface StudioRouteChildren {
-  StudioSectionRoute: typeof StudioSectionRoute
-  StudioIndexRoute: typeof StudioIndexRoute
-}
-
-const StudioRouteChildren: StudioRouteChildren = {
-  StudioSectionRoute: StudioSectionRoute,
-  StudioIndexRoute: StudioIndexRoute,
-}
-
-const StudioRouteWithChildren =
-  StudioRoute._addFileChildren(StudioRouteChildren)
-
 interface BlogCategorySlugRouteChildren {
   BlogCategorySlugPagePageRoute: typeof BlogCategorySlugPagePageRoute
 }
@@ -1328,7 +1259,6 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  StudioRoute: StudioRouteWithChildren,
   legalsCookieRoute: legalsCookieRoute,
   legalsPrivacyRoute: legalsPrivacyRoute,
   legalsTermsRoute: legalsTermsRoute,
