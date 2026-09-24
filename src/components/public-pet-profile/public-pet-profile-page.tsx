@@ -101,16 +101,6 @@ export function PublicPetProfilePage({
         />
 
         <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="flex items-center">
-            <span className="inline-flex items-center gap-2 text-sm font-extrabold text-[#6e4a3e]">
-              <PawPrintIcon
-                aria-hidden="true"
-                className="size-5 fill-[#ff6f61] text-[#ff6f61]"
-              />
-              DeskPet
-            </span>
-          </div>
-
           <div className="pt-44 sm:pt-40 md:pt-36">
             <div className="max-w-[310px] sm:max-w-[380px] md:max-w-lg lg:max-w-xl">
               <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
