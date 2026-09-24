@@ -52,12 +52,53 @@ export type PlaygroundPetStageHandle = {
 const PLAYGROUND_PET_DEFAULT_ASPECT = 16 / 9;
 const PLAYGROUND_PET_FALLBACK_POSITION = { x: 80, y: 140 } as const;
 
+/** Fluid mode: full size at or above this bounds width. */
+const FLUID_FULL_SIZE_WIDTH = 720;
+/** Fluid mode: bounds width where the pet reaches its minimum scale. */
+const FLUID_MIN_SIZE_WIDTH = 320;
+const FLUID_MIN_SCALE = 0.4;
+
+function fluidPetScale(boundsWidth: number): number {
+  const progress =
+    (boundsWidth - FLUID_MIN_SIZE_WIDTH) /
+    (FLUID_FULL_SIZE_WIDTH - FLUID_MIN_SIZE_WIDTH);
+  const clamped = Math.min(1, Math.max(0, progress));
+  return FLUID_MIN_SCALE + (1 - FLUID_MIN_SCALE) * clamped;
+}
+
+/** Fluid mode: share of the clip box allowed past the canvas edge (transparent padding). */
+const FLUID_EDGE_OVERHANG = 0.2;
+
+type FluidAnchor = {
+  centerFraction: number;
+  bottomFraction: number;
+  /** Position last placed from these fractions; a mismatch means the pet moved. */
+  placed: { x: number; y: number };
+};
+
+function scalePetSize(
+  size: { width: number; height: number },
+  scale: number
+): { width: number; height: number } {
+  if (scale === 1) return size;
+  return {
+    width: Math.round(size.width * scale),
+    height: Math.round(size.height * scale),
+  };
+}
+
 type PlaygroundPetStageProps = {
   pet: PlaygroundPet;
   action: PlaygroundPetAction;
   boundsRef: RefObject<HTMLElement | null>;
   /** Optional fixed window size for embedded stages; playground uses dynamic sizing. */
   windowSize?: { width: number; height: number };
+  /**
+   * Canvas-relative mode: start at the stored spot or centered, shrink the pet
+   * as the bounds narrow, and keep it at the same fractional spot
+   * (center x, feet y) on resize.
+   */
+  fluidLayout?: boolean;
   /** Initial horizontal placement when no stored layout is used. */
   initialSide?: 'left' | 'right';
   /**
@@ -169,6 +210,7 @@ export const PlaygroundPetStage = forwardRef<
     action,
     boundsRef,
     windowSize,
+    fluidLayout = false,
     initialSide,
     anchorSelector,
     anchorRootRef,
@@ -304,7 +346,16 @@ export const PlaygroundPetStage = forwardRef<
     pet.actions.find((item) => item.interaction === 'look-scrub')
       ?.displayScale ?? action.displayScale;
   const aspect = mediaAspect > 0 ? mediaAspect : PLAYGROUND_PET_DEFAULT_ASPECT;
-  const size = windowSize ?? showcasePetWindowSize(lookScrubScale, aspect);
+  // Fluid mode waits for a measured bounds width so the first placement
+  // already uses the scaled size.
+  const [fluidBoundsWidth, setFluidBoundsWidth] = useState<number | null>(null);
+  const baseSize = windowSize ?? showcasePetWindowSize(lookScrubScale, aspect);
+  const size = scalePetSize(
+    baseSize,
+    fluidLayout && fluidBoundsWidth != null
+      ? fluidPetScale(fluidBoundsWidth)
+      : 1
+  );
 
   const debugSnapshotRef = useRef<(() => PetDebugTooltipParts | null) | null>(
     null
@@ -347,6 +398,7 @@ export const PlaygroundPetStage = forwardRef<
     autoPlace: false,
     fallbackSize: size,
     horizontalWrap,
+    clampOnWindowResize: !fluidLayout,
   });
 
   debugSnapshotRef.current = () => {
@@ -411,6 +463,9 @@ export const PlaygroundPetStage = forwardRef<
       if (!boundsEl || bounds.width <= 0 || bounds.height <= 0) {
         return false;
       }
+      if (fluidLayout && fluidBoundsWidth == null) {
+        return false;
+      }
 
       const layout = persistLayout ? readPlaygroundLayout() : null;
       const aspectNow =
@@ -431,7 +486,12 @@ export const PlaygroundPetStage = forwardRef<
       const side = anchorSide ?? initialSide ?? 'left';
       let position: { x: number; y: number } | null = null;
 
-      if (anchorSelector) {
+      if (fluidLayout) {
+        position = layout?.petPosition ?? {
+          x: Math.round((bounds.width - size.width) / 2),
+          y: Math.round((bounds.height - size.height) / 2),
+        };
+      } else if (anchorSelector) {
         if (!anchorRootEl) {
           return false;
         }
@@ -496,6 +556,8 @@ export const PlaygroundPetStage = forwardRef<
       anchorPlacement,
       boundsRef,
       companionRef,
+      fluidBoundsWidth,
+      fluidLayout,
       getBoundsSize,
       getVisibleWidth,
       horizontalWrap,
@@ -602,6 +664,113 @@ export const PlaygroundPetStage = forwardRef<
     restorePetPosition,
   ]);
 
+  const sizeRef = useRef(size);
+  sizeRef.current = size;
+  const baseSizeRef = useRef(baseSize);
+  baseSizeRef.current = baseSize;
+  const isStartupReadyRef = useRef(isStartupReady);
+  isStartupReadyRef.current = isStartupReady;
+  /** Set when a fluid resize already placed the pet for the next size. */
+  const skipSizeRepositionRef = useRef(false);
+  const fluidAnchorRef = useRef<FluidAnchor | null>(null);
+
+  useLayoutEffect(() => {
+    const el = boundsRef.current;
+    if (!fluidLayout || !el) {
+      return;
+    }
+
+    let prevBounds = getBoundsSize();
+    if (prevBounds.width > 0) {
+      setFluidBoundsWidth(prevBounds.width);
+    }
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      const prev = prevBounds;
+      const next = getBoundsSize();
+      prevBounds = next;
+      if (next.width <= 0 || next.height <= 0) {
+        return;
+      }
+      if (prev.width === next.width && prev.height === next.height) {
+        return;
+      }
+
+      if (isStartupReadyRef.current && prev.width > 0 && prev.height > 0) {
+        const prevSize = sizeRef.current;
+        const nextSize = scalePetSize(
+          baseSizeRef.current,
+          fluidPetScale(next.width)
+        );
+        if (
+          nextSize.width !== prevSize.width ||
+          nextSize.height !== prevSize.height
+        ) {
+          skipSizeRepositionRef.current = true;
+        }
+        // Several resize callbacks can land before React re-renders.
+        sizeRef.current = nextSize;
+        const current = petPositionRef.current;
+        // Reuse the intended fractions while the pet has not moved, so an
+        // edge clamp on a narrow canvas does not drift the spot on regrow.
+        const anchor = fluidAnchorRef.current;
+        const { centerFraction, bottomFraction } =
+          anchor &&
+          anchor.placed.x === current.x &&
+          anchor.placed.y === current.y
+            ? anchor
+            : {
+                centerFraction: (current.x + prevSize.width / 2) / prev.width,
+                bottomFraction: (current.y + prevSize.height) / prev.height,
+              };
+        const clamped = clampPetPosition(
+          {
+            x: Math.round(centerFraction * next.width - nextSize.width / 2),
+            y: Math.round(bottomFraction * next.height - nextSize.height),
+          },
+          null,
+          next,
+          nextSize
+        );
+        const overhang = Math.round(nextSize.width * FLUID_EDGE_OVERHANG);
+        const moved = {
+          x: Math.min(
+            Math.max(
+              -overhang,
+              Math.round(centerFraction * next.width - nextSize.width / 2)
+            ),
+            next.width - nextSize.width + overhang
+          ),
+          y: clamped.y,
+        };
+        fluidAnchorRef.current = {
+          centerFraction,
+          bottomFraction,
+          placed: moved,
+        };
+        petPositionRef.current = moved;
+        setPetPosition(moved);
+        if (persistLayout) {
+          writePlaygroundPetPosition(moved);
+        }
+      }
+
+      setFluidBoundsWidth(next.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [
+    boundsRef,
+    fluidLayout,
+    getBoundsSize,
+    persistLayout,
+    petPositionRef,
+    setPetPosition,
+  ]);
+
   // Keep feet anchored when measured aspect updates window size — only after
   // startup reveal, so the first aspect correction is applied while still hidden.
   const prevSizeRef = useRef(size);
@@ -612,6 +781,10 @@ export const PlaygroundPetStage = forwardRef<
       return;
     }
     if (prev.width === size.width && prev.height === size.height) {
+      return;
+    }
+    if (skipSizeRepositionRef.current) {
+      skipSizeRepositionRef.current = false;
       return;
     }
 

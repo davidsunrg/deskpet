@@ -5,15 +5,14 @@ import '@fontsource/kalam/700.css';
 import '@fontsource/nunito/400.css';
 import '@fontsource/nunito/600.css';
 import '@fontsource/nunito/700.css';
-import { SelectedCatPreview } from '@/components/pets/selected-cat-preview';
+import { ProfilePlayCard } from '@/components/public-pet-profile/profile-play-card';
 import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
-import { Routes, playgroundRoute } from '@/lib/routes';
+import { Routes } from '@/lib/routes';
 import type { PublicPetProfile } from '@/pets/public-pet-profile';
-import type { ShowcasePet } from '@/utils/showcase-pets';
+import type { PlaygroundPet } from '@/utils/playground-pet';
 import {
   ArrowRightIcon,
-  DownloadIcon,
   Gamepad2Icon,
   HeartIcon,
   ImageIcon,
@@ -21,19 +20,12 @@ import {
   type LucideIcon,
   PawPrintIcon,
   PlayIcon,
-  SettingsIcon,
   VideoIcon,
 } from 'lucide-react';
-import { useLayoutEffect, useRef, useState } from 'react';
 
 type PublicPetProfilePageProps = {
   profile: PublicPetProfile;
-  playPet: ShowcasePet | null;
-};
-
-type PreviewOrigin = {
-  centerX: number;
-  centerY: number;
+  playgroundPet: PlaygroundPet | null;
 };
 
 const PHOTO_PLACEHOLDERS = [
@@ -90,44 +82,13 @@ function MediaPlaceholder({
 
 export function PublicPetProfilePage({
   profile,
-  playPet,
+  playgroundPet,
 }: PublicPetProfilePageProps) {
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [previewOrigin, setPreviewOrigin] = useState<PreviewOrigin | null>(
-    null
-  );
-  const [previewHidden, setPreviewHidden] = useState(true);
-
-  useLayoutEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-
-    const measure = () => {
-      const rect = stage.getBoundingClientRect();
-      setPreviewOrigin({
-        centerX: rect.left + rect.width * 0.48,
-        centerY: rect.top + rect.height * 0.58,
-      });
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
-
   return (
     <article
       className="min-h-screen overflow-hidden bg-[#fffaf6] text-[#43271f] [font-family:'Nunito',sans-serif]"
       data-testid="public-pet-profile"
     >
-      {playPet && previewOrigin && !previewHidden ? (
-        <SelectedCatPreview
-          pet={playPet}
-          origin={previewOrigin}
-          onHide={() => setPreviewHidden(true)}
-        />
-      ) : null}
-
       <section
         className="relative min-h-[560px] overflow-hidden px-5 pb-16 pt-5 sm:px-8 md:min-h-[620px] md:px-12"
         data-testid="public-pet-profile-hero"
@@ -152,26 +113,23 @@ export function PublicPetProfilePage({
 
           <div className="pt-44 sm:pt-40 md:pt-36">
             <div className="max-w-[310px] sm:max-w-[380px] md:max-w-lg lg:max-w-xl">
-                <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
-                  {profile.name}
-                  <PawPrintIcon
-                    aria-hidden="true"
-                    className="ml-4 inline size-12 rotate-12 fill-[#ff6f61] text-[#ff6f61] md:size-14"
-                  />
-                </h1>
-                <p className="mt-3 max-w-md text-2xl font-normal leading-8 text-[#594038] [font-family:'Kalam',cursive]">
-                  {profile.description}
-                </p>
-                <a
-                  href="#desktop-pet"
-                  className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#ff6f61] px-7 text-sm font-bold text-white shadow-[0_10px_24px_rgba(238,101,88,0.28)] transition hover:bg-[#ec5d52]"
-                >
-                  <PlayIcon
-                    aria-hidden="true"
-                    className="size-4 fill-current"
-                  />
-                  Meet {profile.name}
-                </a>
+              <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
+                {profile.name}
+                <PawPrintIcon
+                  aria-hidden="true"
+                  className="ml-4 inline size-12 rotate-12 fill-[#ff6f61] text-[#ff6f61] md:size-14"
+                />
+              </h1>
+              <p className="mt-3 max-w-md text-2xl font-normal leading-8 text-[#594038] [font-family:'Kalam',cursive]">
+                {profile.description}
+              </p>
+              <a
+                href="#desktop-pet"
+                className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#ff6f61] px-7 text-sm font-bold text-white shadow-[0_10px_24px_rgba(238,101,88,0.28)] transition hover:bg-[#ec5d52]"
+              >
+                <PlayIcon aria-hidden="true" className="size-4 fill-current" />
+                Meet {profile.name}
+              </a>
             </div>
           </div>
         </div>
@@ -188,77 +146,10 @@ export function PublicPetProfilePage({
               title={`Play with ${profile.name}`}
               icon={Gamepad2Icon}
             />
-            <div className="grid overflow-hidden rounded-[28px] border border-[#f0ded3] bg-[linear-gradient(105deg,#fff_0%,#fff8f2_64%,#fff0e8_100%)] shadow-[0_14px_38px_rgba(100,62,47,0.08)] lg:grid-cols-[1fr_260px]">
-              <div
-                ref={stageRef}
-                className="relative grid min-h-[330px] place-items-center overflow-hidden border-b border-[#f0ded3] lg:border-b-0 lg:border-r"
-              >
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(transparent,rgba(244,214,194,0.35))]" />
-                <div className="grid grid-cols-3 items-end gap-5 px-6">
-                  {[0.74, 1, 0.82].map((scale, index) => (
-                    <div
-                      key={scale}
-                      className="flex flex-col items-center"
-                      aria-hidden="true"
-                    >
-                      <div
-                        className="grid h-32 w-28 place-items-center rounded-[45%_45%_36%_36%] border-2 border-dashed border-[#d9b7a5] bg-[#f7e8dd]/80 text-[#b48875]"
-                        style={{ transform: `scale(${scale})` }}
-                      >
-                        <PawPrintIcon className="size-9 opacity-70" />
-                      </div>
-                      <div className="mt-2 h-3 w-24 rounded-full bg-[#6f5147]/10 blur-[2px]" />
-                      <span className="mt-2 text-[10px] font-bold text-[#9a7568]">
-                        Pose {index + 1}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                {previewHidden && playPet ? (
-                  <button
-                    type="button"
-                    onClick={() => setPreviewHidden(false)}
-                    className="absolute bottom-4 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#68483d] shadow"
-                  >
-                    Play with {profile.name}
-                  </button>
-                ) : null}
-              </div>
-
-              <div className="flex flex-col justify-center gap-3 p-6">
-                <Button
-                  asChild
-                  className="h-12 rounded-full bg-[#ff6f61] font-bold text-white hover:bg-[#ec5d52]"
-                >
-                  <LocaleLink
-                    href={playgroundRoute(playPet?.id ?? 'golden-retriever')}
-                  >
-                    <PlayIcon className="size-4 fill-current" />
-                    Open Playground
-                  </LocaleLink>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-12 rounded-full border-[#ead8ce] bg-white font-bold"
-                >
-                  <LocaleLink href={Routes.DesktopPetCreator}>
-                    <SettingsIcon className="size-4" />
-                    Customize
-                  </LocaleLink>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-12 rounded-full border-[#ead8ce] bg-white font-bold"
-                >
-                  <LocaleLink href={Routes.Download}>
-                    <DownloadIcon className="size-4" />
-                    Download App
-                  </LocaleLink>
-                </Button>
-              </div>
-            </div>
+            <ProfilePlayCard
+              name={profile.name}
+              playgroundPet={playgroundPet}
+            />
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-photos">

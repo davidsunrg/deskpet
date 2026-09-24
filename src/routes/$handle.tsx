@@ -1,7 +1,7 @@
 import { PublicPetProfilePage } from '@/components/public-pet-profile/public-pet-profile-page';
 import { websiteConfig } from '@/config/website';
 import { seo } from '@/lib/seo';
-import { getCatalogPetByBreed } from '@/pets/catalog';
+import { getPlaygroundPetByBreed } from '@/pets/catalog';
 import { getPublicPetProfile } from '@/pets/public-pet-profile';
 import { createFileRoute, notFound } from '@tanstack/react-router';
 
@@ -12,8 +12,8 @@ export const Route = createFileRoute('/$handle')({
       : null;
     if (!profile) throw notFound();
 
-    const playPet = await getCatalogPetByBreed('golden-retriever');
-    return { profile, playPet };
+    const playgroundPet = await getPlaygroundPetByBreed('golden-retriever');
+    return { profile, playgroundPet };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
@@ -29,6 +29,8 @@ export const Route = createFileRoute('/$handle')({
 });
 
 function PublicPetProfileRoute() {
-  const { profile, playPet } = Route.useLoaderData();
-  return <PublicPetProfilePage profile={profile} playPet={playPet} />;
+  const { profile, playgroundPet } = Route.useLoaderData();
+  return (
+    <PublicPetProfilePage profile={profile} playgroundPet={playgroundPet} />
+  );
 }

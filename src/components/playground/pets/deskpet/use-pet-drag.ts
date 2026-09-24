@@ -34,6 +34,8 @@ type UsePetDragOptions = {
    * When true, dragging past left/right re-enters from the opposite side.
    */
   horizontalWrap?: boolean;
+  /** Re-clamp on window resize. Disable when the caller repositions itself. */
+  clampOnWindowResize?: boolean;
 };
 
 export function usePetDrag({
@@ -44,6 +46,7 @@ export function usePetDrag({
   originCenter = null,
   fallbackSize,
   horizontalWrap = false,
+  clampOnWindowResize = true,
 }: UsePetDragOptions): {
   companionRef: RefObject<HTMLDivElement | null>;
   petPosition: PetPosition;
@@ -146,6 +149,7 @@ export function usePetDrag({
   ]);
 
   useLayoutEffect(() => {
+    if (!clampOnWindowResize) return;
     const handleResize = () => {
       setPetPosition((current) => {
         const next = constrainPosition(current);
@@ -155,7 +159,7 @@ export function usePetDrag({
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [constrainPosition]);
+  }, [clampOnWindowResize, constrainPosition]);
 
   const handlePointerDown = useCallback(
     (event: PointerEvent<HTMLDivElement>) => {

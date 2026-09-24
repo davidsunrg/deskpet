@@ -56,6 +56,11 @@ type PlaygroundExperienceProps = {
   onWallpaperChange: (id: WallpaperId) => void;
   /** Bounds root from the outer wallpaper shell. */
   rootRef: RefObject<HTMLElement | null>;
+  /**
+   * Embedded on another page: no `?pet=` URL sync and no shared layout
+   * persistence with `/playground`.
+   */
+  embedded?: boolean;
 };
 
 export type { PlaygroundExperienceProps };
@@ -73,21 +78,22 @@ export function PlaygroundExperience({
   presetPets,
   initialPetKey = null,
   rootRef,
+  embedded = false,
 }: PlaygroundExperienceProps) {
   const router = useLocaleRouter();
   const petRef = useRef<PlaygroundPetStageHandle>(null);
-
   const [selectedPetKey, setSelectedPetKey] = useState(
     () => resolveInitialPet(presetPets, initialPetKey)?.key ?? ''
   );
 
   const syncPlaygroundQuery = useCallback(
     (pet: PlaygroundPet) => {
+      if (embedded) return;
       router.replace(playgroundRoute({ petKey: pet.key }), {
         scroll: false,
       });
     },
-    [router]
+    [embedded, router]
   );
 
   // Deep-link updates (client navigations / refresh with ?pet=).
@@ -127,7 +133,7 @@ export function PlaygroundExperience({
   // Action selection is in-memory only. Strip legacy ?action= without a
   // Next navigation so the pet does not remount during initial playback.
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || embedded) return;
     const url = new URL(window.location.href);
     if (!url.searchParams.has('action')) return;
     url.searchParams.delete('action');
@@ -136,7 +142,7 @@ export function PlaygroundExperience({
       '',
       `${url.pathname}${url.search}${url.hash}`
     );
-  }, [initialPetKey]);
+  }, [embedded, initialPetKey]);
 
   const [petStartupReady, setPetStartupReady] = useState(false);
   useEffect(() => {
@@ -215,6 +221,8 @@ export function PlaygroundExperience({
                 onVideoEnded={onVideoEnded}
                 onHitWalkEdge={onHitWalkEdge}
                 onStartupReady={onPetStartupReady}
+                persistLayout={!embedded}
+                fluidLayout
               />
             </div>
           }
@@ -226,7 +234,7 @@ export function PlaygroundExperience({
 
       {/* Wallpaper / theme select temporarily hidden — locked to night. */}
 
-      {petStartupReady ? (
+      {petStartupReady && availablePets.length > 1 ? (
         <PetSelectionPanel
           mode="rail"
           pets={availablePets}

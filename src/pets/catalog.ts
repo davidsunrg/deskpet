@@ -54,6 +54,18 @@ export async function listPlaygroundPresetPets(options?: {
     );
 }
 
+/** Load one registry pet with playable actions, or null when unavailable. */
+export async function getPlaygroundPetByBreed(
+  presetKey: string
+): Promise<PlaygroundPet | null> {
+  const resource = getPetResourceByIdOrBreed(presetKey);
+  if (!resource || resource.actions.length === 0) return null;
+
+  return petResourceToPlaygroundPet(resource, {
+    publicStorageBase: getPublicPetMediaBase(),
+  });
+}
+
 /**
  * List registry-backed public pets for homepage and catalog display.
  */

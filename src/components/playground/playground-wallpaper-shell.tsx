@@ -11,7 +11,7 @@ type PlaygroundWallpaperShellProps = {
   rootRef?: Ref<HTMLElement | null>;
   /**
    * `page` — full playground viewport (default).
-   * `hero` — fixed marketing stage height, no 1024px min-width scroll.
+   * `hero` — compact embedded stage height, no 1024px min-width scroll.
    */
   variant?: PlaygroundWallpaperShellVariant;
   className?: string;
@@ -31,9 +31,8 @@ const VARIANT_LAYOUT: Record<
   },
   hero: {
     wrapClassName: 'w-full',
-    sectionClassName:
-      'playground-root relative isolate w-full overflow-hidden border-y-2 border-[#3A2B36]/[0.12] shadow-[0_6px_0_0_rgba(58,43,54,0.12)] dark:border-border dark:shadow-[0_6px_0_0_rgba(0,0,0,0.35)]',
-    minHeight: 'min(68vh, 40rem)',
+    sectionClassName: 'playground-root relative isolate w-full overflow-hidden',
+    minHeight: '32rem',
   },
 };
 
@@ -64,6 +63,7 @@ export function PlaygroundWallpaperShell({
             ...wallpaper.vars,
             minHeight: layout.minHeight,
             height: variant === 'hero' ? layout.minHeight : undefined,
+            minWidth: variant === 'hero' ? 0 : undefined,
             color: 'var(--foreground, #102149)',
             background: `
           radial-gradient(circle at 20% 14%, var(--wallpaper-root-a), transparent 24%),
