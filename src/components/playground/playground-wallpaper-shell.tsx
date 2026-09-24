@@ -32,6 +32,7 @@ export function PlaygroundWallpaperShell({
   playgroundMode = 'default',
 }: PlaygroundWallpaperShellProps) {
   const wallpaper = getWallpaper(wallpaperId);
+  const gridOnly = playgroundMode === 'profile-play';
 
   return (
     <div className={cn('w-full', className)}>
@@ -53,7 +54,9 @@ export function PlaygroundWallpaperShell({
               : { minHeight: STAGE_HEIGHT, height: STAGE_HEIGHT }),
             minWidth: 0,
             color: 'var(--foreground, #102149)',
-            background: `
+            background: gridOnly
+              ? 'var(--wallpaper-root-base)'
+              : `
           radial-gradient(circle at 20% 14%, var(--wallpaper-root-a), transparent 24%),
           radial-gradient(circle at 86% 20%, var(--wallpaper-root-b), transparent 22%),
           var(--wallpaper-root-base)
@@ -66,26 +69,36 @@ export function PlaygroundWallpaperShell({
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
           style={{
-            background: `
+            background: gridOnly
+              ? `
+            linear-gradient(var(--wallpaper-grid-a) 1px, transparent 1px),
+            linear-gradient(90deg, var(--wallpaper-grid-b) 1px, transparent 1px),
+            var(--wallpaper-shell-base)
+          `
+              : `
             linear-gradient(var(--wallpaper-grid-a) 1px, transparent 1px),
             linear-gradient(90deg, var(--wallpaper-grid-b) 1px, transparent 1px),
             radial-gradient(circle at 12% 18%, var(--wallpaper-shell-a), transparent 28%),
             radial-gradient(circle at 78% 16%, var(--wallpaper-shell-b), transparent 24%),
             var(--wallpaper-shell-base)
           `,
-            backgroundSize: '42px 42px, 42px 42px, auto, auto, auto',
+            backgroundSize: gridOnly
+              ? '42px 42px, 42px 42px, auto'
+              : '42px 42px, 42px 42px, auto, auto, auto',
           }}
         />
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background: `
+        {gridOnly ? null : (
+          <div
+            className="pointer-events-none absolute inset-0"
+            aria-hidden="true"
+            style={{
+              background: `
             radial-gradient(circle at 52% 46%, var(--wallpaper-glow-a), transparent 18%),
             radial-gradient(circle at 54% 48%, var(--wallpaper-glow-b), transparent 34%)
           `,
-          }}
-        />
+            }}
+          />
+        )}
         {children}
       </section>
     </div>
