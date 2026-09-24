@@ -12,7 +12,6 @@ import { Routes, playgroundRoute } from '@/lib/routes';
 import type { PublicPetProfile } from '@/pets/public-pet-profile';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 import {
-  ArrowDownIcon,
   ArrowRightIcon,
   DownloadIcon,
   Gamepad2Icon,
@@ -277,28 +276,14 @@ export function PublicPetProfilePage({
               title={`${profile.name}'s Photos`}
               icon={ImagesIcon}
             />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {PHOTO_PLACEHOLDERS.map((label, index) => (
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              {PHOTO_PLACEHOLDERS.map((label) => (
                 <MediaPlaceholder
                   key={label}
                   label={label}
-                  className={
-                    index === 0
-                      ? 'aspect-[4/3] sm:col-span-2 sm:row-span-2'
-                      : 'aspect-[4/3]'
-                  }
+                  className="aspect-[4/3]"
                 />
               ))}
-            </div>
-            <div className="mt-5 flex justify-center">
-              <button
-                type="button"
-                disabled
-                className="inline-flex items-center gap-2 rounded-full bg-[#ffe7e2] px-5 py-2.5 text-xs font-bold text-[#704d42] disabled:opacity-100"
-              >
-                See more photos
-                <ArrowDownIcon className="size-4" />
-              </button>
             </div>
           </section>
 
@@ -329,16 +314,6 @@ export function PublicPetProfilePage({
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="mt-5 flex justify-center">
-              <button
-                type="button"
-                disabled
-                className="inline-flex items-center gap-2 rounded-full bg-[#ffe7e2] px-5 py-2.5 text-xs font-bold text-[#704d42] disabled:opacity-100"
-              >
-                See more videos
-                <ArrowDownIcon className="size-4" />
-              </button>
             </div>
           </section>
 
