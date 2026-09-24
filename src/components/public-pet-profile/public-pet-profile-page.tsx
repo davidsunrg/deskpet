@@ -28,6 +28,9 @@ import {
 
 const COPPER_MEMORY_BOOK_DEMO_HREF = '/demo/memory-book/';
 
+const DEFAULT_BANNER_OBJECT_CLASS =
+  'object-[38%_center] sm:object-[44%_center] md:object-[48%_center] lg:object-center';
+
 type PublicPetProfilePageProps = {
   profile: PublicPetProfile;
 };
@@ -175,14 +178,17 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
       data-testid="public-pet-profile"
     >
       <section
-        className="relative min-h-[560px] overflow-hidden px-5 pb-8 pt-5 sm:px-8 md:min-h-[620px] md:px-12"
+        className="relative min-h-[560px] overflow-hidden px-5 pb-16 pt-5 sm:px-8 md:min-h-[620px] md:px-12"
         data-testid="public-pet-profile-hero"
       >
         <img
           src={profile.bannerSrc}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-[38%_center] sm:object-[44%_center] md:object-[48%_center] lg:object-center"
+          className={cn(
+            'absolute inset-0 h-full w-full object-cover',
+            profile.bannerObjectClass ?? DEFAULT_BANNER_OBJECT_CLASS
+          )}
         />
 
         <div className="relative z-10 mx-auto max-w-7xl">
@@ -234,17 +240,16 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
         <HeroBannerWave />
       </section>
 
-      <div className="relative z-20 -mt-6 bg-white px-5 pb-12 pt-2 sm:-mt-8 sm:px-8 sm:pt-3 md:-mt-10 md:px-12 md:pt-4">
+      <div className="relative z-10 bg-white px-5 pb-12 pt-10 sm:px-8 md:px-12">
         <div className="mx-auto max-w-7xl">
           <section
             id="desktop-pet"
-            className="scroll-mt-24 pb-4"
+            className="scroll-mt-24 py-5"
             data-testid="public-pet-profile-desktop-pet"
           >
             <SectionHeading
               title={`Play with ${profile.name}`}
               icon={Gamepad2Icon}
-              className="mb-3"
             />
             <ProfilePlayCard profile={profile} />
           </section>
