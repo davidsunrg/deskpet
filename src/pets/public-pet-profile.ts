@@ -19,8 +19,7 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     name: 'Copper',
     breed: 'Golden Retriever',
     age: '3 years old',
-    description:
-      'A gentle adventurer with a sunny smile and a talent for making every day feel like home.',
+    description: 'My little adventure buddy.',
     bannerSrc: '/sites/copper/banner.png',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
     about:

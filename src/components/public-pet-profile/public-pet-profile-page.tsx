@@ -1,5 +1,10 @@
 'use client';
 
+import '@fontsource/kalam/400.css';
+import '@fontsource/kalam/700.css';
+import '@fontsource/nunito/400.css';
+import '@fontsource/nunito/600.css';
+import '@fontsource/nunito/700.css';
 import { SelectedCatPreview } from '@/components/pets/selected-cat-preview';
 import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
@@ -49,27 +54,22 @@ const VIDEO_PLACEHOLDERS = [
 function SectionHeading({
   title,
   description,
-  action,
 }: {
   title: string;
   description: string;
-  action?: React.ReactNode;
 }) {
   return (
-    <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h2 className="flex items-center gap-3 text-2xl font-black tracking-[-0.03em] text-[#43271f] md:text-3xl">
-          <PawPrintIcon
-            aria-hidden="true"
-            className="size-7 rotate-[-8deg] fill-[#ff6f61] text-[#ff6f61]"
-          />
-          {title}
-        </h2>
-        <p className="mt-1.5 text-sm font-medium text-[#7b625b]">
-          {description}
-        </p>
-      </div>
-      {action}
+    <div className="mb-5">
+      <h2 className="flex items-center gap-3 text-3xl font-bold tracking-normal text-[#43271f] [font-family:'Kalam',cursive] md:text-4xl">
+        <PawPrintIcon
+          aria-hidden="true"
+          className="size-7 rotate-[-8deg] fill-[#ff6f61] text-[#ff6f61]"
+        />
+        {title}
+      </h2>
+      <p className="mt-1 text-sm font-normal leading-6 text-[#7b625b]">
+        {description}
+      </p>
     </div>
   );
 }
@@ -125,7 +125,7 @@ export function PublicPetProfilePage({
 
   return (
     <article
-      className="min-h-screen overflow-hidden bg-[#fffaf6] text-[#43271f]"
+      className="min-h-screen overflow-hidden bg-[#fffaf6] text-[#43271f] [font-family:'Nunito',sans-serif]"
       data-testid="public-pet-profile"
     >
       {playPet && previewOrigin && !previewHidden ? (
@@ -146,11 +146,9 @@ export function PublicPetProfilePage({
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(255,250,246,0.98)_0%,rgba(255,250,246,0.9)_37%,rgba(255,232,217,0.38)_66%,rgba(242,204,180,0.55)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_65%,rgba(255,250,246,0.34)_100%)]" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center">
             <span className="inline-flex items-center gap-2 text-sm font-extrabold text-[#6e4a3e]">
               <PawPrintIcon
                 aria-hidden="true"
@@ -158,32 +156,37 @@ export function PublicPetProfilePage({
               />
               DeskPet
             </span>
-            <span className="rounded-full border border-[#e8cfc1] bg-white/80 px-4 py-2 text-xs font-black text-[#6e4a3e] backdrop-blur">
-              A little page for a big love
-            </span>
           </div>
 
-          <div className="max-w-xl pt-28 md:pt-36">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#e65f55]">
-              {profile.breed} · {profile.age}
-            </p>
-            <h1 className="mt-4 text-6xl font-black leading-[0.9] tracking-[-0.07em] text-[#3f241c] sm:text-7xl md:text-8xl">
-              {profile.name}
-              <PawPrintIcon
+          <div className="pt-28 md:pt-36">
+            <div className="relative max-w-xl p-6 sm:p-8">
+              <div
                 aria-hidden="true"
-                className="ml-4 inline size-12 rotate-12 fill-[#ff6f61] text-[#ff6f61] md:size-14"
+                className="absolute -inset-x-10 -inset-y-7 bg-white/65 backdrop-blur-lg [mask-image:radial-gradient(ellipse_at_center,black_38%,transparent_76%)]"
               />
-            </h1>
-            <p className="mt-5 max-w-md text-lg font-semibold leading-7 text-[#79584d]">
-              {profile.description}
-            </p>
-            <a
-              href="#desktop-pet"
-              className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#ff6f61] px-7 text-sm font-black text-white shadow-[0_10px_24px_rgba(238,101,88,0.28)] transition hover:bg-[#ec5d52]"
-            >
-              <PlayIcon aria-hidden="true" className="size-4 fill-current" />
-              Meet {profile.name}
-            </a>
+              <div className="relative z-10">
+                <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
+                  {profile.name}
+                  <PawPrintIcon
+                    aria-hidden="true"
+                    className="ml-4 inline size-12 rotate-12 fill-[#ff6f61] text-[#ff6f61] md:size-14"
+                  />
+                </h1>
+                <p className="mt-3 max-w-md text-2xl font-normal leading-8 text-[#594038] [font-family:'Kalam',cursive]">
+                  {profile.description}
+                </p>
+                <a
+                  href="#desktop-pet"
+                  className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#ff6f61] px-7 text-sm font-bold text-white shadow-[0_10px_24px_rgba(238,101,88,0.28)] transition hover:bg-[#ec5d52]"
+                >
+                  <PlayIcon
+                    aria-hidden="true"
+                    className="size-4 fill-current"
+                  />
+                  Meet {profile.name}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -229,7 +232,7 @@ export function PublicPetProfilePage({
                   <button
                     type="button"
                     onClick={() => setPreviewHidden(false)}
-                    className="absolute bottom-4 rounded-full bg-white px-4 py-2 text-xs font-black text-[#68483d] shadow"
+                    className="absolute bottom-4 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#68483d] shadow"
                   >
                     Play with {profile.name}
                   </button>
@@ -239,7 +242,7 @@ export function PublicPetProfilePage({
               <div className="flex flex-col justify-center gap-3 p-6">
                 <Button
                   asChild
-                  className="h-12 rounded-full bg-[#ff6f61] font-black text-white hover:bg-[#ec5d52]"
+                  className="h-12 rounded-full bg-[#ff6f61] font-bold text-white hover:bg-[#ec5d52]"
                 >
                   <LocaleLink
                     href={playgroundRoute(playPet?.id ?? 'golden-retriever')}
@@ -276,16 +279,6 @@ export function PublicPetProfilePage({
             <SectionHeading
               title={`${profile.name}'s Photos`}
               description="Moments from daily adventures."
-              action={
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex items-center gap-2 self-start rounded-full bg-[#ffe7e2] px-5 py-2.5 text-xs font-black text-[#704d42] disabled:opacity-100"
-                >
-                  See more photos
-                  <ArrowDownIcon className="size-4" />
-                </button>
-              }
             />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {PHOTO_PLACEHOLDERS.map((label, index) => (
@@ -300,22 +293,22 @@ export function PublicPetProfilePage({
                 />
               ))}
             </div>
+            <div className="mt-5 flex justify-center">
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center gap-2 rounded-full bg-[#ffe7e2] px-5 py-2.5 text-xs font-bold text-[#704d42] disabled:opacity-100"
+              >
+                See more photos
+                <ArrowDownIcon className="size-4" />
+              </button>
+            </div>
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-videos">
             <SectionHeading
               title="Videos"
               description={`Short clips of ${profile.name}'s happy moments.`}
-              action={
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex items-center gap-2 self-start rounded-full bg-[#ffe7e2] px-5 py-2.5 text-xs font-black text-[#704d42] disabled:opacity-100"
-                >
-                  See more videos
-                  <ArrowDownIcon className="size-4" />
-                </button>
-              }
             />
             <div className="grid gap-4 md:grid-cols-3">
               {VIDEO_PLACEHOLDERS.map((video) => (
@@ -339,6 +332,16 @@ export function PublicPetProfilePage({
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-5 flex justify-center">
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center gap-2 rounded-full bg-[#ffe7e2] px-5 py-2.5 text-xs font-bold text-[#704d42] disabled:opacity-100"
+              >
+                See more videos
+                <ArrowDownIcon className="size-4" />
+              </button>
             </div>
           </section>
 
@@ -366,7 +369,7 @@ export function PublicPetProfilePage({
                       key={label}
                       className="grid grid-cols-[100px_1fr] gap-3"
                     >
-                      <dt className="text-xs font-black text-[#4f332a]">
+                      <dt className="text-xs font-bold text-[#4f332a]">
                         {label}
                       </dt>
                       <dd className="text-xs font-medium text-[#80665d]">
@@ -399,16 +402,16 @@ export function PublicPetProfilePage({
         <HeartIcon className="absolute right-[10%] top-5 size-8 rotate-12 fill-[#ff8a76]/30 text-[#ff8a76]/30" />
         <div className="relative mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <h2 className="text-2xl font-black tracking-[-0.03em] text-[#4a2a20] md:text-3xl">
+            <h2 className="text-3xl font-bold tracking-normal text-[#4a2a20] [font-family:'Kalam',cursive] md:text-4xl">
               {`Love a page like ${profile.name}'s?`}
             </h2>
-            <p className="mt-2 font-medium text-[#806157]">
+            <p className="mt-1 text-xl font-normal text-[#806157] [font-family:'Kalam',cursive]">
               Bring your own pet to life with DeskPet.
             </p>
           </div>
           <Button
             asChild
-            className="h-14 rounded-full bg-[#f2574f] px-9 text-base font-black text-white shadow-[0_10px_22px_rgba(224,76,66,0.24)] hover:bg-[#df4c45]"
+            className="h-14 rounded-full bg-[#f2574f] px-9 text-base font-bold text-white shadow-[0_10px_22px_rgba(224,76,66,0.24)] hover:bg-[#df4c45]"
           >
             <LocaleLink href={Routes.DesktopPetCreator}>
               Make My Pet
