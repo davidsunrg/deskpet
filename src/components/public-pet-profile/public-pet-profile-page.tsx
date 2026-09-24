@@ -17,6 +17,9 @@ import {
   DownloadIcon,
   HeartIcon,
   ImageIcon,
+  ImagesIcon,
+  type LucideIcon,
+  MonitorIcon,
   PawPrintIcon,
   PlayIcon,
   SettingsIcon,
@@ -53,23 +56,17 @@ const VIDEO_PLACEHOLDERS = [
 
 function SectionHeading({
   title,
-  description,
+  icon: Icon,
 }: {
   title: string;
-  description: string;
+  icon: LucideIcon;
 }) {
   return (
     <div className="mb-5">
       <h2 className="flex items-center gap-3 text-3xl font-bold tracking-normal text-[#43271f] [font-family:'Kalam',cursive] md:text-4xl">
-        <PawPrintIcon
-          aria-hidden="true"
-          className="size-7 rotate-[-8deg] fill-[#ff6f61] text-[#ff6f61]"
-        />
+        <Icon aria-hidden="true" className="size-7 text-[#ff6f61]" />
         {title}
       </h2>
-      <p className="mt-1 text-sm font-normal leading-6 text-[#7b625b]">
-        {description}
-      </p>
     </div>
   );
 }
@@ -144,7 +141,7 @@ export function PublicPetProfilePage({
           src={profile.bannerSrc}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[38%_center] sm:object-[44%_center] md:object-[48%_center] lg:object-center"
         />
 
         <div className="relative z-10 mx-auto max-w-7xl">
@@ -158,11 +155,11 @@ export function PublicPetProfilePage({
             </span>
           </div>
 
-          <div className="pt-28 md:pt-36">
-            <div className="relative max-w-xl p-6 sm:p-8">
+          <div className="pt-44 sm:pt-40 md:pt-36">
+            <div className="relative max-w-[310px] p-4 sm:max-w-[380px] sm:p-5 md:max-w-lg md:p-6 lg:max-w-xl lg:p-8">
               <div
                 aria-hidden="true"
-                className="absolute -inset-x-10 -inset-y-7 bg-white/65 backdrop-blur-lg [mask-image:radial-gradient(ellipse_at_center,black_38%,transparent_76%)]"
+                className="absolute -inset-2 bg-white/80 backdrop-blur-sm [mask-image:radial-gradient(ellipse_at_center,black_46%,transparent_68%)] sm:-inset-4 sm:bg-white/75 sm:backdrop-blur-md sm:[mask-image:radial-gradient(ellipse_at_center,black_43%,transparent_71%)] md:-inset-6 md:bg-white/70 md:[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_74%)] lg:-inset-x-10 lg:-inset-y-7 lg:bg-white/65 lg:backdrop-blur-lg lg:[mask-image:radial-gradient(ellipse_at_center,black_38%,transparent_76%)]"
               />
               <div className="relative z-10">
                 <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
@@ -198,10 +195,7 @@ export function PublicPetProfilePage({
             className="scroll-mt-24 py-5"
             data-testid="public-pet-profile-desktop-pet"
           >
-            <SectionHeading
-              title="Desktop Pet"
-              description={`Meet ${profile.name} on your desktop — a playful companion who's always by your side.`}
-            />
+            <SectionHeading title="Desktop Pet" icon={MonitorIcon} />
             <div className="grid overflow-hidden rounded-[28px] border border-[#f0ded3] bg-[linear-gradient(105deg,#fff_0%,#fff8f2_64%,#fff0e8_100%)] shadow-[0_14px_38px_rgba(100,62,47,0.08)] lg:grid-cols-[1fr_260px]">
               <div
                 ref={stageRef}
@@ -278,7 +272,7 @@ export function PublicPetProfilePage({
           <section className="py-8" data-testid="public-pet-profile-photos">
             <SectionHeading
               title={`${profile.name}'s Photos`}
-              description="Moments from daily adventures."
+              icon={ImagesIcon}
             />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {PHOTO_PLACEHOLDERS.map((label, index) => (
@@ -306,10 +300,7 @@ export function PublicPetProfilePage({
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-videos">
-            <SectionHeading
-              title="Videos"
-              description={`Short clips of ${profile.name}'s happy moments.`}
-            />
+            <SectionHeading title="Videos" icon={VideoIcon} />
             <div className="grid gap-4 md:grid-cols-3">
               {VIDEO_PLACEHOLDERS.map((video) => (
                 <div
@@ -346,10 +337,7 @@ export function PublicPetProfilePage({
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-about">
-            <SectionHeading
-              title={`About ${profile.name}`}
-              description="A little more about this very good companion."
-            />
+            <SectionHeading title={`About ${profile.name}`} icon={HeartIcon} />
             <div className="grid gap-6 rounded-[28px] border border-[#f1dfd4] bg-[#fff5ed] p-6 md:grid-cols-[180px_1fr] md:p-8">
               <div className="grid min-h-44 place-items-center rounded-full border-2 border-dashed border-[#d9b7a5] bg-white/70 text-center text-[#9a6d5f]">
                 <div>
