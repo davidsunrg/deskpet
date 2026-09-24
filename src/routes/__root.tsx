@@ -138,6 +138,7 @@ function RootComponent() {
   const canonicalPathname = getCanonicalPathname(pathname);
   const matches = useRouterState({ select: (s) => s.matches }) ?? [];
   const isAuthPages = canonicalPathname.startsWith(Routes.Auth);
+  const isPublicPetProfile = canonicalPathname.startsWith('/@');
   const isProtectedPages =
     canonicalPathname.startsWith(Routes.Admin) ||
     canonicalPathname.startsWith(Routes.Dashboard) ||
@@ -148,7 +149,7 @@ function RootComponent() {
     canonicalPathname !== '' &&
     matches.length <= 1;
 
-  if (isAuthPages || isProtectedPages || isNotFound) {
+  if (isAuthPages || isPublicPetProfile || isProtectedPages || isNotFound) {
     return (
       <div className="flex min-h-screen flex-col">
         <main id="main-content" className="flex-1">
