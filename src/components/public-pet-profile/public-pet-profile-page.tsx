@@ -41,10 +41,6 @@ const PHOTO_PLACEHOLDERS = [
   'Morning adventure',
   'Cozy afternoon',
   'Park day',
-  'Best smile',
-  'Nap time',
-  'Play time',
-  'Little explorer',
 ] as const;
 
 const VIDEO_PLACEHOLDERS = [
