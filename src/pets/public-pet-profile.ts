@@ -50,8 +50,6 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: '/sites/laika/banner.png',
-    bannerObjectClass:
-      'object-[82%_36%] sm:object-[72%_center] md:object-[62%_center] lg:object-[54%_center]',
     playClipSrcs: GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_SRCS,
     playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],

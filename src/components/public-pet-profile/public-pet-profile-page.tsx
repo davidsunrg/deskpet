@@ -29,7 +29,7 @@ import {
 const COPPER_MEMORY_BOOK_DEMO_HREF = '/demo/memory-book/';
 
 const DEFAULT_BANNER_OBJECT_CLASS =
-  'object-[38%_center] sm:object-[44%_center] md:object-[48%_center] lg:object-center';
+  'object-[60%_38%] sm:object-[58%_center] md:object-[56%_center] lg:object-[52%_center]';
 
 type PublicPetProfilePageProps = {
   profile: PublicPetProfile;
