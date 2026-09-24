@@ -1,3 +1,5 @@
+import { GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_SRCS } from '@/pets/public-pet-profile-play-clips';
+
 export type PublicPetProfile = {
   handle: string;
   name: string;
@@ -5,9 +7,7 @@ export type PublicPetProfile = {
   age: string;
   description: string;
   bannerSrc: string;
-  /** Shown under the Desktop Pet heading. */
-  desktopPetIntro: string;
-  /** Three animated clip stills (GIF/WebP/PNG) for the play section. */
+  /** Three animated clips (WebM/video or image) for the play section. */
   playClipSrcs?: readonly [string, string, string];
   /** `?pet=` key for Open Playground. */
   playgroundPetKey?: string;
@@ -27,8 +27,7 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: '/sites/copper/banner.png',
-    desktopPetIntro:
-      'Meet Copper on your desktop. A playful companion who is always by your side.',
+    playClipSrcs: GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_SRCS,
     playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
     about:
@@ -49,13 +48,7 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: '/sites/laika/banner.png',
-    desktopPetIntro:
-      'Meet Laika on your desktop. A playful companion who is always by your side.',
-    playClipSrcs: [
-      '/sites/laika/clips/clip-1.png',
-      '/sites/laika/clips/clip-2.png',
-      '/sites/laika/clips/clip-3.png',
-    ],
+    playClipSrcs: GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_SRCS,
     playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
     about:

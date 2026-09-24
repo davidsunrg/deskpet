@@ -3,6 +3,7 @@
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes, playgroundRoute } from '@/lib/routes';
 import type { PublicPetProfile } from '@/pets/public-pet-profile';
+import { GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_LABELS } from '@/pets/public-pet-profile-play-clips';
 import { DownloadIcon, ImageIcon, PlayIcon, SettingsIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -10,28 +11,39 @@ type ProfilePlayCardProps = {
   profile: PublicPetProfile;
 };
 
-const CLIP_PLACEHOLDER_LABELS = [
-  'Wave hello',
-  'Playful bark',
-  'Space helmet',
-] as const;
+function isVideoClipSrc(src: string): boolean {
+  return /\.(webm|mp4)(\?|#|$)/i.test(src);
+}
 
 function PlayClip({ src, label }: { src?: string; label: string }) {
   const [failed, setFailed] = useState(false);
-  const showImage = Boolean(src) && !failed;
+  const showMedia = Boolean(src) && !failed;
 
   return (
-    <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-[#ead8ce] bg-white shadow-sm">
-      {showImage ? (
-        <img
-          src={src}
-          alt=""
-          className="size-full object-cover object-center"
-          onError={() => setFailed(true)}
-        />
+    <div className="relative h-[160px] overflow-hidden rounded-2xl bg-transparent sm:h-[184px] md:h-[204px]">
+      {showMedia ? (
+        isVideoClipSrc(src!) ? (
+          <video
+            src={src}
+            className="absolute bottom-0 left-1/2 h-[142%] w-full max-w-full -translate-x-1/2 object-contain object-bottom"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label={label}
+            onError={() => setFailed(true)}
+          />
+        ) : (
+          <img
+            src={src}
+            alt=""
+            className="absolute bottom-0 left-1/2 h-[142%] w-full max-w-full -translate-x-1/2 object-contain object-bottom"
+            onError={() => setFailed(true)}
+          />
+        )
       ) : (
         <div
-          className="grid size-full place-items-center bg-[linear-gradient(180deg,#fffaf6_0%,#f7ebe0_100%)] px-2 text-center text-[#9a6d5f]"
+          className="grid size-full place-items-center bg-[#fff0e8]/40 px-2 text-center text-[#9a6d5f]"
           role="img"
           aria-label={`${label} clip placeholder`}
         >
@@ -64,7 +76,7 @@ function PlayActionButton({
       className={
         isPrimary
           ? 'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#ff6f61] px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(238,101,88,0.22)] transition hover:bg-[#ec5d52]'
-          : 'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#43271f]/15 bg-white px-5 text-sm font-bold text-[#43271f] transition hover:border-[#ff6f61]/35 hover:bg-[#fffaf6]'
+          : 'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#43271f]/15 bg-white px-5 text-sm font-bold text-[#43271f] transition hover:border-[#ff6f61]/35 hover:bg-[#fff5ed]'
       }
     >
       <Icon aria-hidden="true" className="size-4 shrink-0" />
@@ -81,15 +93,15 @@ export function ProfilePlayCard({ profile }: ProfilePlayCardProps) {
 
   return (
     <div
-      className="rounded-[24px] border border-[#f1dfd4] bg-[#fff5ed] p-5 sm:p-6"
+      className="rounded-[28px] bg-[#fff5ed] px-4 py-2 sm:px-5 sm:py-2.5"
       data-testid="public-pet-profile-play-card"
     >
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-8">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
         <div
           className="grid flex-1 grid-cols-3 gap-2 sm:gap-3"
           data-testid="public-pet-profile-play-clips"
         >
-          {CLIP_PLACEHOLDER_LABELS.map((label, index) => (
+          {GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_LABELS.map((label, index) => (
             <PlayClip key={label} src={clips?.[index]} label={label} />
           ))}
         </div>
@@ -100,7 +112,7 @@ export function ProfilePlayCard({ profile }: ProfilePlayCardProps) {
         >
           <PlayActionButton
             href={playgroundHref}
-            label="Open Playground"
+            label="Playground"
             icon={PlayIcon}
             variant="primary"
           />
@@ -111,7 +123,7 @@ export function ProfilePlayCard({ profile }: ProfilePlayCardProps) {
           />
           <PlayActionButton
             href={Routes.Download}
-            label="Download App"
+            label="Download"
             icon={DownloadIcon}
           />
         </div>

@@ -9,6 +9,7 @@ import { ProfilePlayCard } from '@/components/public-pet-profile/profile-play-ca
 import { Button } from '@/components/ui/button';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import type { PublicPetProfile } from '@/pets/public-pet-profile';
 import {
   ArrowRightIcon,
@@ -92,12 +93,14 @@ function DemoExperienceLink({
 function SectionHeading({
   title,
   icon: Icon,
+  className,
 }: {
   title: string;
   icon: LucideIcon;
+  className?: string;
 }) {
   return (
-    <div className="mb-5">
+    <div className={cn('mb-5', className)}>
       <h2 className="flex items-center gap-3 text-3xl font-bold tracking-normal text-[#43271f] [font-family:'Kalam',cursive] md:text-4xl">
         <Icon aria-hidden="true" className="size-7 text-[#ff6f61]" />
         {title}
@@ -146,7 +149,7 @@ function WallpaperCard({ label, live }: { label: string; live: boolean }) {
 export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
   return (
     <article
-      className="min-h-screen overflow-hidden bg-[#fffaf6] text-[#43271f] [font-family:'Nunito',sans-serif]"
+      className="min-h-screen overflow-hidden bg-[#fffcf9] text-[#43271f] [font-family:'Nunito',sans-serif]"
       data-testid="public-pet-profile"
     >
       <section
@@ -208,17 +211,18 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
         </div>
       </section>
 
-      <div className="bg-[#fffaf6] px-5 pb-12 pt-10 sm:px-8 md:px-12">
+      <div className="bg-[#fffcf9] px-5 pb-12 pt-10 sm:px-8 md:px-12">
         <div className="mx-auto max-w-7xl">
           <section
             id="desktop-pet"
-            className="scroll-mt-24 py-5"
+            className="scroll-mt-24 pt-2 pb-4"
             data-testid="public-pet-profile-desktop-pet"
           >
-            <SectionHeading title="Desktop Pet" icon={Gamepad2Icon} />
-            <p className="mb-5 max-w-2xl text-base leading-7 text-[#80665d]">
-              {profile.desktopPetIntro}
-            </p>
+            <SectionHeading
+              title={`Play with ${profile.name}`}
+              icon={Gamepad2Icon}
+              className="mb-3"
+            />
             <ProfilePlayCard profile={profile} />
           </section>
 
@@ -283,7 +287,7 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
       </div>
 
       <footer
-        className="relative overflow-hidden bg-[linear-gradient(105deg,#fff0e4_0%,#ffe5d5_100%)] px-6 py-12 md:px-12"
+        className="relative overflow-hidden bg-[#fffcf9] px-6 py-12 md:px-12"
         data-testid="public-pet-profile-promo"
       >
         <PawPrintIcon className="absolute -bottom-3 left-8 size-20 rotate-[-18deg] fill-[#f8bea1]/50 text-[#f8bea1]/50" />
