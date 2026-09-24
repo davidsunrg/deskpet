@@ -20,7 +20,7 @@ import {
   type LucideIcon,
   PawPrintIcon,
   PlayIcon,
-  VideoIcon,
+  SmartphoneIcon,
 } from 'lucide-react';
 
 type PublicPetProfilePageProps = {
@@ -28,18 +28,34 @@ type PublicPetProfilePageProps = {
   playgroundPet: PlaygroundPet | null;
 };
 
-const PHOTO_PLACEHOLDERS = [
-  'Favorite portrait',
-  'Morning adventure',
-  'Cozy afternoon',
-  'Park day',
+type MomentPlaceholder = {
+  label: string;
+  duration?: string;
+};
+
+const MOMENT_PLACEHOLDERS: readonly MomentPlaceholder[] = [
+  { label: 'Favorite portrait' },
+  { label: 'Morning adventure' },
+  { label: 'A happy little run', duration: '0:28' },
+  { label: 'Cozy afternoon' },
+  { label: 'Playtime in the park', duration: '0:36' },
+  { label: 'Park day' },
+  { label: 'A cozy snow day', duration: '0:32' },
+  { label: 'A quiet evening', duration: '0:24' },
+];
+
+const WALLPAPER_PLACEHOLDERS = [
+  { label: 'Morning light', live: false },
+  { label: 'Tail wag', live: true },
+  { label: 'Cozy nap', live: false },
+  { label: 'Park stroll', live: true },
 ] as const;
 
-const VIDEO_PLACEHOLDERS = [
-  { title: 'A happy little run', duration: '0:28' },
-  { title: 'Playtime in the park', duration: '0:36' },
-  { title: 'A cozy snow day', duration: '0:32' },
-] as const;
+const MEDIA_FRAME_CLASS =
+  'relative grid overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#f7d9c5_0%,#fdece1_48%,#e7c8b1_100%)]';
+
+const MEDIA_WASH_CLASS =
+  'absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(255,255,255,0.85),transparent_25%),radial-gradient(circle_at_25%_85%,rgba(255,142,116,0.22),transparent_32%)]';
 
 function SectionHeading({
   title,
@@ -58,21 +74,63 @@ function SectionHeading({
   );
 }
 
-function MediaPlaceholder({
-  label,
-  className = '',
-}: {
-  label: string;
-  className?: string;
-}) {
+function MomentCard({ moment }: { moment: MomentPlaceholder }) {
+  const isVideo = Boolean(moment.duration);
+
   return (
     <div
-      className={`relative grid overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#f7d9c5_0%,#fdece1_48%,#e7c8b1_100%)] ${className}`}
+      className={`${MEDIA_FRAME_CLASS} aspect-[4/3]`}
       role="img"
-      aria-label={`${label} placeholder`}
+      aria-label={
+        isVideo
+          ? `${moment.label} video, ${moment.duration}`
+          : `${moment.label} photo`
+      }
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(255,255,255,0.85),transparent_25%),radial-gradient(circle_at_25%_85%,rgba(255,142,116,0.22),transparent_32%)]" />
-      <div className="relative m-auto grid place-items-center text-[#9a6d5f]">
+      <div className={MEDIA_WASH_CLASS} />
+      {isVideo ? (
+        <>
+          <div className="relative grid place-items-center">
+            <span className="grid size-12 place-items-center rounded-full bg-[#43271f]/75 text-white shadow-lg">
+              <PlayIcon
+                aria-hidden="true"
+                className="ml-0.5 size-5 fill-current"
+              />
+            </span>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-[#43271f]/60 to-transparent p-3 pt-10 text-white">
+            <span className="min-w-0 truncate text-xs font-bold">
+              {moment.label}
+            </span>
+            <span className="shrink-0 rounded bg-black/45 px-2 py-1 text-[11px] font-bold">
+              {moment.duration}
+            </span>
+          </div>
+        </>
+      ) : (
+        <div className="relative m-auto grid place-items-center text-[#9a6d5f]">
+          <ImageIcon aria-hidden="true" className="size-8" />
+          <span className="mt-2 text-xs font-bold">{moment.label}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function WallpaperCard({ label, live }: { label: string; live: boolean }) {
+  return (
+    <div
+      className={`${MEDIA_FRAME_CLASS} aspect-[9/16]`}
+      role="img"
+      aria-label={live ? `${label} live wallpaper` : `${label} wallpaper`}
+    >
+      <div className={MEDIA_WASH_CLASS} />
+      {live ? (
+        <span className="absolute top-3 left-3 rounded-full bg-[#ff6f61] px-2.5 py-1 text-[11px] font-bold text-white">
+          Live
+        </span>
+      ) : null}
+      <div className="relative m-auto grid place-items-center px-3 text-center text-[#9a6d5f]">
         <ImageIcon aria-hidden="true" className="size-8" />
         <span className="mt-2 text-xs font-bold">{label}</span>
       </div>
@@ -142,48 +200,30 @@ export function PublicPetProfilePage({
             />
           </section>
 
-          <section className="py-8" data-testid="public-pet-profile-photos">
+          <section className="py-8" data-testid="public-pet-profile-wallpapers">
             <SectionHeading
-              title={`${profile.name}'s Photos`}
-              icon={ImagesIcon}
+              title={`${profile.name}'s Wallpapers`}
+              icon={SmartphoneIcon}
             />
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {PHOTO_PLACEHOLDERS.map((label) => (
-                <MediaPlaceholder
-                  key={label}
-                  label={label}
-                  className="aspect-[4/3]"
+              {WALLPAPER_PLACEHOLDERS.map((wallpaper) => (
+                <WallpaperCard
+                  key={wallpaper.label}
+                  label={wallpaper.label}
+                  live={wallpaper.live}
                 />
               ))}
             </div>
           </section>
 
-          <section className="py-8" data-testid="public-pet-profile-videos">
+          <section className="py-8" data-testid="public-pet-profile-moments">
             <SectionHeading
-              title={`${profile.name}'s Videos`}
-              icon={VideoIcon}
+              title={`${profile.name}'s Moments`}
+              icon={ImagesIcon}
             />
-            <div className="grid gap-4 md:grid-cols-3">
-              {VIDEO_PLACEHOLDERS.map((video) => (
-                <div
-                  key={video.title}
-                  className="relative aspect-video overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#dfc2ae,#f9e8dd_50%,#efc9b4)]"
-                  role="img"
-                  aria-label={`${video.title} video placeholder`}
-                >
-                  <VideoIcon className="absolute right-4 top-4 size-6 text-white/80" />
-                  <div className="absolute inset-0 grid place-items-center">
-                    <span className="grid size-12 place-items-center rounded-full bg-[#43271f]/75 text-white shadow-lg">
-                      <PlayIcon className="ml-0.5 size-5 fill-current" />
-                    </span>
-                  </div>
-                  <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-[#43271f]/70 to-transparent p-4 pt-12 text-white">
-                    <span className="text-sm font-bold">{video.title}</span>
-                    <span className="rounded bg-black/45 px-2 py-1 text-xs font-bold">
-                      {video.duration}
-                    </span>
-                  </div>
-                </div>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              {MOMENT_PLACEHOLDERS.map((moment) => (
+                <MomentCard key={moment.label} moment={moment} />
               ))}
             </div>
           </section>
