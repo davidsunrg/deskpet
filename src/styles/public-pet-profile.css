@@ -123,10 +123,14 @@
   transform: scaleX(1);
 }
 
+.pet-profile-header-actions {
+  position: relative;
+  justify-self: end;
+}
+
 .pet-profile-header-share {
   display: inline-flex;
   align-items: center;
-  justify-self: end;
   gap: 10px;
   min-height: 48px;
   padding: 10px 26px;
@@ -145,6 +149,15 @@
   transform: translateY(-1px);
 }
 
+.pet-profile-header-share-status {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 4px;
+  color: var(--pet-profile-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
 .pet-profile-header-share svg,
 .pet-profile-menu-button svg {
   width: 20px;
@@ -158,7 +171,6 @@
 .pet-profile-main {
   display: grid;
   grid-template-columns: minmax(390px, 42%) minmax(0, 58%);
-  grid-template-rows: minmax(580px, auto) auto;
   min-height: 770px;
   padding-top: clamp(24px, 4vh, 48px);
 }
@@ -290,66 +302,6 @@
   white-space: nowrap;
 }
 
-.pet-profile-actions {
-  display: flex;
-  gap: 16px;
-}
-
-.pet-profile-actions button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  min-height: 58px;
-  border-radius: 999px;
-  font-size: 17px;
-  font-weight: 700;
-  transition:
-    background-color 160ms ease,
-    transform 160ms ease;
-}
-
-.pet-profile-actions button:hover {
-  transform: translateY(-1px);
-}
-
-.pet-profile-actions svg {
-  width: 21px;
-  height: 21px;
-}
-
-.pet-profile-follow {
-  min-width: 240px;
-  padding: 12px 26px;
-  background: var(--pet-profile-accent);
-  color: white;
-}
-
-.pet-profile-follow:hover,
-.pet-profile-follow[aria-pressed="true"] {
-  background: var(--pet-profile-accent-hover);
-}
-
-.pet-profile-share {
-  min-width: 170px;
-  padding: 12px 24px;
-  border: 1.5px solid var(--pet-profile-border);
-  background: rgba(255, 250, 243, 0.72);
-  color: var(--pet-profile-accent);
-}
-
-.pet-profile-share:hover {
-  background: white;
-}
-
-.pet-profile-share-status {
-  display: block;
-  min-height: 20px;
-  margin-top: 8px;
-  color: var(--pet-profile-muted);
-  font-size: 12px;
-}
-
 .pet-profile-hero-placeholder {
   position: relative;
   align-self: stretch;
@@ -462,69 +414,6 @@
   backdrop-filter: blur(8px);
 }
 
-.pet-profile-gallery {
-  z-index: 3;
-  display: grid;
-  grid-column: 1 / 2;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  align-self: end;
-  width: min(100%, 650px);
-  padding: 6px 0 0 36px;
-  scroll-margin-top: 100px;
-}
-
-.pet-profile-gallery-item,
-.pet-profile-gallery-more {
-  position: relative;
-  display: grid;
-  aspect-ratio: 1;
-  min-width: 0;
-  place-items: center;
-  overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.9);
-  border-radius: 16px;
-}
-
-.pet-profile-gallery-item {
-  transition:
-    transform 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.pet-profile-gallery-item:hover,
-.pet-profile-gallery-item[aria-pressed="true"] {
-  box-shadow: 0 0 0 3px var(--pet-profile-accent);
-  transform: translateY(-2px);
-}
-
-.pet-profile-gallery-item svg {
-  width: 40%;
-  height: 40%;
-  color: rgba(80, 38, 21, 0.46);
-  fill: currentColor;
-}
-
-.pet-profile-gallery-item span {
-  position: absolute;
-  right: 6px;
-  bottom: 5px;
-  left: 6px;
-  overflow: hidden;
-  color: rgba(63, 27, 12, 0.74);
-  font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.pet-profile-gallery-more {
-  background: rgba(112, 75, 55, 0.6);
-  color: white;
-  font-family: var(--pet-profile-display);
-  font-size: clamp(22px, 2.8vw, 36px);
-  font-weight: 700;
-}
-
 .pet-profile-footer {
   position: relative;
   z-index: 2;
@@ -579,19 +468,6 @@
   .pet-profile-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px 12px;
-  }
-
-  .pet-profile-actions {
-    flex-wrap: wrap;
-  }
-
-  .pet-profile-follow,
-  .pet-profile-share {
-    min-width: 0;
-  }
-
-  .pet-profile-gallery {
-    padding-left: 6px;
   }
 }
 
@@ -704,24 +580,6 @@
     margin: 26px 0;
   }
 
-  .pet-profile-actions {
-    order: 7;
-  }
-
-  .pet-profile-share-status {
-    order: 8;
-  }
-
-  .pet-profile-gallery {
-    order: 9;
-    width: 100%;
-    margin-top: 10px;
-    padding-left: 0;
-    overflow-x: auto;
-    grid-template-columns: repeat(5, minmax(112px, 1fr));
-    scrollbar-width: thin;
-  }
-
   .pet-profile-footer {
     justify-content: center;
     margin-top: 36px;
@@ -788,15 +646,6 @@
 
   .pet-profile-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .pet-profile-actions button {
-    min-height: 52px;
-  }
-
-  .pet-profile-follow,
-  .pet-profile-share {
-    flex: 1 1 100%;
   }
 }
 

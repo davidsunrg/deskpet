@@ -1,7 +1,6 @@
 import {
   IconBook,
   IconCalendarEvent,
-  IconExternalLink,
   IconHeart,
   IconMenu2,
   IconPaw,
@@ -30,11 +29,9 @@ export function PublicPetProfilePage({
 }: {
   profile: PublicPetProfile;
 }) {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [shareStatus, setShareStatus] = useState<ShareStatus>('');
-  const activeGalleryItem = profile.gallery[activeGalleryIndex];
+  const heroPreview = profile.gallery[0];
 
   async function shareProfile() {
     const shareData = {
@@ -93,9 +90,6 @@ export function PublicPetProfilePage({
             <a href="#home" onClick={closeMenu}>
               Home
             </a>
-            <a href="#gallery" onClick={closeMenu}>
-              Gallery
-            </a>
             <a href="#stories" onClick={closeMenu}>
               Stories
             </a>
@@ -104,14 +98,22 @@ export function PublicPetProfilePage({
             </a>
           </nav>
 
-          <button
-            type="button"
-            className="pet-profile-header-share"
-            onClick={shareProfile}
-          >
-            <IconShare3 />
-            Share
-          </button>
+          <div className="pet-profile-header-actions">
+            <button
+              type="button"
+              className="pet-profile-header-share"
+              onClick={shareProfile}
+            >
+              <IconShare3 />
+              Share
+            </button>
+            <output
+              className="pet-profile-header-share-status"
+              aria-live="polite"
+            >
+              {shareStatus}
+            </output>
+          </div>
         </header>
 
         <main id="home" className="pet-profile-main">
@@ -138,52 +140,23 @@ export function PublicPetProfilePage({
             <dl id="stories" className="pet-profile-stats">
               {profile.stats.map((stat) => {
                 const StatIcon = statIcons[stat.kind];
-                const value =
-                  stat.kind === 'loved' && isFollowing
-                    ? stat.value + 1
-                    : stat.value;
 
                 return (
                   <div key={stat.kind}>
                     <StatIcon aria-hidden="true" />
                     <div>
                       <dt>{stat.label}</dt>
-                      <dd>{value}</dd>
+                      <dd>{stat.value}</dd>
                     </div>
                   </div>
                 );
               })}
             </dl>
-
-            <div className="pet-profile-actions">
-              <button
-                type="button"
-                className="pet-profile-follow"
-                aria-pressed={isFollowing}
-                onClick={() => setIsFollowing((following) => !following)}
-              >
-                {isFollowing
-                  ? `Following ${profile.name}`
-                  : `Follow ${profile.name}`}
-                <IconHeart />
-              </button>
-              <button
-                type="button"
-                className="pet-profile-share"
-                onClick={shareProfile}
-              >
-                Share
-                <IconExternalLink />
-              </button>
-            </div>
-            <output className="pet-profile-share-status" aria-live="polite">
-              {shareStatus}
-            </output>
           </section>
 
           <section
-            className={`pet-profile-hero-placeholder pet-profile-tone-${activeGalleryItem?.tone ?? 'cream'}`}
-            aria-label={activeGalleryItem?.label ?? `${profile.name} portrait`}
+            className={`pet-profile-hero-placeholder pet-profile-tone-${heroPreview?.tone ?? 'cream'}`}
+            aria-label={heroPreview?.label ?? `${profile.name} portrait`}
           >
             <div className="pet-profile-placeholder-subject" aria-hidden="true">
               <IconPaw />
@@ -193,34 +166,8 @@ export function PublicPetProfilePage({
               <IconHeart aria-hidden="true" />
             </p>
             <span className="pet-profile-placeholder-label">
-              {activeGalleryItem?.label}
+              {heroPreview?.label}
             </span>
-          </section>
-
-          <section
-            id="gallery"
-            className="pet-profile-gallery"
-            aria-label="Gallery"
-          >
-            {profile.gallery.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                className={`pet-profile-gallery-item pet-profile-tone-${item.tone}`}
-                aria-label={`Show ${item.label}`}
-                aria-pressed={activeGalleryIndex === index}
-                onClick={() => setActiveGalleryIndex(index)}
-              >
-                <IconPaw aria-hidden="true" />
-                <span>{item.label}</span>
-              </button>
-            ))}
-            <div className="pet-profile-gallery-more">
-              <span aria-hidden="true">+{profile.remainingGalleryCount}</span>
-              <span className="sr-only">
-                {profile.remainingGalleryCount} more photos
-              </span>
-            </div>
           </section>
         </main>
 
