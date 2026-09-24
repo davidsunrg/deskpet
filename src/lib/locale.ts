@@ -115,5 +115,6 @@ export function isLocalizedPath(path: string): boolean {
   if (LOCALIZED_PATHS.has(path)) return true;
   if (path.startsWith('/blog/')) return true;
   if (path.startsWith('/p/')) return true;
+  if (path.startsWith('/@')) return true;
   return false;
 }
