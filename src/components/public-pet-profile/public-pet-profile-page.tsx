@@ -28,21 +28,12 @@ type PublicPetProfilePageProps = {
   playgroundPet: PlaygroundPet | null;
 };
 
-type MomentPlaceholder = {
-  label: string;
-  duration?: string;
-};
-
-const MOMENT_PLACEHOLDERS: readonly MomentPlaceholder[] = [
-  { label: 'Favorite portrait' },
-  { label: 'Morning adventure' },
-  { label: 'A happy little run', duration: '0:28' },
-  { label: 'Cozy afternoon' },
-  { label: 'Playtime in the park', duration: '0:36' },
-  { label: 'Park day' },
-  { label: 'A cozy snow day', duration: '0:32' },
-  { label: 'A quiet evening', duration: '0:24' },
-];
+const MOMENT_PLACEHOLDERS = [
+  'Favorite portrait',
+  'Morning adventure',
+  'Cozy afternoon',
+  'Park day',
+] as const;
 
 const WALLPAPER_PLACEHOLDERS = [
   { label: 'Morning light', live: false },
@@ -74,45 +65,18 @@ function SectionHeading({
   );
 }
 
-function MomentCard({ moment }: { moment: MomentPlaceholder }) {
-  const isVideo = Boolean(moment.duration);
-
+function MomentCard({ label }: { label: string }) {
   return (
     <div
       className={`${MEDIA_FRAME_CLASS} aspect-[4/3]`}
       role="img"
-      aria-label={
-        isVideo
-          ? `${moment.label} video, ${moment.duration}`
-          : `${moment.label} photo`
-      }
+      aria-label={`${label} photo`}
     >
       <div className={MEDIA_WASH_CLASS} />
-      {isVideo ? (
-        <>
-          <div className="relative grid place-items-center">
-            <span className="grid size-12 place-items-center rounded-full bg-[#43271f]/75 text-white shadow-lg">
-              <PlayIcon
-                aria-hidden="true"
-                className="ml-0.5 size-5 fill-current"
-              />
-            </span>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-[#43271f]/60 to-transparent p-3 pt-10 text-white">
-            <span className="min-w-0 truncate text-xs font-bold">
-              {moment.label}
-            </span>
-            <span className="shrink-0 rounded bg-black/45 px-2 py-1 text-[11px] font-bold">
-              {moment.duration}
-            </span>
-          </div>
-        </>
-      ) : (
-        <div className="relative m-auto grid place-items-center text-[#9a6d5f]">
-          <ImageIcon aria-hidden="true" className="size-8" />
-          <span className="mt-2 text-xs font-bold">{moment.label}</span>
-        </div>
-      )}
+      <div className="relative m-auto grid place-items-center text-[#9a6d5f]">
+        <ImageIcon aria-hidden="true" className="size-8" />
+        <span className="mt-2 text-xs font-bold">{label}</span>
+      </div>
     </div>
   );
 }
@@ -222,8 +186,8 @@ export function PublicPetProfilePage({
               icon={ImagesIcon}
             />
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {MOMENT_PLACEHOLDERS.map((moment) => (
-                <MomentCard key={moment.label} moment={moment} />
+              {MOMENT_PLACEHOLDERS.map((label) => (
+                <MomentCard key={label} label={label} />
               ))}
             </div>
           </section>
