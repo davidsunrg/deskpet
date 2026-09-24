@@ -15,11 +15,11 @@ import {
   ArrowDownIcon,
   ArrowRightIcon,
   DownloadIcon,
+  Gamepad2Icon,
   HeartIcon,
   ImageIcon,
   ImagesIcon,
   type LucideIcon,
-  MonitorIcon,
   PawPrintIcon,
   PlayIcon,
   SettingsIcon,
@@ -195,7 +195,10 @@ export function PublicPetProfilePage({
             className="scroll-mt-24 py-5"
             data-testid="public-pet-profile-desktop-pet"
           >
-            <SectionHeading title="Desktop Pet" icon={MonitorIcon} />
+            <SectionHeading
+              title={`Play with ${profile.name}`}
+              icon={Gamepad2Icon}
+            />
             <div className="grid overflow-hidden rounded-[28px] border border-[#f0ded3] bg-[linear-gradient(105deg,#fff_0%,#fff8f2_64%,#fff0e8_100%)] shadow-[0_14px_38px_rgba(100,62,47,0.08)] lg:grid-cols-[1fr_260px]">
               <div
                 ref={stageRef}
@@ -300,7 +303,10 @@ export function PublicPetProfilePage({
           </section>
 
           <section className="py-8" data-testid="public-pet-profile-videos">
-            <SectionHeading title="Videos" icon={VideoIcon} />
+            <SectionHeading
+              title={`${profile.name}'s Videos`}
+              icon={VideoIcon}
+            />
             <div className="grid gap-4 md:grid-cols-3">
               {VIDEO_PLACEHOLDERS.map((video) => (
                 <div
