@@ -125,6 +125,28 @@ function MomentCard({ label }: { label: string }) {
   );
 }
 
+function HeroBannerWave() {
+  return (
+    <div
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-20 leading-none"
+      aria-hidden="true"
+      data-testid="public-pet-profile-hero-wave"
+    >
+      <svg
+        viewBox="0 0 1440 140"
+        preserveAspectRatio="none"
+        className="block h-14 w-full sm:h-[4.75rem] md:h-24"
+        role="presentation"
+      >
+        <path
+          fill="#ffffff"
+          d="M0,104 C160,104 240,48 400,44 C560,40 640,98 780,94 C920,90 1020,42 1160,46 C1300,50 1380,88 1440,92 L1440,140 L0,140 Z"
+        />
+      </svg>
+    </div>
+  );
+}
+
 function WallpaperCard({ label, live }: { label: string; live: boolean }) {
   return (
     <div
@@ -209,9 +231,10 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
             </div>
           </div>
         </div>
+        <HeroBannerWave />
       </section>
 
-      <div className="bg-white px-5 pb-12 pt-10 sm:px-8 md:px-12">
+      <div className="relative z-10 bg-white px-5 pb-12 pt-4 sm:px-8 md:px-12">
         <div className="mx-auto max-w-7xl">
           <section
             id="desktop-pet"
