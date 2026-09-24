@@ -13,6 +13,14 @@ describe('public pet profile handles', () => {
     );
   });
 
+  test('resolves Laika after normalization', () => {
+    expect(getPublicPetProfile('laika')?.name).toBe('Laika');
+    expect(getPublicPetProfile(' LAIKA ')?.handle).toBe('laika');
+    expect(getPublicPetProfile('laika')?.bannerSrc).toBe(
+      '/sites/laika/banner.png'
+    );
+  });
+
   test('rejects unknown and malformed handles', () => {
     expect(getPublicPetProfile('unknown')).toBeNull();
     expect(normalizePublicPetHandle('%E0%A4%A')).toBeNull();

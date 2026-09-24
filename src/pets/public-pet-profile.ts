@@ -33,6 +33,25 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
       { label: 'Availability', value: 'Playable online' },
     ],
   },
+  laika: {
+    handle: 'laika',
+    name: 'Laika',
+    breed: 'Golden Retriever',
+    age: '3 years old',
+    description: 'My little adventure buddy.',
+    bannerSrc: '/sites/laika/banner.png',
+    traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
+    about:
+      'Laika is happiest close to the people she loves. Whether she is exploring outside, settling in for a quiet afternoon, or keeping you company on the desktop, she brings warm and playful energy everywhere she goes.',
+    stats: [
+      { label: 'Breed', value: 'Golden Retriever' },
+      { label: 'Age', value: '3 years old' },
+      { label: 'Temperament', value: 'Friendly & affectionate' },
+      { label: 'Activity', value: 'Medium to high' },
+      { label: 'Best for', value: 'Families & adventures' },
+      { label: 'Availability', value: 'Playable online' },
+    ],
+  },
 };
 
 const HANDLE_PATTERN = /^[a-z0-9](?:[a-z0-9._-]{1,28}[a-z0-9])$/;
