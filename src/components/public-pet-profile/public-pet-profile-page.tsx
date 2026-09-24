@@ -155,12 +155,7 @@ export function PublicPetProfilePage({
           </div>
 
           <div className="pt-44 sm:pt-40 md:pt-36">
-            <div className="relative max-w-[310px] p-4 sm:max-w-[380px] sm:p-5 md:max-w-lg md:p-6 lg:max-w-xl lg:p-8">
-              <div
-                aria-hidden="true"
-                className="absolute -inset-2 bg-white/80 backdrop-blur-sm [mask-image:radial-gradient(ellipse_at_center,black_46%,transparent_68%)] sm:-inset-4 sm:bg-white/75 sm:backdrop-blur-md sm:[mask-image:radial-gradient(ellipse_at_center,black_43%,transparent_71%)] md:-inset-6 md:bg-white/70 md:[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_74%)] lg:-inset-x-10 lg:-inset-y-7 lg:bg-white/65 lg:backdrop-blur-lg lg:[mask-image:radial-gradient(ellipse_at_center,black_38%,transparent_76%)]"
-              />
-              <div className="relative z-10">
+            <div className="max-w-[310px] sm:max-w-[380px] md:max-w-lg lg:max-w-xl">
                 <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
                   {profile.name}
                   <PawPrintIcon
@@ -181,7 +176,6 @@ export function PublicPetProfilePage({
                   />
                   Meet {profile.name}
                 </a>
-              </div>
             </div>
           </div>
         </div>
