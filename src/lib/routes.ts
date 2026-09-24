@@ -63,11 +63,6 @@ export function petDetailRoute(slug: string): string {
   return `/p/${slug}`;
 }
 
-/** Public pet profile route: `/@{handle}`. */
-export function publicPetProfileRoute(handle: string): string {
-  return `/@${encodeURIComponent(handle)}`;
-}
-
 /** Dashboard pet detail route: `/dashboard/pets/{petId}`. */
 export function dashboardPetDetailRoute(petId: string): string {
   return `${Routes.DashboardPets}/${petId}`;
