@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import type { PlaygroundPet } from '@/utils/playground-pet';
 import {
   lazy,
@@ -21,16 +22,25 @@ const PlaygroundExperienceLazy = lazy(() =>
 
 type PlaygroundEmbedProps = {
   pets: readonly PlaygroundPet[];
+  /** Registry pet key to select first (e.g. from `?pet=`). */
+  initialPetKey?: string | null;
+  /**
+   * Sync the selected pet to `?pet=` and persist layout across visits.
+   * Only the `/playground` page owns the URL; embeds on other pages do not.
+   */
+  syncWithPage?: boolean;
   className?: string;
   ariaLabel?: string;
 };
 
 /**
- * Compact `/playground` for other pages: same wallpaper, pet stage, and action
- * rail, on a smaller canvas without URL sync or shared layout persistence.
+ * Playground card: wallpaper, pet stage, and action rail on a compact canvas.
+ * Used by `/playground` and embedded on other pages.
  */
 export function PlaygroundEmbed({
   pets,
+  initialPetKey = null,
+  syncWithPage = false,
   className,
   ariaLabel,
 }: PlaygroundEmbedProps) {
@@ -57,18 +67,21 @@ export function PlaygroundEmbed({
     <PlaygroundWallpaperShell
       wallpaperId={wallpaperId}
       rootRef={rootRef}
-      variant="hero"
-      className={className}
+      className={cn(
+        'overflow-hidden rounded-[28px] border border-[#f0ded3] shadow-[0_14px_38px_rgba(100,62,47,0.08)]',
+        className
+      )}
       ariaLabel={ariaLabel}
     >
       {appReady ? (
         <Suspense fallback={<PlaygroundLoadingPets />}>
           <PlaygroundExperienceLazy
             presetPets={pets}
+            initialPetKey={initialPetKey}
             wallpaperId={wallpaperId}
             onWallpaperChange={onWallpaperChange}
             rootRef={rootRef}
-            embedded
+            embedded={!syncWithPage}
           />
         </Suspense>
       ) : (

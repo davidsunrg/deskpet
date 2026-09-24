@@ -1,7 +1,8 @@
 import type { PanelPosition } from './use-panel-drag';
 import type { ChromeId } from './use-playground-chrome';
 
-const LAYOUT_STORAGE_KEY = 'petnet.playground.layout.v1';
+// v2: compact card stage — v1 coords were for the full-viewport canvas.
+const LAYOUT_STORAGE_KEY = 'petnet.playground.layout.v2';
 
 export type WidgetId = 'pomodoro' | 'countdown' | 'notes';
 

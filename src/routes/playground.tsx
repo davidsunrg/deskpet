@@ -1,4 +1,4 @@
-import { PlaygroundExperienceClient } from '@/components/playground/playground-experience-client';
+import { PlaygroundEmbed } from '@/components/playground/playground-embed';
 import { listPlaygroundPresetPets } from '@/pets/catalog';
 import { PLAYGROUND_PET_QUERY } from '@/lib/routes';
 import { seo } from '@/lib/seo';
@@ -32,9 +32,14 @@ export const Route = createFileRoute('/playground')({
 function PlaygroundPage() {
   const { presetPets, initialPetKey } = Route.useLoaderData();
   return (
-    <PlaygroundExperienceClient
-      presetPets={presetPets}
-      initialPetKey={initialPetKey}
-    />
+    <div className="px-5 py-10 sm:px-8 md:px-12">
+      <div className="mx-auto max-w-7xl">
+        <PlaygroundEmbed
+          pets={presetPets}
+          initialPetKey={initialPetKey}
+          syncWithPage
+        />
+      </div>
+    </div>
   );
 }

@@ -10,10 +10,7 @@ type ProfilePlayCardProps = {
 
 export function ProfilePlayCard({ name, playgroundPet }: ProfilePlayCardProps) {
   return (
-    <div
-      className="overflow-hidden rounded-[28px] border border-[#f0ded3] shadow-[0_14px_38px_rgba(100,62,47,0.08)]"
-      data-testid="public-pet-profile-play-card"
-    >
+    <div data-testid="public-pet-profile-play-card">
       <PlaygroundEmbed
         pets={playgroundPet ? [playgroundPet] : []}
         ariaLabel={`Play with ${name}`}

@@ -2,68 +2,43 @@ import { cn } from '@/lib/utils';
 import { getWallpaper, type WallpaperId } from './wallpapers';
 import type { CSSProperties, ReactNode, Ref } from 'react';
 
-export type PlaygroundWallpaperShellVariant = 'page' | 'hero';
-
 type PlaygroundWallpaperShellProps = {
   wallpaperId: WallpaperId;
   children?: ReactNode;
   /** Optional section ref (pet bounds / panel clamp). */
   rootRef?: Ref<HTMLElement | null>;
-  /**
-   * `page` — full playground viewport (default).
-   * `hero` — compact embedded stage height, no 1024px min-width scroll.
-   */
-  variant?: PlaygroundWallpaperShellVariant;
   className?: string;
   /** Override section aria-label. */
   ariaLabel?: string;
 };
 
-const VARIANT_LAYOUT: Record<
-  PlaygroundWallpaperShellVariant,
-  { wrapClassName: string; sectionClassName: string; minHeight: string }
-> = {
-  page: {
-    wrapClassName: 'w-full overflow-x-auto',
-    sectionClassName:
-      'playground-root relative isolate w-full min-w-[1024px] overflow-hidden',
-    minHeight: 'calc(100svh - 4.5rem)',
-  },
-  hero: {
-    wrapClassName: 'w-full',
-    sectionClassName: 'playground-root relative isolate w-full overflow-hidden',
-    minHeight: '32rem',
-  },
-};
+const STAGE_HEIGHT = '32rem';
 
 /**
- * Playground atmosphere only: root gradients, grid, and glow.
- * Safe to paint before pets / chrome mount.
+ * Playground atmosphere only: root gradients, grid, and glow, on a fixed-height
+ * compact stage. Safe to paint before pets / chrome mount.
  */
 export function PlaygroundWallpaperShell({
   wallpaperId,
   children,
   rootRef,
-  variant = 'page',
   className,
   ariaLabel = 'Pets playground',
 }: PlaygroundWallpaperShellProps) {
   const wallpaper = getWallpaper(wallpaperId);
-  const layout = VARIANT_LAYOUT[variant];
 
   return (
-    <div className={cn(layout.wrapClassName, className)}>
+    <div className={cn('w-full', className)}>
       <section
         ref={rootRef as Ref<HTMLElement>}
-        className={layout.sectionClassName}
+        className="playground-root relative isolate w-full overflow-hidden"
         data-wallpaper-id={wallpaper.id}
-        data-wallpaper-variant={variant}
         style={
           {
             ...wallpaper.vars,
-            minHeight: layout.minHeight,
-            height: variant === 'hero' ? layout.minHeight : undefined,
-            minWidth: variant === 'hero' ? 0 : undefined,
+            minHeight: STAGE_HEIGHT,
+            height: STAGE_HEIGHT,
+            minWidth: 0,
             color: 'var(--foreground, #102149)',
             background: `
           radial-gradient(circle at 20% 14%, var(--wallpaper-root-a), transparent 24%),

@@ -71,7 +71,7 @@ export type { PlaygroundExperienceProps };
  * them into raw clip sequences. Mouse and hand share absolute horizontal look
  * mapping (latest input wins).
  *
- * Wallpaper chrome is owned by `PlaygroundExperienceClient` so the background
+ * Wallpaper chrome is owned by `PlaygroundEmbed` so the background
  * can paint before this interactive layer mounts.
  */
 export function PlaygroundExperience({
