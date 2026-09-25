@@ -7,6 +7,7 @@ export type PublicPetProfile = {
   age: string;
   description: string;
   bannerSrc: string;
+  avatarSrc: string;
   /** Hero `object-position` Tailwind classes (focal point per artwork). */
   bannerObjectClass?: string;
   /** Three animated clips (WebM/video or image) for the play section. */
@@ -29,6 +30,7 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: 'https://cdn.deskpet.ai/pets/copper/banner.webp',
+    avatarSrc: 'https://cdn.deskpet.ai/pets/copper/avatar.webp',
     playClipSrcs: GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_SRCS,
     playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],
@@ -50,6 +52,7 @@ const PUBLIC_PET_PROFILES: Record<string, PublicPetProfile> = {
     age: '3 years old',
     description: 'My little adventure buddy.',
     bannerSrc: 'https://cdn.deskpet.ai/pets/laika/banner.webp',
+    avatarSrc: 'https://cdn.deskpet.ai/pets/laika/avatar.webp',
     playClipSrcs: GOLDEN_RETRIEVER_PUBLIC_PLAY_CLIP_SRCS,
     playgroundPetKey: 'golden-retriever',
     traits: ['Playful', 'Smart', 'Affectionate', 'Adventurous'],

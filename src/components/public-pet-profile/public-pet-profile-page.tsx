@@ -293,9 +293,9 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
             <SectionHeading title={`About ${profile.name}`} icon={HeartIcon} />
             <div className="flex flex-col items-center gap-5 rounded-[24px] border border-[#f1dfd4] bg-[#fff5ed] p-5 sm:flex-row sm:p-6">
               <img
-                src={profile.bannerSrc}
+                src={profile.avatarSrc}
                 alt={`${profile.name} portrait`}
-                className="size-20 shrink-0 rounded-full border-4 border-white object-cover object-[70%_center] shadow-sm"
+                className="size-20 shrink-0 rounded-full border-4 border-white object-cover shadow-sm"
               />
               <dl className="grid w-full gap-3 border-t border-[#ead8ce] pt-5 text-sm sm:border-l sm:border-t-0 sm:py-1 sm:pl-6">
                 <div className="grid grid-cols-[92px_1fr] gap-3">
