@@ -9,7 +9,7 @@ describe('public pet profile handles', () => {
     expect(getPublicPetProfile('copper')?.name).toBe('Copper');
     expect(getPublicPetProfile(' COPPER ')?.handle).toBe('copper');
     expect(getPublicPetProfile('%63opper')?.bannerSrc).toBe(
-      '/sites/copper/banner.png'
+      'https://cdn.deskpet.ai/pets/copper/banner.webp'
     );
   });
 
@@ -17,7 +17,7 @@ describe('public pet profile handles', () => {
     expect(getPublicPetProfile('laika')?.name).toBe('Laika');
     expect(getPublicPetProfile(' LAIKA ')?.handle).toBe('laika');
     expect(getPublicPetProfile('laika')?.bannerSrc).toBe(
-      '/sites/laika/banner.png'
+      'https://cdn.deskpet.ai/pets/laika/banner.webp'
     );
   });
 
