@@ -19,11 +19,9 @@ import {
   ImageIcon,
   ImagesIcon,
   type LucideIcon,
-  OrbitIcon,
   PawPrintIcon,
   PlayIcon,
   SmartphoneIcon,
-  StarIcon,
 } from 'lucide-react';
 
 const COPPER_MEMORY_BOOK_DEMO_HREF = '/demo/memory-book/';
@@ -225,18 +223,6 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute left-1/2 top-[38%] -z-10 h-[min(420px,120%)] w-[min(520px,135%)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/35 blur-3xl"
-              />
-              <StarIcon
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-1 top-6 size-5 fill-none stroke-white stroke-[1.75] text-white/90 sm:top-8 sm:size-6"
-              />
-              <HeartIcon
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-16 left-2 size-4 fill-none stroke-white stroke-[1.75] text-white/85 sm:bottom-20 sm:size-5"
-              />
-              <OrbitIcon
-                aria-hidden="true"
-                className="pointer-events-none absolute -left-3 top-2 size-6 fill-none stroke-white stroke-[1.5] text-white/80 sm:-left-5 sm:size-7"
               />
               <h1 className="text-6xl font-bold leading-[0.95] tracking-normal text-[#3f241c] [font-family:'Kalam',cursive] sm:text-7xl md:text-8xl">
                 {profile.name}
