@@ -69,8 +69,8 @@ const ACTION_PRICING_PLANS = [
   {
     id: 'customizeMyOwn' as const,
     actionCount: 0,
-    price: '$79.99',
-    priceValue: 79.99,
+    price: '$9.99',
+    priceValue: 9.99,
     featured: true,
     href: Routes.DesktopPetCreator,
     checkoutPlanId: customizeCheckout.checkoutPlanId,

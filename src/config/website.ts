@@ -122,7 +122,7 @@ export const websiteConfig: WebsiteConfig = {
             {
               type: 'one_time',
               priceId: priceIds.customizeMyOwn,
-              amount: 7999,
+              amount: 999,
               currency: 'USD',
               allowPromotionCode: true,
             },

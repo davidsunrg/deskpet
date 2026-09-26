@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 import { IconCalendar, IconLoader2 } from '@tabler/icons-react';
 
 const QUEUE_COUNT = 6;
-const PRICE = '$79.99';
-const OLD_PRICE = '$129.99';
+const PRICE = '$9.99';
+const OLD_PRICE = '$29.99';
 const DELIVERY_HOURS = 24;
 
 function DashedDivider() {
