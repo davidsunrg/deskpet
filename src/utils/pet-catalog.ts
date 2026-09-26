@@ -92,6 +92,7 @@ export const PetBreed = {
   Korat: 'korat',
   ChineseLiHua: 'chinese-li-hua',
   ChineseLionCat: 'chinese-lion-cat',
+  LeopardusTilcayo: 'leopardus-tilcayo',
   DomesticShorthair: 'domestic-shorthair',
   DomesticLonghair: 'domestic-longhair',
   GoldenRetriever: 'golden-retriever',

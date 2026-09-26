@@ -117,6 +117,7 @@ export const PET_SPECIES_CONFIG = {
       breed('korat', 'Korat'),
       breed('chinese-li-hua', 'Chinese Li Hua'),
       breed('chinese-lion-cat', 'Chinese Lion Cat'),
+      breed('leopardus-tilcayo', 'Leopardus tilcayo'),
       breed('domestic-shorthair', 'Domestic Shorthair'),
       breed('domestic-longhair', 'Domestic Longhair'),
     ],

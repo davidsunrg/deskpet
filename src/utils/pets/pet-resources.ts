@@ -9,6 +9,7 @@ import type {
   PetResourceVisibilityTarget,
 } from '@/utils/pets/pet-resource-types';
 import type { ShowcasePet, ShowcasePetAction } from '@/utils/showcase-pets';
+import { leopardusTilcayoResources } from '@/pets/cat/leopardus-tilcayo';
 import { orangeCatResources } from '@/pets/cat/orange-cat';
 import { goldenRetrieverResources } from '@/pets/dog/golden-retriever';
 import { miniGoldenRetrieverResources } from '@/pets/dog/mini-golden-retriever';
@@ -29,6 +30,7 @@ export type {
 export const petResourceRegistry = {
   [goldenRetrieverResources.id]: goldenRetrieverResources,
   [orangeCatResources.id]: orangeCatResources,
+  [leopardusTilcayoResources.id]: leopardusTilcayoResources,
   [miniGoldenRetrieverResources.id]: miniGoldenRetrieverResources,
 } as const satisfies Readonly<Record<string, PetResourceManifest>>;
 
@@ -38,6 +40,7 @@ export type PetResourceId = keyof typeof petResourceRegistry;
 export const PET_RESOURCE_DISPLAY_ORDER = [
   goldenRetrieverResources.id,
   orangeCatResources.id,
+  leopardusTilcayoResources.id,
   miniGoldenRetrieverResources.id,
 ] as const satisfies readonly PetResourceId[];
 
@@ -213,6 +216,7 @@ export function petResourceToPlaygroundPet(
 
 export {
   goldenRetrieverResources,
+  leopardusTilcayoResources,
   miniGoldenRetrieverResources,
   orangeCatResources,
 };
