@@ -11,11 +11,8 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { BehaviorsGrid } from '@/components/blocks/behaviors/behaviors';
-import {
-  PetCardGrid,
-  type PetCardSelectOrigin,
-} from '@/components/pets/pet-card-grid';
-import { SelectedCatPreview } from '@/components/pets/selected-cat-preview';
+import { PetCardGrid } from '@/components/pets/pet-card-grid';
+import { PetDetailHeroIdlePreview } from '@/components/pets/pet-detail-hero-idle-preview';
 import { LocaleLink } from '@/lib/i18n/navigation';
 import { Routes, playgroundRoute } from '@/lib/routes';
 import {
@@ -27,7 +24,7 @@ import type { PetDetail } from '@/utils/pets/showcase-pet-to-detail';
 import type { ShowcasePet } from '@/utils/showcase-pets';
 import { cn } from '@/utils/cn';
 import { ImageIcon, PlayIcon, SparklesIcon, VideoIcon } from 'lucide-react';
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export type { PetDetail } from '@/utils/pets/showcase-pet-to-detail';
 
@@ -172,39 +169,12 @@ export function PetDetailTemplate({
 
   const [playPetId, setPlayPetId] = useState(initialPlayPet?.id ?? pet.id);
   const [previewHidden, setPreviewHidden] = useState(false);
-  const [previewOrigin, setPreviewOrigin] =
-    useState<PetCardSelectOrigin | null>(null);
-  const [heroOrigin, setHeroOrigin] = useState<PetCardSelectOrigin | null>(
-    null
-  );
-  const heroStageRef = useRef<HTMLDivElement>(null);
-
   const activePlayPet = playablePets.get(playPetId) ?? initialPlayPet;
   const showInteractive = Boolean(activePlayPet) && !previewHidden;
-  const placementOrigin = previewOrigin ?? heroOrigin;
 
-  useLayoutEffect(() => {
-    const stage = heroStageRef.current;
-    if (!stage) return;
-
-    const measure = () => {
-      const rect = stage.getBoundingClientRect();
-      setHeroOrigin({
-        centerX: rect.left + rect.width / 2,
-        centerY: rect.top + rect.height / 2,
-      });
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
-
-  const handleSelectPet = (petId: string, origin?: PetCardSelectOrigin) => {
+  const handleSelectPet = (petId: string) => {
     setPlayPetId(petId);
     setPreviewHidden(false);
-    if (origin) setPreviewOrigin(origin);
-    else setPreviewOrigin(null);
   };
 
   const resumePlay = () => {
@@ -212,23 +182,10 @@ export function PetDetailTemplate({
       setPlayPetId(initialPlayPet.id);
     }
     setPreviewHidden(false);
-    // Fall back to the hero-stage center for this page's pet.
-    setPreviewOrigin(null);
   };
 
   return (
     <div className="space-y-2" data-testid="pet-detail-page">
-      {showInteractive && activePlayPet && placementOrigin ? (
-        <SelectedCatPreview
-          pet={activePlayPet}
-          origin={placementOrigin}
-          onHide={() => {
-            setPreviewHidden(true);
-            setPreviewOrigin(null);
-          }}
-        />
-      ) : null}
-
       <div className="text-sm font-semibold text-muted-foreground">
         <LocaleLink
           href={backHref as typeof Routes.Pets}
@@ -242,7 +199,6 @@ export function PetDetailTemplate({
 
       <section className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
         <div
-          ref={heroStageRef}
           className={cn(
             'relative grid min-h-[360px] place-items-center overflow-hidden rounded-[34px] border-2 border-deskpet-ink',
             'bg-[radial-gradient(circle_at_50%_42%,rgba(85,217,170,0.25),transparent_34%),linear-gradient(180deg,#fff3cd_0%,#fffaf0_100%)]',
@@ -275,11 +231,8 @@ export function PetDetailTemplate({
                 : `Play ${pet.name}`
             }
           >
-            {showInteractive ? (
-              <span
-                className="block h-64 w-full max-w-sm rounded-[24px] bg-[#f7f1e0]/80 md:h-80"
-                aria-hidden="true"
-              />
+            {showInteractive && activePlayPet ? (
+              <PetDetailHeroIdlePreview pet={activePlayPet} />
             ) : previewUrl ? (
               <img
                 src={previewUrl}
