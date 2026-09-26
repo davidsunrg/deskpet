@@ -150,6 +150,27 @@ function HeroBannerWave() {
   );
 }
 
+function FooterBannerWave() {
+  return (
+    <div
+      className="pointer-events-none absolute inset-x-0 top-0 z-20 leading-none"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 1440 140"
+        preserveAspectRatio="none"
+        className="block h-14 w-full sm:h-[4.75rem] md:h-24"
+        role="presentation"
+      >
+        <path
+          fill="#ffffff"
+          d="M0,0 H1440 V92 C1380,88 1300,50 1160,46 C1020,42 920,90 780,94 C640,98 560,40 400,44 C240,48 160,104 0,104 Z"
+        />
+      </svg>
+    </div>
+  );
+}
+
 function WallpaperCard({ label, live }: { label: string; live: boolean }) {
   return (
     <div
@@ -315,23 +336,31 @@ export function PublicPetProfilePage({ profile }: PublicPetProfilePageProps) {
       </div>
 
       <footer
-        className="relative overflow-hidden bg-white px-6 py-12 md:px-12"
+        className="relative overflow-hidden bg-white px-6 pb-12 pt-24 md:px-12 md:pt-28"
         data-testid="public-pet-profile-promo"
       >
-        <PawPrintIcon className="absolute -bottom-3 left-8 size-20 rotate-[-18deg] fill-[#f8bea1]/50 text-[#f8bea1]/50" />
-        <HeartIcon className="absolute right-[10%] top-5 size-8 rotate-12 fill-[#ff8a76]/30 text-[#ff8a76]/30" />
-        <div className="relative mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-          <div>
+        <img
+          src={profile.bannerSrc}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 size-full object-cover object-top"
+        />
+        <FooterBannerWave />
+        <PawPrintIcon className="absolute -bottom-3 left-8 z-10 size-20 rotate-[-18deg] fill-[#f8bea1]/50 text-[#f8bea1]/50" />
+        <HeartIcon className="absolute right-[10%] top-5 z-10 size-8 rotate-12 fill-[#ff8a76]/30 text-[#ff8a76]/30" />
+        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="relative isolate px-2 py-1">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-8 -inset-y-5 -z-10 bg-[radial-gradient(ellipse_85%_80%_at_45%_50%,rgba(255,255,255,0.88)_0%,rgba(255,255,255,0.58)_48%,rgba(255,255,255,0.12)_72%,transparent_86%)] blur-xl"
+            />
             <h2 className="text-3xl font-bold tracking-normal text-[#4a2a20] [font-family:'Kalam',cursive] md:text-4xl">
               {`Love a page like ${profile.name}'s?`}
             </h2>
-            <p className="mt-1 text-xl font-normal text-[#806157] [font-family:'Kalam',cursive]">
-              Bring your own pet to life with DeskPet.
-            </p>
           </div>
           <Button
             asChild
-            className="h-14 rounded-full bg-[#f2574f] px-9 text-base font-bold text-white shadow-[0_10px_22px_rgba(224,76,66,0.24)] hover:bg-[#df4c45]"
+            className="h-14 self-end rounded-full bg-[#f2574f] px-9 text-base font-bold text-white shadow-[0_10px_22px_rgba(224,76,66,0.24)] hover:bg-[#df4c45] md:self-auto"
           >
             <LocaleLink href={Routes.DesktopPetCreator}>
               Make My Pet
